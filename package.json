@@ -8,7 +8,8 @@
         "build": "cd vue-remote && npm run build",
         "vue-run-dev": "cd vue-remote && npm run serve -- --port 8083",
         "start": "node protube.js",
-        "dev": "run-p -r start vue-run-dev"
+        "dev": "run-p -r start vue-run-dev",
+        "dev-watch": "concurrently --kill-others -n VUE,NODEJS -c bgGreen.bold,bgBlue.bold 'cd ./vue-remote && npm run serve -- --port 8083' 'nodemon ./protube.js'"
     },
     "dependencies": {
         "colors": "^1.4.0",
@@ -32,6 +33,8 @@
     },
     "devDependencies": {
         "autoprefixer": "^10.3.1",
-        "electron": "^13.1.7"
+        "concurrently": "^7.3.0",
+        "electron": "^13.1.7",
+        "nodemon": "^2.0.19"
     }
 }
