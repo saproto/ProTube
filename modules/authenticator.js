@@ -81,6 +81,7 @@ exports.validateClient = async (_cookies, screencode_correct=false) => {
             return true;
         }
     } catch (e) {
+        logger.serverError(`Error at the authentication of a cookie. Caused by authenticator.js, error message: ${e}`);
         throw new Error('Error at parsing cookies');
     }
     throw new Error('Invalid session cookie');
