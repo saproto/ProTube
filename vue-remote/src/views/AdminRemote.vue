@@ -22,7 +22,8 @@
                     <div class="w-full md:w-2/3 md:mt-12">
                         <p class=" text-right md:text-center text-md text-gray-500 dark:text-white w-full "> Volume Slider</p>
                         <input @change="volumeChange" class="bg-proto_blue hover:bg-opacity-80 rounded-xl h-2 w-full border outline-none border-gray-500 appearance-none" type="range" min="1" max="100" :value="volume">
-                        <font-awesome-icon class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" icon="backward" />
+                        <!-- Has no functionality yet.. TODO -->
+                        <!--<font-awesome-icon class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" icon="backward" />-->
                         <font-awesome-icon @click="playPause" class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" :icon="playing ? 'pause' : 'play'"/>
                         <font-awesome-icon @click="skip" class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" icon="forward" />
                     </div>
