@@ -2,7 +2,7 @@ const io = window.io = require('socket.io-client');
 export let socket = null;
 import { eventBus } from '@/js/eventbus.js';
 let player;
-let nowPlaying;
+let nowPlaying = {};
 // let volume = 100;
 let volumeControl = false;
 let playMode = 'video'; // radio or video
