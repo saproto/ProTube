@@ -11,7 +11,7 @@ const path = require('path');
 const {apiRouter} = require('./routes/api');
 
 // Used for a SPA to redirect all paths to the index.html file
-var history = require('connect-history-api-fallback');
+let history = require('connect-history-api-fallback');
 app.use(history({
     index: '/protube/index.html'
 }));
@@ -22,16 +22,17 @@ const https = process.env.HTTPS === 'true' || false;
 app.use('/', express.static(path.join(__dirname, 'public')));
 // app.use('/api/', apiRouter);
 
+let server;
 if(https) {
     const https = require('https');
     const fs = require('fs');
-    const privateKey  = fs.readFileSync('./ssl/selfsigned.key', 'utf8');
-    const certificate = fs.readFileSync('./ssl/selfsigned.crt', 'utf8');
+    const privateKey  = fs.readFileSync(process.env.SSL_KEY_FILE, 'utf8');
+    const certificate = fs.readFileSync(process.env.SSL_CERT_FILE, 'utf8');
     const ssl = {key: privateKey, cert: certificate};
-    var server = https.createServer(ssl, app);
+    server = https.createServer(ssl, app);
 }else{
     const http = require('http');
-    var server = http.createServer(app);
+    server = http.createServer(app);
 }
 server.listen(port); //server.listen instead of app.listen to accommedate for https and socket.io
 server.on('error', err => logger.serverError(`Failed to start server: ${err}`));
@@ -76,6 +77,7 @@ exports.getPlayerStatus = () => {
 exports.getQueue = queue.getQueue;
 exports.getQueueDuration = queue.getTotalDuration;
 
+// Start up picking random song
 (async () => {
     const startVideos = [
         'working as a waitress in a cocktail bar',

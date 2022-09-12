@@ -5,11 +5,7 @@ const { InMemorySessionStore } = require("./sessionStore");
 const { getCurrentUnix } = require('../utils/time-formatter');
 const sessionStore = new InMemorySessionStore();
 
-// Ignoring ssl errors on fetches
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
-// time based session expiration, check every 30 seconds
-const maxSessionDuration = 3600;
+// Automated session flushing
 setInterval(async () => {
     sessionStore.flushExpiredSessions();
 }, parseInt(process.env.SESSION_FLUSHING_INTERVAL) * 1000);

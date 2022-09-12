@@ -8,6 +8,7 @@
         "build": "cd vue-remote && npm run build",
         "vue-run-dev": "cd vue-remote && npm run serve -- --port 8083",
         "start": "node protube.js",
+        "watch": "nodemon protube.js",
         "dev": "run-p -r start vue-run-dev",
         "dev-watch": "concurrently --kill-others -n VUE,NODEJS -c bgGreen.bold,bgBlue.bold 'cd ./vue-remote && npm run serve -- --port 8083' 'nodemon ./protube.js'"
     },
