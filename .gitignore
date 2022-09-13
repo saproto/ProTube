@@ -4,5 +4,3 @@ node_modules/
 logs/*
 public/*
 .idea/*
-package-lock.json
-vue-remote/package-lock.json
