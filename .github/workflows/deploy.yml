@@ -1,0 +1,78 @@
+name: 🚀 Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    env:
+      NODE_VERSION: 16.17.0
+      BUILD_SOURCE_DIR: .
+      BUILD_ARTIFACT_STAGING_DIR: build/
+      BUILD_ARTIFACT_DESTINATION_DIR: .
+      HOST_SERVER: s176.webhostingserver.nl
+      SENTRY_ORG: sa-proto
+      SENTRY_PROJECT: sa-proto-website
+    steps:
+      - name: 🛎️ Checkout project
+        uses: actions/checkout@v2
+
+# Idk waar dit voor is
+#       - name: 🔍 Get Node version
+#         id: nvm
+#         run: echo ::set-output name=NODE_VERSION::$(cat .nvmrc)
+
+      - name: 🖱️ Set Node v${{ steps.nvm.outputs.NODE_VERSION }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📥 Installing backend dependencies
+        run: npm ci --ignore-scripts
+
+      - name: 📥 Installing frontend dependencies
+        run: cd ./vue-remote && npm ci --ignore-scripts
+
+      - name: 🔨 Building frontend
+        run: npm run build
+
+# hebben we denk ik niet nodig, atleast voor nu
+#      - name: 📝 Create Sentry release
+#        uses: getsentry/action-release@v1
+#        env:
+#          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+#          SENTRY_ORG: ${{ env.SENTRY_ORG }}
+#          SENTRY_PROJECT: ${{ env.SENTRY_PROJECT }}
+#        with:
+#          environment: production
+
+      - name: 📁 Create build directory
+        run: mkdir ${{ env.BUILD_ARTIFACT_STAGING_DIR }}
+
+      - name: 🗄️ ZIP Build
+        uses: TheDoctor0/zip-release@0.6.1
+        with:
+          filename: ${{ env.BUILD_ARTIFACT_STAGING_DIR }}build.zip
+          path: ${{ env.BUILD_SOURCE_DIR }}
+          exclusions: 'vue-remote/* build/* ssl/*'
+
+      - name: ➗ Calculate checksum
+        run: openssl md5 ${{ env.BUILD_ARTIFACT_STAGING_DIR }}build.zip | cut -d" " -f2 > ${{ env.BUILD_ARTIFACT_STAGING_DIR }}checksum.txt
+
+# to be configured later
+#       - name: 📂 Sync files
+#         uses: SamKirkland/FTP-Deploy-Action@4.3.2
+#         with:
+#           server: ${{ env.HOST_SERVER }}
+#           username: ${{ secrets.FTP_USER }}
+#           password: ${{ secrets.FTP_PASSWORD }}
+#           local-dir: ${{ env.BUILD_ARTIFACT_STAGING_DIR }}
+#           server-dir: ${{ env.BUILD_ARTIFACT_DESTINATION_DIR }}
