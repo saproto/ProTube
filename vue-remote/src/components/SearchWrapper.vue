@@ -20,29 +20,45 @@
         </div>
       </form>      
     </div>
-    <HeaderFieldButtons :classes="openMenu ? '' : 'md:block hidden'" :admin-remote="userData.isAdmin" :admin-screen="userData.isAdmin" screen :name="userData.name"/>
+    <HeaderFieldButtons :classes="openMenu ? '' : 'md:block hidden'" :admin-remote="user.admin" :admin-screen="user.admin" screen :name="user.name"/>
   </HeaderField>
 </template>
 
 <script setup>
-import { ref, onMounted, defineEmits } from 'vue';
+import { ref, onMounted, defineEmits, defineProps } from 'vue';
 import HeaderField from '@/layout/HeaderField.vue'
 import HeaderFieldButtons from '@/components/HeaderFieldButtons.vue'
-import { getUserData } from '@/js/user_socket.js'
-
+// import { getUserData } from '@/js/user_socket.js'
+import socket from '@/js-2/RemoteSocket'
 const searchString = ref("");
-const userData = ref({
-  name: null,
-  isAdmin: false
-});
+// const userData = ref({
+//   name: null,
+//   isAdmin: false
+// });
+defineProps({
+  user: Object
+})
 
 const emit = defineEmits(['query-videos', 'query-single-video', 'query-playlist']);
 const openMenu = ref(false);
 
 onMounted(async () => {
-  let data = await getUserData();
-  userData.value.name = data.name;
-  userData.value.isAdmin = data.isAdmin;
+});
+
+socket.on("connect_error", async (err) => {
+    console.log("v2:_searchwrapper");
+    console.log("Socket connect error: ");
+    console.log(err.message);
+    console.log(socket.auth.token);
+    if(err.message == 'no_cookie_please_reconnect'){
+        await fetch('https://localhost:3000/api/test');
+        socket.connect();
+    } if(err.message == 'unauthorized') {
+        console.log("no_auth");
+        // await fetch('http://localhost:3000/api/auth/example');
+        // location.href="/api/login";
+        // router.push({name: "Login"});
+    }
 });
 
 function processQuery() {

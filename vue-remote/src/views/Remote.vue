@@ -1,7 +1,8 @@
 <template>
     <div>
         <transition name="search" mode="out-in" appear>
-            <SearchWrapper 
+            <SearchWrapper
+                :user=user 
                 v-on:query-videos="fetchVideos"
                 v-on:query-single-video="fetchThenAddVideo"
                 v-on:query-playlist="fetchThenAddPlaylist"
@@ -14,90 +15,92 @@
                 :skeletonLoading="resultsWrapperSkeletons"
             />
         </transition>
-        <ToastsModal :toasts="toasts"/>
+        <ToastsModal :latestToast="latestToast"/>
         <transition name="modal" appear >
-            <LoginModal v-if="loginModalVisible" />
+            <PincodeModal v-if="loginModalVisible" />
         </transition>
         <transition name="modal" appear >
             <LoadModal :message="loadModalMessage" :opacity="70" v-if="loadModalVisible && !loginModalVisible" />
         </transition>
         <transition name="results" mode="out-in" appear>
-            <CurrentQueue 
-                :queueData="queueData"
-                :skeletonLoading="queueSkeletonLoading"
-            />
+            <CurrentQueue />
         </transition>
     </div>
 </template>
 
 
 <script setup>
+/* eslint-disable */
 import SearchWrapper from '@/components/SearchWrapper.vue'
 import ResultsWrapper from '@/components/ResultsWrapper.vue'
-import LoginModal from '@/components/modals/LoginModal.vue'
+import PincodeModal from '@/components/modals/PincodeModal.vue'
 import LoadModal from '@/components/modals/LoadModal.vue'
 import CurrentQueue from '@/components/CurrentQueue.vue'
 import ToastsModal from '@/components/modals/ToastsModal.vue'
-import { initializeSocket, fetchVideosSocket, fetchThenAddVideoSocket, fetchThenAddPlaylistSocket } from '@/js/remote_socket'
-import { getUserVideoQueueSocket, socket } from '@/js/user_socket'
-import { eventBus } from '@/js/eventbus'
-import { onMounted, ref } from 'vue'
+// import { fetchVideosSocket, fetchThenAddVideoSocket, fetchThenAddPlaylistSocket } from '@/js/remote_socket'
+import socket, { connectSocket } from '@/js-2/RemoteSocket'
+// import { getUserVideoQueueSocket, socket } from '@/js/user_socket'
+// import { eventBus } from '@/js/eventbus'
+import { onMounted, ref, onBeforeMount, onBeforeUnmount } from 'vue'
+// import { useRouter } from 'vue-router'
 
 const loginModalVisible = ref(true);
 const loadModalVisible = ref(false);
 const resultsWrapperSkeletons = ref(false);
 const loadModalMessage = ref("");
 const foundVideos = ref([]);
-const toasts = ref([]);
-const queueData = ref({});
-const queueSkeletonLoading = ref(true);
+const latestToast = ref(null);
 
-onMounted(async () => {
-    initializeSocket();
-    const queue = await getUserVideoQueueSocket();
-    queueData.value = queue;
-    queueSkeletonLoading.value = false;
+const user = ref({
+    name: "",
+    admin: false,
+    validRemote: false
 });
 
 
-// On connect sucess you can create socket listeners here
-eventBus.on('remotesocket-connect-success', () => {
+onBeforeMount(async () => {
+    const response = await fetch('/api/user');
+    if(response.redirected) return window.location.href = response.url;
+    const data = await response.json();
+    console.log(data);
+    user.value.name = data.name;
+    user.value.admin = data.admin;
+    user.value.validRemote = data.hasValidRemote;
+    if(user.value.validRemote) connectSocket();
+})
+
+onMounted(() => {
+});
+
+onBeforeUnmount(() => {
+    socket.disconnect();
+})
+
+// does not get retriggered?
+socket.on("connect", () => {
+    console.log("socket accepted");
     setTimeout( () => {
         loginModalVisible.value = false;
-        loadModalVisible.value = false;
-    }, 1000);
+    }, 200);
 });
 
-// there was a change in the queue, update this on the remote
-socket.on('user-queue-update', (queue) => {
-    queueData.value = queue;
-});
-
-function displayToast(message){
-    let toastMessage = {
-        video: message,
-        type: 'video',
-        id: Math.random()
-    };
-    toasts.value.push(toastMessage);
-    setTimeout(() => {
-        let index = toasts.value.indexOf(toastMessage);
-        if (index !== -1) {
-            toasts.value.splice(index, 1);
-        }
-    }, 2500);
-}
-
-// On connect sucess you can create socket listeners here
-eventBus.on('remotesocket-disconnect', () => {
+socket.on("disconnect", () => {
     loginModalVisible.value = true;
 });
 
+function displayToast(toast){
+    latestToast.value = toast;
+}
+
 async function fetchThenAddVideo(videoId) {
-  loadModalVisible.value = true;
-  loadModalMessage.value = 'Adding video...';
-  await fetchThenAddVideoSocket(videoId);
-  loadModalVisible.value = false;
+    loadModalVisible.value = true;
+    loadModalMessage.value = 'Adding video...';
+    return new Promise(resolve => {
+        socket.emit('fetch-then-add-video', videoId, result => {
+            resolve(result);
+        });
+    });
+    loadModalVisible.value = false;
 }
 
 async function fetchThenAddPlaylist(playlistId) {
@@ -111,7 +114,11 @@ async function fetchVideos(query){
     loadModalVisible.value = true;
     resultsWrapperSkeletons.value = true;
     loadModalMessage.value = `Searching for ${query}...`;
-    foundVideos.value = await fetchVideosSocket(query);
+    foundVideos.value = await new Promise(resolve => {
+        socket.emit('fetch-videos', query, result => {
+            resolve(result);
+        });
+    });
     loadModalVisible.value = false;
     resultsWrapperSkeletons.value = false;
 }

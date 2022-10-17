@@ -2,7 +2,7 @@
     <div aria-live="assertive" class="fixed inset-0 flex px-4 py-6 pointer-events-none sm:p-6 items-start">
         <div class="w-full flex flex-col items-center space-y-4">
             <transition-group name="list">
-                <Toast v-for="toast in toasts" :data="toast" :key="toast"/>
+                <Toast v-for="toast in toasts" :message="toast.message" :status="toast.status" :key="toast"/>
             </transition-group>
         </div>
     </div>
@@ -10,37 +10,25 @@
 
 <script setup>
 import Toast from '@/components/Toast.vue'
-// import { eventBus } from '@/js/eventbus'
-import { defineProps } from 'vue'
+import { defineProps, watch, ref } from 'vue'
 
-defineProps({
-  toasts: Array
-})
+const toasts = ref([]);
 
-// onMounted(() => {
-//   mountListeners();
-// });
+const props = defineProps({
+  latestToast: Object
+});
+// latestToast items: duration (ms), message, status
 
-// onUnmounted(() => {
-//   unMountListeners();
-// })
+watch(() => props.latestToast, (newValue) => {
+  // adding random string to prevent duplicate toasts
+  newValue.rand = Math.random();
+  toasts.value.push(newValue);
+  setTimeout(() => {
+        let index = toasts.value.indexOf(newValue);
+        if (index !== -1) toasts.value.splice(index, 1);
+    }, newValue.duration ?? 2500);
+});
 
-// // Only use an eventlistener once and mount it when the page mounts 
-// // and unmount it when the page unmounts
-// function mountListeners(){
-//   eventBus.on('to-toastsmodal-from-result-add-toast', response => {
-//       statusUpdates.value.push(response);
-//       setTimeout(() => {
-//           for( var i = 0; i < statusUpdates.value.length; i++){ 
-//               if ( statusUpdates.value[i].videoId === response.videoId) statusUpdates.value.splice(i, 1); 
-//           }
-//       }, 2500);
-//   });
-// }
-
-// function unMountListeners(){
-//   eventBus.off('to-toastsmodal-from-result-add-toast');
-// }
 </script>
 
 <style>

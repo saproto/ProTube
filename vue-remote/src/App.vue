@@ -1,5 +1,5 @@
 <template>
-    <div v-if="currentRoute == 'Screen' || currentRoute == 'Admin Screen'">
+    <div v-if="currentRoute == 'Screen' || currentRoute == 'Admin Screen' || currentRoute == 'Error'">
         <router-view v-slot="{ Component, route }">
             <transition :name="route.meta.transition || ''">
                 <component :is="Component" />
@@ -8,28 +8,19 @@
     </div>
     <div v-else class="xl:max-w-screen-2xl mx-auto md:pt-8 sm:pt-0">
         <router-view v-slot="{ Component }">
-            <keep-alive>
+            <!-- <keep-alive> -->
                 <component :is="Component" />
-            </keep-alive>
+            <!-- </keep-alive> -->
         </router-view>
     </div>
 </template>
 
 <script setup>
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { computed } from 'vue'
-import { setCurrentRoute } from '@/js/authenticator'
-import { eventBus } from '@/js/eventbus'
 
-const router = useRouter();
 const currentRoute = computed(() => {
-    const path = useRoute().name;
-    setCurrentRoute(path);
-    return path;
-});
-
-eventBus.on('authenticator-router-push', (route) => {
-    router.push(route);
+    return useRoute().name;
 });
 </script>
 

@@ -8,7 +8,7 @@ module.exports = {
     extend: {
       colors: {
         proto_green: '#83B716',
-        true_gray: colors.trueGray,
+        // true_gray: colors.trueGray,
         proto_blue: '#00AAC0',
         proto_background_gray: {
           DEFAULT: '#f1f1f1',

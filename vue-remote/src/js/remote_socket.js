@@ -1,7 +1,9 @@
 import { eventBus } from '@/js/eventbus';
+import router from '@/router/index'
 const io = window.io = require('socket.io-client');
 
-let socket;
+export let socket;
+// eslint-disable-next-line
 let silentConnect = false;
 
 
@@ -17,10 +19,10 @@ export function resetSocket(pincode){
         reconnection: false,
         autoConnect: false,
     });
-    connectSocket();
+    // connectSocket();
     return;
 }
-
+//eslint-disable-next-line
 function connectSocket(){
     socket.connect();
 
@@ -30,21 +32,21 @@ function connectSocket(){
         eventBus.emit('remotesocket-disconnect');
     });
 
-    socket.on("connect_error", (err) => {
-        if(!silentConnect){
-            let reason = "Unknown error";
-            if (err == "Error: Not authorized") {
-                reason = "Unable to authorize with proto"
-            } else if (err == "Error: Invalid screencode") {
-                reason = "PIN invalid";
-            }
-            eventBus.emit('remotesocket-connect-error', reason);
-        } else{
-            silentConnect = false;
-        }
-    });
+    socket.on("connect_error", async (err) => {
+    console.log("Socket connect error: ");
+    console.log(err.message);
+    if(err.message == 'no_cookie_please_reconnect'){
+        await fetch('https://localhost:3000/api/test');
+        socket.connect();
+    } if(err.message == 'unauthorized') {
+        // await fetch('http://localhost:3000/api/auth/example');
+        // location.href="/api/login";
+        router.push({name: "Login"});
+    }
+});
 
     socket.on('connect', () => {
+        console.log("connected!");
         eventBus.emit('remotesocket-connect-success', socket);
     });
 }
@@ -101,7 +103,7 @@ async function addVideoToQueueSocket(video){
 // }
 
 // Executed once on mounted of remote
-export function initializeSocket(){
-    resetSocket();
+export function silentRemoteConnect(){
     silentConnect = true;
+    resetSocket();
 }

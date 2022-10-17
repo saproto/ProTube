@@ -1,27 +1,22 @@
 <template>
-    <!-- not Found -->
-    <ErrorModal v-if="errorCode == 404" opacity=100 >
-        404 - Page not found!
+    <!-- <ErrorModal opacity=100 >
+        {{ codeLookupTable[errorcode] }}
         <router-link to="/remote" class="w-full mt-2 justify-center mx-auto p-2 bg-proto_green rounded-md hover:bg-opacity-80 flex" >
             Return home
         </router-link>
-    </ErrorModal>
+    </ErrorModal> -->
 
-    <!-- Unauthorized -->
-    <ErrorModal v-if="errorCode == 401" opacity=100 >
-        401 - Unauthorized!
-    </ErrorModal>
-
-    <!-- Session expired -->
-    <ErrorModal v-if="errorCode == 440" opacity=100 >
-        Session Expired! 
-        <router-link :to="{name: sourcePath}" class="w-full mt-2 justify-center mx-auto p-2 bg-proto_green rounded-md hover:bg-opacity-80 flex" >
-            Refresh
-            <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+    <div class="bg-opacity-30 bg-proto_background_gray-dark grid place-items-center min-h-screen">
+        <div class="p-8 max-w-fit rounded-md mx-auto content-center shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-20 text-yellow-600 text-center w-full" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
-        </router-link>
-    </ErrorModal>
+            {{ codeLookupTable[errorcode] }}
+            <router-link to="/remote" class="mt-2 justify-center mx-auto p-2 bg-proto_green rounded-md hover:bg-opacity-80 flex" >
+                Return home
+            </router-link>
+        </div>
+    </div>
 </template>
 
 <script setup>
@@ -30,13 +25,14 @@ import { defineProps } from 'vue'
 
 // See https://en.wikipedia.org/wiki/List_of_HTTP_status_codes for the error codes
 defineProps({
-    'errorCode': {
+    'errorcode': {
         type: Number,
         default: 404
-    },
-    'sourcePath': {
-        type: String,
-        default: 'Remote'
     }
 })
+
+const codeLookupTable = {
+    404: '404 - Page not found!',
+    401: '401 - Unauthorized!'
+}
 </script>

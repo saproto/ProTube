@@ -50,7 +50,7 @@ global.io = new Server(server, {
 });
 
 //Create a global EventEmitter for all modules to communicate with each other
-const {EventEmitter} = require('events');
+const { EventEmitter } = require('events');
 global.communicator = new EventEmitter();
 
 //Protube modules

@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --skip-plugins @vue/cli-plugin-eslint",
+    "dev": "vue-cli-service build --mode development --dest ../public/protube --watch ",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -35,7 +36,8 @@
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
     "vue": "^3.2.31",
     "vue-cli-plugin-tailwind": "~2.0.6",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "youtube-player": "^5.5.2"
   },
   "eslintConfig": {
     "root": true,

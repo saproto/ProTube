@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-proto_secondary_gray dark:bg-proto_secondary_gray-dark shadow overflow-hidden md:rounded-sm mt-4"> <!--dark:bg-true_gray-700-->
+    <div class="bg-proto_secondary_gray dark:bg-proto_secondary_gray-dark shadow overflow-hidden md:rounded-sm mt-4"> <!--dark:bg-stone-700-->
         <div class="m-8">
             <slot />
         </div>

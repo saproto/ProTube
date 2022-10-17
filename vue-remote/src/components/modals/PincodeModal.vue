@@ -17,9 +17,4 @@
 
 <script setup>
 import Pincode from '@/components/Pincode.vue'
-
 </script>
-
-<style>
-
-</style>

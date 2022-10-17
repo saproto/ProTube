@@ -1,106 +1,116 @@
 <template>
-  <NothingPlayingModal v-if="Object.keys(currentVideo).length === 0" />
-  <RadioModal :volume="volume" v-show="currentRadio" :radio="currentRadio" />
-  <div v-show="overlayModalIsVisible" :class="overlayModalIsVisible ? 'z-10' : ''" aria-live="assertive" class="fixed inset-0 flex px-4 py-6 pointer-events-none sm:p-6 items-start">
-    <div class="w-full flex flex-col items-center space-y-4">
-      <div v-show="screenCode != -1" class="flex max-w-sm bg-white dark:bg-proto_secondary_gray-dark shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden">
-        <div class="p-4">
-          <div class="flex text-2xl text-center dark:text-white">
-            {{ screenCode }}
-          </div>
-        </div>
+  <div class="dark:bg-proto_background_gray-dark">
+    <div class="absolute grid grid-cols-3 gap-4 w-full pt-3 ">
+      <div class=""></div> <!-- empty filler block for the grid -->
+      <div >
+        <div v-show="screenCode !== -1" class="bg-white dark:bg-proto_secondary_gray-dark shadow-lg rounded-lg ring-1 ring-black ring-opacity-5 text-2xl px-4 py-2 mx-auto font-medium text-gray-900 dark:text-gray-50 max-w-min">{{ screenCode }}</div>
       </div>
-      <div class="absolute self-end max-w-sm bg-white dark:bg-proto_secondary_gray-dark shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden">
-        <div class="p-4">
-          <div class="flex flex-col text-2xl text-center dark:text-white" v-if="currentVideo">
-            <div>
-              Now playing: <br>{{ currentVideo.title }}
-            </div>
-            <div class="mt-3">
-              Added by: {{ addedBy }}
-            </div>
-          </div>
-          <div class="flex text-2xl text-center dark:text-white" v-else>
-            Nothing currently playing
-          </div>
+      <div v-show="playerState.playerMode !== MODES.IDLE" class="bg-white dark:bg-proto_secondary_gray-dark shadow-lg rounded-lg ring-1 ring-black ring-opacity-5 px-4 py-2 ml-auto mr-4 font-medium text-gray-900 dark:text-gray-50 ">
+        <div class="text-sm text-gray-600 dark:text-gray-300">
+          Now playing:
+        </div>
+        <span class="ml-1">
+          {{ playerState.video.title }}
+        </span>
+        <div class="mt-1">
+          <span class=" text-sm text-gray-600 dark:text-gray-300">
+            Added by: 
+          </span>
+          {{ playerState.video?.user?.name }}
         </div>
       </div>
     </div>
+    <div v-if="playerState.playerMode === MODES.IDLE" class="grid place-items-center min-h-screen">
+      <RadioScreen v-if="playerState.playerType === TYPES.RADIO" :radio="playerState.radio" :volume="volume"/>
+      <div v-else class="dark:text-white text-4xl">
+          Nothing currently in the queue...<br>
+          Visit protu.be to add some tunes!
+      </div>
+    </div>
+    <div v-show="playerState.playerType === TYPES.VIDEO && playerState.playerMode !== MODES.IDLE " >
+      <div ref="player" :id="playerID" class="w-full min-h-screen" />
+    </div>
   </div>
-  <div class="min-w-screen min-h-screen" id='yt-player' />
 </template>
 
   
 <script setup>
-import { defineProps, ref, onMounted, onBeforeUnmount } from 'vue'
-import { eventBus } from '@/js/eventbus.js';
-import RadioModal from '@/components/modals/RadioModal.vue'
-import NothingPlayingModal from '@/components/modals/NothingPlayingModal.vue'
-import { onYouTubeIframeAPIReady, resetYTplayer, killSocket, getNowPlaying } from '@/js/screen_socket.js'
+import RadioScreen from '@/components/RadioScreen'
+import { onMounted, onBeforeUnmount, onBeforeMount, ref, defineProps, watch } from 'vue'
+import socket, { connectSocket } from '@/js-2/ScreenSocket'
+import YoutubePlayer from 'youtube-player'
+import { MODES, TYPES } from '../../../utils/constants'
 
-const currentRadio = ref("");
-const currentVideo = ref({});
-const addedBy = ref("");
-const overlayModalIsVisible = ref(true);
+const playerID = "player-"+Math.random();
+let player;
+const playerState = ref({
+  playerMode: MODES.IDLE,
+  playerType: TYPES.VIDEO,
+  queue: [],
+  radio: {},
+  timestamp: 0,
+  video: {},
+  volume: 0,
+});
 
-defineProps({
-  screenCode: {
-    type: Number,
-    default: -1
-  }, volume: {
-    type: Number,
-    default: -1
-  }
-})
+const props = defineProps({
+    volume: {
+        type: Number,
+        default: -1
+    },
+    screenCode: {
+      type: Number,
+      default: -1
+    }
+});
+
+onBeforeMount(async () => {
+    console.log("creating csreen")
+    connectSocket();
+});
 
 onMounted(() => {
-  mountScripts();
-  currentVideo.value = getNowPlaying();
-
-  eventBus.on('screensocket-radio-playing', (radio) => {
-    currentRadio.value = radio;
-    currentVideo.value = {};
-    overlayModalIsVisible.value = false;
-  });
-
-  eventBus.on('screensocket-video-idle', () => {
-    currentRadio.value = "";
-    currentVideo.value = {};
-  });
-
-  eventBus.on('screensocket-video-playing', (video) => {
-    currentRadio.value = "";
-    currentVideo.value = video;
-    addedBy.value = video.user.name;
-    overlayModalIsVisible.value = true;
-  });
+    player = YoutubePlayer(playerID, {
+      host: "https://www.youtube.com",
+      videoId: "",
+      playerVars: {
+        autoplay: 1,
+        controls: 1,
+        modestbranding: 0,
+        loop: 0
+      },
+    });
 });
 
-const scripts = [
-    `${process.env.VUE_APP_SOCKET_ADDRESS}/socket.io/socket.io.min.js`,
-    'https://www.youtube.com/iframe_api',
-];
-
-// purposely kill socket on page leave to prevent duplicate sockets
-onBeforeUnmount(() =>{
-    killSocket();
+watch(() => props.volume, () => {
+    if(props.volume < 0) return;
+    player.setVolume(props.volume);
 });
 
-function mountScripts(){
-  for(let i = 0; i < scripts.length; i++){
-    let script = document.getElementById(`script_${i}`);
-    if(script){
-        window.YT.ready(() =>{
-            resetYTplayer();
-            onYouTubeIframeAPIReady();
-        });
-        return;
+onBeforeUnmount(() => {
+    socket.disconnect();
+});
+
+socket.on('player-update', (newState) => {
+    if(newState.playerType === TYPES.VIDEO){
+        if(newState.playerMode === MODES.PLAYING) player.loadVideoById(newState.video.id, newState.timestamp);
+        else player.pauseVideo();
+    } else if(playerState.value.playerType === TYPES.VIDEO) player.stopVideo();
+    playerState.value = newState;
+});
+
+socket.on("disconnect", () => {
+
+    // socket.disconnect();
+    // socket.removeAllListeners();
+});
+
+socket.on('new-video-timestamp', async (newStamp) => {
+    if (Math.abs(await player.getCurrentTime() - newStamp) > 5){
+      player.seekTo(newStamp, true);
+      if(await player.getPlayerState() === 2) player.playVideo();
     }
+});
 
-    let externalScript = document.createElement('script');
-    externalScript.setAttribute('src', scripts[i]);
-    externalScript.setAttribute('id', `script_${i}`);
-    document.head.appendChild(externalScript);
-  }
-}
+
 </script>

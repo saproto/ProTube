@@ -4,10 +4,6 @@
       Passcode
     </h1>
     <div class="flex flex-col">
-      <div class="hidden mt-3 text-gray-700 space-x-3 inline-flex">
-        <h2 class="font-semibold">returned code:</h2>
-        <span class="">{{ passkey }}</span>
-      </div>
       <!-- style="caret-color: transparent" -->
  
       <div class="mt-6 flex mx-auto space-x-3">
@@ -92,8 +88,7 @@
  
 <script setup>
 import { computed, reactive, ref, onMounted } from 'vue';
-import { pinEntered } from '@/js/remote_socket'
-import { eventBus } from '@/js/eventbus'
+import socket, { setPinCode, connectSocket } from '@/js-2/RemoteSocket'
  
 const digitsFromInput = reactive({
   0: null,
@@ -106,6 +101,11 @@ const code_0 = ref(null);
 let lastPressed;
 let fieldIsEmpty;
 let originalTarget;
+
+const passkeyAccepted = ref(null);
+const connectError = ref("");
+const loading = ref(false);
+
 
 const codeStatusIndicatorStyle = computed (() => {
     if(passkeyAccepted.value && !loading.value){
@@ -125,17 +125,14 @@ onMounted(() => {
   code_0.value = document.getElementById('code_0');
   focusOnFirstInput();
 });
- 
-const passkeyAccepted = ref(null);
-const connectError = ref("");
-const loading = ref(false);
- 
 
-eventBus.on('remotesocket-connect-error', (reason) => {
-    processPinEntered(false, reason);
+socket.on("connect_error", (err) => {
+  if(err.message == 'Invalid screencode') processPinEntered(false, "Invalid pincode entered!");
+  else processPinEntered(false, "Whoops.. Can't do anything with this response..");
 });
-eventBus.on('remotesocket-connect-success', () => {
-    processPinEntered(true)
+
+socket.on("connect", () => {
+  processPinEntered(true);
 });
 
 
@@ -250,13 +247,15 @@ function allInputsFilled() {
 
 function makeServerConnection(){
     loading.value = true;
-    return pinEntered(constructPasskey());
+    setPinCode(constructPasskey());
+    connectSocket();
 }
 
 function processPinEntered(success, reason=""){
     passkeyAccepted.value = success;
     connectError.value = reason;
     loading.value = false;
+    console.log(loading.value);
     if(!success){
         resetPinCode();
         focusOnFirstInput();
