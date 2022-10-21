@@ -9,6 +9,7 @@ global.eventBus = new EventEmitter();
 
 const server = require('./modules_v2/HTTPServer');
 
+// todo migrate theses errors to global+update status codes to enums
 // more soft error, like a warning
 class softError extends Error {  
     constructor (message) {

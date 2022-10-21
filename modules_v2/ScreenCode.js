@@ -29,7 +29,6 @@ exports.adminResetScreenCode = () => {
         for (const [sessId, session] of Object.entries(sessions)) {
             if(!('screencode' in session)) continue;
             session.screencode = {
-                attempts: 0,
                 expires: currenTime + parseInt(process.env.CODE_VALID_DURATION),
                 correct: false
             };
@@ -50,9 +49,8 @@ async function revokeExpiredRemotes(){
     let flushCount = 0;
     // finding all connected remotes and flushing+disconnecting
     soks.forEach((sock) => {
-        if(sock.request.session.screencode.expires < currentTime && sock.request.session.screencode.correct) {
+        if(sock.request.session.screencode.expires < currentTime && sock.request.session.screencode.correct ) {
             sock.request.session.screencode = {
-                attempts: 0,
                 expires: currentTime + parseInt(process.env.CODE_VALID_DURATION),
                 correct: false
             };
@@ -67,11 +65,12 @@ async function revokeExpiredRemotes(){
             const currenTime = getCurrentUnix();
             for (const [sessId, session] of Object.entries(sessions)) {
                 if(!('screencode' in session)) continue;
-                if(session.screencode.expires < currentTime && session.screencode.correct) {
+                if(session.screencode.expires < currentTime && session.screencode.correct){
                     session.screencode = {
                         attempts: 0,
                         expires: currenTime + parseInt(process.env.CODE_VALID_DURATION),
-                        correct: false
+                        correct: false,
+                        // banned_until: -1
                     };
                     await new Promise((resolve)=> {
                         sessionStore.set(sessId, session, (cb) => {

@@ -1,10 +1,10 @@
 <template>
   <div class="max-w-5xl mx-6 sm:mx-auto">
-    <h1 class="hidden mt-6 text-2xl text-gray-700 font-bold tracking-wider">
-      Passcode
-    </h1>
     <div class="flex flex-col">
-      <!-- style="caret-color: transparent" -->
+      <!-- Needs to be here to keep triggerering te computed function to construct a password -->
+      <div class="hidden mt-3 text-gray-700 space-x-3 inline-flex">
+        <span class="">{{ passkey }}</span>
+      </div>
  
       <div class="mt-6 flex mx-auto space-x-3">
         <template v-for="(item, i) in 4" :key="i">
@@ -128,7 +128,8 @@ onMounted(() => {
 
 socket.on("connect_error", (err) => {
   if(err.message == 'Invalid screencode') processPinEntered(false, "Invalid pincode entered!");
-  else processPinEntered(false, "Whoops.. Can't do anything with this response..");
+  processPinEntered(false, err)
+  // else processPinEntered(false, "Whoops.. Can't do anything with this response..");
 });
 
 socket.on("connect", () => {

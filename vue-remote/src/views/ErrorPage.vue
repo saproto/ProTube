@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import ErrorModal from '@/components/modals/ErrorModal.vue'
+// import ErrorModal from '@/components/modals/ErrorModal.vue'
 import { defineProps } from 'vue'
 
 // See https://en.wikipedia.org/wiki/List_of_HTTP_status_codes for the error codes
