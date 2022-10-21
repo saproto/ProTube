@@ -1,34 +1,43 @@
 # Backend
-This is the backend application for ProTube of SaProto.
+This is the backend application for ProTube of SaProto. Make sure that the regular saproto is also ready and running. Then copy the .example.env to .env and fill it in.
 
 ## Installation
 Open up a terminal and run 
 ```sh
 npm install
 ```
-To build the frontend
+To build the vue frontend for dev mode
 ```sh
-npm run build
+cd ./vue-remote && npm run dev
 ```
-To start the project
+To start the nodejs backend
 ```sh
 npm run start
 ```
 This should start the project on localhost:3000. The screen can be found at /protube/screen and the remote at /protube/remote, the admin remote at /protube/remote/admin, the admin screen at /protube/screen/admin (with code).
 
-### CORS errors
-In the event of cors errors this can be modified at protube.js line 34
+## Database
+Currently the protube backend needs a database with 3 tables, todo: add migrations or sth
+You can run docker compose up -d to create the database (uses .env variables) and start adminer at port 9090.
 
-### Dotenv
-###### CLIENT_IDENTIFIER
-Identification code for the local client (the electron application)
-###### YOUTUBE_MAX_DURATION
-Limit for the duration of the youtube videos that can be added to the queue
-###### API_KEY
-Key used to check the api authentication with, bearer token authorisation is used
+Current database layout: todo: add migrations or sth
+screencode {
+    INT id, auto increment, PRIMARY_KEY
+    INT user_id, FOREIGN_KEY users.user_id
+    BIGINT banned_until, default 0
+    INT connection_attempts, default 0
+}
 
+users {
+    INT id, auto increment, PRIMARY_KEY
+    INT user_id,
+    tinyINT admin,
+    text refresh_token,
+    text access_token,
+}
 
-### User Authentication
-At this moment there is a test user auth method that can be used for the dev environment. Run this project: https://github.com/saproto/saproto/tree/misc/protube-api 
-
-Then set the env variable of the node project API_ENDPOINT to (most likely) https://localhost:8080/api/protube. If you can reach /api/protube/userdetails from the browser but ProTube really refuses to connect and the API_ENDPOINT is correct. You can try to change line 40 of docker-compose.yml at the laravel project by removing '127.0.0.1:'
+sessions {
+    varchar(128) session_id, PRIMARY_KEY
+    UNSIGNED_INT expires,
+    mediumtext data
+}
