@@ -1,7 +1,8 @@
 const passport = require("passport");
 const fetch = require('node-fetch');
 const OAuth2Strategy = require("passport-oauth2").Strategy;
-const { db } = require('./Middlewares');
+// const { db } = require('./Middlewares');
+const { sequelize, User, ScreenCode } = require('./DataBase');
 const { getCurrentUnix } = require('../utils/time-formatter');
 
 const authURL = `${process.env.LARAVEL_ENDPOINT}/oauth/authorize`;
@@ -24,11 +25,20 @@ passport.use(
         });
         const userData = await response.json();
         if(userData.authenticated){
-            db.query(`
-                REPLACE INTO users (user_id, admin, refresh_token, access_token) 
-                VALUES ('${userData.user_id}', '${+userData.is_admin}', '${refreshToken}', '${accessToken}')
-            `);
-            db.query(`REPLACE INTO screencode (user_id) VALUES ('${userData.user_id}')`);
+            await User.upsert({
+                id: userData.user_id,
+                admin: +userData.is_admin,
+                refresh_token: refreshToken,
+                access_token: accessToken
+            });
+            await ScreenCode.upsert({
+                user_id: userData.user_id
+            });
+            // db.query(`
+            //     REPLACE INTO users (user_id, admin, refresh_token, access_token) 
+            //     VALUES ('${userData.user_id}', '${+userData.is_admin}', '${refreshToken}', '${accessToken}')
+            // `);
+            // db.query(`REPLACE INTO screencode (user_id) VALUES ('${userData.user_id}')`);
             return done(null, {
                 id: userData.user_id,
                 admin: userData.is_admin,
@@ -45,12 +55,21 @@ passport.serializeUser(function(user, done) {
     });
 });
   
-passport.deserializeUser(function(user, done) {
-    db.query(`
-        SELECT * FROM users 
-        JOIN screencode ON screencode.user_id = users.user_id 
-        WHERE users.user_id = ${user.id}`, function(err,rows){	
-            rows[0].banned = rows[0].banned_until > getCurrentUnix();
-            done(err, rows[0]);
+passport.deserializeUser(async function(user, done) {
+    const userData = await User.findOne({ 
+        include: ScreenCode,
+        where: {
+            id: user.id
+        }
     });
+    if(!userData) return done(true, null);
+    userData.screencode.banned = userData.screencode.banned_until > getCurrentUnix();
+    done(null, userData);
+    // db.query(`
+    //     SELECT * FROM users 
+    //     JOIN screencode ON screencode.user_id = users.user_id 
+    //     WHERE users.user_id = ${user.id}`, function(err,rows){	
+    //         rows[0].banned = rows[0].banned_until > getCurrentUnix();
+    //         done(err, rows[0]);
+    // });
 });

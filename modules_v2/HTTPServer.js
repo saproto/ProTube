@@ -7,6 +7,7 @@ const { authApi } = require('../modules_v2/AuthApi');
 const https = require('https');
 const fs = require('fs');
 const http = require('http');
+require('./DataBase');
 const { sessionMiddleware } = require('./Middlewares');
 const passport = require('passport');
 const history = require('connect-history-api-fallback');

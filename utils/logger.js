@@ -26,6 +26,16 @@ let errorFileRotationTransport = new winston.transports.DailyRotateFile({
     maxFiles: process.env.LOG_RETENTION_DAYS+'d'
 });
 
+let dbFileRotationTransport = new winston.transports.DailyRotateFile({
+    level: "info",
+    filename: '%DATE%-protube-db.log',
+    datePattern: 'YYYY-MM-DD',
+    zippedArchive: true,
+    dirname: process.env.LOGDIR+'/db',
+    maxSize: '20m',
+    maxFiles: process.env.LOG_RETENTION_DAYS+'d'
+});
+
 let color = winston.format.uncolorize();
 // Dev mode: log with colors into console except for logging to files
 if (process.env.NODE_ENV !== "production") {
@@ -34,21 +44,25 @@ if (process.env.NODE_ENV !== "production") {
     color = winston.format.colorize();
 }
 
-const logConfig = {
+const logFormat = winston.format.combine(
+    color,
+    winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
+    winston.format.printf((info) => {
+        return `${info.timestamp} - ${info.message}`;
+    })
+);
+
+const logger = winston.createLogger({
     transports: [
         fileRotationTransport,
         errorFileRotationTransport
-    ],
-    format: winston.format.combine(
-        color,
-        winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss'}),
-        winston.format.printf((info) => {
-            return `${info.timestamp} - ${info.message}`;
-        })
-    )
-};
-
-const logger = winston.createLogger(logConfig);
+    ], format: logFormat
+});
+const dbLogger = winston.createLogger({
+    transports: [
+        dbFileRotationTransport
+    ], format: logFormat
+});
 
 let prefix = {
     server:         '[SERVER]       '.yellow,
@@ -100,6 +114,11 @@ exports.localClientInfo = message => {
 
 exports.sessionStoreInfo = message => {
     log(prefix.session + message);
+}
+
+exports.dbLog = message => {
+    // console.log
+    dbLogger.info(message);
 }
 
 function log(message, error=false){

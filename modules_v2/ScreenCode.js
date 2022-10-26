@@ -1,5 +1,6 @@
 // const { updateCodeAdminScreen } = require('./socket_endpoints/AdminScreen');
 const { getCurrentUnix } = require('../utils/time-formatter');
+const { sequelize, Session } = require('./DataBase');
 
 let sessionStore;
 const SUCCESS = true;
@@ -42,46 +43,50 @@ exports.adminResetScreenCode = () => {
 exports.checkScreenCode = (code) => {
     return parseInt(code) === screenCode;
 }
-//bug, socket that is already flushed throug sockets also gets flushed through the sessionstore
+
+// flushing all expired remotes and disconnecting currently connected sockets
 async function revokeExpiredRemotes(){
-    const soks = await io.of('/socket/remote').fetchSockets();
+    const sockets = await io.of('/socket/remote').fetchSockets();
     const currentTime = getCurrentUnix();
     let flushCount = 0;
     // finding all connected remotes and flushing+disconnecting
-    soks.forEach((sock) => {
+    for (const sock in sockets){
         if(sock.request.session.screencode.expires < currentTime && sock.request.session.screencode.correct ) {
             sock.request.session.screencode = {
                 expires: currentTime + parseInt(process.env.CODE_VALID_DURATION),
                 correct: false
             };
-            sock.request.session.save();
+            await new Promise(resolve => {
+                sock.request.session.save(resolve);
+            });
             sock.disconnect(true);
             flushCount++;
         }
-    });
-    // flush al disconnected but expired remotes
-    await new Promise((resolve)=> {
-        sessionStore.all(async (err, sessions) => {
-            const currenTime = getCurrentUnix();
-            for (const [sessId, session] of Object.entries(sessions)) {
-                if(!('screencode' in session)) continue;
-                if(session.screencode.expires < currentTime && session.screencode.correct){
-                    session.screencode = {
-                        attempts: 0,
-                        expires: currenTime + parseInt(process.env.CODE_VALID_DURATION),
-                        correct: false,
-                        // banned_until: -1
-                    };
-                    await new Promise((resolve)=> {
-                        sessionStore.set(sessId, session, (cb) => {
-                            resolve();
-                        });
-                    });
-                    flushCount++;
-                }
-            }
-            resolve();
+    };
+
+    const sessionIDs = await Session.findAll({ attributes: ['sid'] });
+
+    const currenTime = getCurrentUnix();
+    // flushing all currently disconnected sockets
+    for (const session of sessionIDs){
+        const sid = session.sid;
+        const sessData = await new Promise((resolve) => {
+            const cb = (rej, res) => resolve(res);
+            sessionStore.get(sid, cb);
         });
-    });
+        if(!('screencode' in sessData)) continue;
+        // valid screencode has expired
+        if(sessData.screencode.expires < currentTime && sessData.screencode.correct) {
+            sessData.screencode = {
+                expires: currentTime + parseInt(process.env.CODE_VALID_DURATION),
+                correct: false
+            }
+            await new Promise((resolve) => {
+                const cb = (rej, res) => resolve(res);
+                sessionStore.set(sid, sessData, cb);
+            });
+            flushCount++;
+        }
+    };
     if(flushCount > 0) logger.serverInfo(`Flushed ${flushCount} sockets!`);
 }
