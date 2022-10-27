@@ -50,7 +50,7 @@ async function revokeExpiredRemotes(){
     const currentTime = getCurrentUnix();
     let flushCount = 0;
     // finding all connected remotes and flushing+disconnecting
-    for (const sock in sockets){
+    for (const sock of sockets){
         if(sock.request.session.screencode.expires < currentTime && sock.request.session.screencode.correct ) {
             sock.request.session.screencode = {
                 expires: currentTime + parseInt(process.env.CODE_VALID_DURATION),

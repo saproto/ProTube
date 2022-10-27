@@ -81,7 +81,7 @@ exports.screenCodeCheck = async (socket, next) => {
     connectionAttempts++;
     // above the connection limit, ban
     if(connectionAttempts >= parseInt(process.env.FAIL_2_BAN_ATTEMPTS)){
-        logger.clientInfo(`Banned ${req.user.id} until ${getCurrentUnix()+parseInt(process.env.FAIL_2_BAN_DURATION)}`);
+        logger.clientInfo(`Banned user: ${req.user.id} until ${getCurrentUnix()+parseInt(process.env.FAIL_2_BAN_DURATION)}`);
         await ScreenCode.update({ banned_until: getCurrentUnix()+parseInt(process.env.FAIL_2_BAN_DURATION), connection_attempts: connectionAttempts }, { where: { user_id: req.user.id }});
         return next(new Error(`Ban hammer lifted ${moment.duration(parseInt(process.env.FAIL_2_BAN_DURATION), 'seconds').humanize(true)}`));
     }

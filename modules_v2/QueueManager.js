@@ -22,6 +22,17 @@ exports.getTotalDuration = () => {
 //Add a video to the queue
 exports.addFair = video => {
     if(findDoppelganger(video)) throw new softError('Video already in queue!!');
+    // check for nr of videos in queue if not an admin
+    if(!video.user.is_admin){
+        let videoCount = 0;
+        for(const vid of queue) {
+            console.log(vid.user);
+            videoCount += vid.user.user_id === video.user.user_id;
+        }
+        if(videoCount >= parseInt(process.env.USER_MAX_VIDEOS_IN_QUEUE)) {
+            throw new softError('Video limit in the queue reached!');
+        }
+    }
     performFairAdd(video);
     return SUCCESS;
 }

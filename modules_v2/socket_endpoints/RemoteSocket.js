@@ -45,8 +45,9 @@ endpoint.on('connection', (socket) => {
 
 function formatUser(socket){
     return {
-        name: socket.request.session.passport.user.name,
-        user_id: socket.request.session.passport.user.user_id
+        name:       socket.request.session.passport.user.name,
+        user_id:    socket.request.session.passport.user.id,
+        is_admin:   socket.request.user.admin
     }
 }
 
