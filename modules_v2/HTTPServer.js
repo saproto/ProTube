@@ -4,6 +4,7 @@ const app = express();
 const path = require('path');
 const {Server} = require('socket.io');
 const { authApi } = require('../modules_v2/AuthApi');
+const { protubeApi } = require('../modules_v2/ProtubeApi');
 const https = require('https');
 const fs = require('fs');
 const http = require('http');
@@ -33,6 +34,7 @@ app.use(history({
 }));
 app.use('/', express.static(path.join(__dirname, '../public')));
 app.use('/api/', authApi);
+app.use('/api/laravel/', protubeApi);
 
 let server;
 if(process.env.HTTPS === 'true' || false) {

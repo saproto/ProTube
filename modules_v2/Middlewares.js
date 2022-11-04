@@ -89,3 +89,11 @@ exports.screenCodeCheck = async (socket, next) => {
     await ScreenCode.update({ connection_attempts: connectionAttempts }, { where: { user_id: req.user.id }});
     return next(new Error("Invalid screencode"));
 }
+
+exports.checkBearerToken = (req, res, next) => {
+    if (req.token === process.env.PROTUBE_API_SECRET) return next();
+    return res.status(401).json({
+        success: false,
+        message: 'Not Authorized for this API'
+    });
+};

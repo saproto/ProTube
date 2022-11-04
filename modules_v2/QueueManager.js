@@ -60,8 +60,8 @@ exports.moveToNext = async () => {
         currentVideo = queue.shift()
         if(currentVideo.user.user_id) {
             try {
-                await fetch(`${process.env.API_ENDPOINT}/played?` + new URLSearchParams({
-                    secret: process.env.API_SECRET,
+                await fetch(`${process.env.LARAVEL_ENDPOINT}/api/protube/played?` + new URLSearchParams({
+                    secret: process.env.LARAVEL_API_KEY,
                     user_id: currentVideo.user.user_id,
                     video_id: currentVideo.id,
                     video_title: currentVideo.title

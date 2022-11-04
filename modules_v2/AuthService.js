@@ -17,7 +17,7 @@ passport.use(
       //callbackURL: "http://localhost:3000/api/auth/example/callback"
     },
     async function(accessToken, refreshToken, profile, done) {
-        let response = await fetch(`${process.env.API_ENDPOINT}/test`, {
+        let response = await fetch(`${process.env.LARAVEL_ENDPOINT}/api/protube/test`, {
             headers: {
                 'Authorization': 'Bearer ' + accessToken
             }
