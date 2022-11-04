@@ -92,7 +92,7 @@ onBeforeMount(async () => {
     user.value.name = data.name;
     user.value.admin = data.admin;
     if(data.admin) connectSocket();
-    else router.push({name: "Error", params: {type: 401}});
+    else router.push({name: "Error", params: { errorcode: 401 }});
 })
 
 onBeforeUnmount(() => {

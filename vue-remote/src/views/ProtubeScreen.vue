@@ -31,11 +31,13 @@
       <div ref="player" :id="playerID" class="w-full min-h-screen" />
     </div>
   </div>
+  <ReconnectionHandler v-if="screenCode === -1" :socket="socket" :maxAttempts="5"/>
 </template>
 
   
 <script setup>
 import RadioScreen from '@/components/RadioScreen'
+import ReconnectionHandler from '@/components/ReconnectionHandler'
 import { onMounted, onBeforeUnmount, onBeforeMount, ref, defineProps, watch } from 'vue'
 import socket, { connectSocket } from '@/js-2/ScreenSocket'
 import YoutubePlayer from 'youtube-player'

@@ -19,7 +19,7 @@ onBeforeMount(async () => {
     if(response.redirected) return window.location.href = response.url;
     const data = await response.json();
     if(data.admin) connectSocket();
-    else router.push({name: "Error", params: {code: 401}});
+    else router.push({name: "Error", params: { errorcode: 401 }});
 });
 
 onBeforeUnmount(() => {
