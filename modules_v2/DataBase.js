@@ -18,8 +18,8 @@ this.sequelize.authenticate().then(() => {
     logger.dbLog('Connection has been established successfully to the database');
     logger.serverInfo('Connection has been established successfully to the database');
 }).catch((error) => {
-    logger.dbLog('Unable to connect to the database: ', error);
-    logger.serverError('Unable to connect to the database: ', error);
+    logger.dbLog(`Unable to connect to the database: ${error.toString()}`);
+    logger.serverError(`Unable to connect to the database: ${error.toString()}`);
     process.exit(10);
 });
 
