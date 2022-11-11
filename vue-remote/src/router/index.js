@@ -63,7 +63,7 @@ const routes = [
     redirect: {
       name: 'Error',
       params: {
-        errorcode: 401
+        errorcode: 404
       }
     }
   }
