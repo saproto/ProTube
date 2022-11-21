@@ -6,10 +6,10 @@
         <div v-show="screenCode !== -1" class="bg-white dark:bg-proto_secondary_gray-dark shadow-lg rounded-lg ring-1 ring-black ring-opacity-5 text-2xl px-4 py-2 mx-auto font-medium text-gray-900 dark:text-gray-50 max-w-min">{{ screenCode }}</div>
       </div>
       <div v-show="playerState.playerMode !== MODES.IDLE" class="bg-white dark:bg-proto_secondary_gray-dark shadow-lg rounded-lg ring-1 ring-black ring-opacity-5 px-4 py-2 ml-auto mr-4 font-medium text-gray-900 dark:text-gray-50 ">
-        <div class="text-sm text-gray-600 dark:text-gray-300">
+        <div class="text-sm text-gray-600 dark:text-gray-300 mr-1">
           Now playing:
         </div>
-        <span class="ml-1">
+        <span class="">
           {{ playerState.video.title }}
         </span>
         <div class="mt-1">
