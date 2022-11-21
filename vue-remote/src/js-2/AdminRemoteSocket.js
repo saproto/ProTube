@@ -1,7 +1,7 @@
 import router from '@/router/index'
 const io = window.io = require('socket.io-client');
 
-const serverUrl = `${process.env.VUE_APP_SOCKET_ADDRESS}/socket/remote/admin`;
+const serverUrl = `/socket/remote/admin`;
 
 const socket = new io(serverUrl, {
     timeout: 5*1000,

@@ -1,6 +1,6 @@
 const io = window.io = require('socket.io-client');
 
-const serverUrl = `${process.env.VUE_APP_SOCKET_ADDRESS}/socket/screen/admin`;
+const serverUrl = `/socket/screen/admin`;
 
 const socket = new io(serverUrl, {
     timeout: 5*1000,

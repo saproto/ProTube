@@ -1,7 +1,7 @@
 import router from '@/router/index'
 const io = window.io = require('socket.io-client');
 
-const serverUrl = `${process.env.VUE_APP_SOCKET_ADDRESS}/socket/remote`;
+const serverUrl = `/socket/remote`;
 
 const socket = new io(serverUrl, {
     auth: {
