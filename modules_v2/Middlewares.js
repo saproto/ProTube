@@ -22,13 +22,8 @@ exports.sessionMiddleware = session({
 
 exports.checkAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) { return next() }
+    else if (req.token === process.env.CLIENT_IDENTIFIER) return next();
     res.redirect("/protube/login")
-}
-
-// add admin check
-exports.CheckAdminAuthenticated = (req, res, next) => {
-    if (req.isAuthenticated()) { return next() }
-    res.redirect("/api/login");
 }
 
 exports.socketCheckAuthenticated = (socket, next) => {
@@ -41,6 +36,7 @@ exports.socketCheckAdminAuthenticated = (socket, next) => {
         if(socket.request.user.admin) return next();
         else return next(new Error('forbidden'));
     }
+    else if(socket.request.headers?.authorization === `Bearer ${process.env.CLIENT_IDENTIFIER}`) return next();
     next(new Error('unauthorized'));
 }
 
@@ -96,4 +92,9 @@ exports.checkBearerToken = (req, res, next) => {
         success: false,
         message: 'Not Authorized for this API'
     });
+};
+
+exports.checkLocalClientToken = (socket, next) => {
+    if (req.token === process.env.CLIENT_IDENTIFIER) return next();
+    next(new Error('Invalid token!'));
 };
