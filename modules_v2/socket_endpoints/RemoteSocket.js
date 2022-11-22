@@ -15,9 +15,13 @@ endpoint.on('connection', (socket) => {
     });
     
     socket.on('fetch-videos', async (query, callback) => {
-        const videos = await youtube.search(query, socket.request.user.admin);
-        callback(videos);
-        logger.youtubeInfo('Returned list of music to client (remote)');
+        try{
+            const videos = await youtube.search(query, socket.request.user.admin);
+            callback(videos);
+            logger.youtubeInfo('Returned list of music to client (remote)');
+        } catch(e){
+            callback([]);
+        }
     });
     
     socket.on('fetch-then-add-playlist', async (playlistId, callback) => {
