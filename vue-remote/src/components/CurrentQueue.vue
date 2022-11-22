@@ -1,6 +1,6 @@
 <template>    
     <ContentField>
-        <label class="text-gray-600 dark:text-white text-2xl absolute"> The current Queue - {{ queueDuration }}</label>
+        <label class="text-gray-600 dark:text-white text-2xl absolute"> The current queue - {{ queueDuration }}</label>
             <div class="flex overflow-x-scroll pt-10 no-scrollbar">
                 <div v-if="skeletonLoading" class="flex flex-nowrap h-full">
                     <ul v-for="index in 10" :key="index" class="grid inline-block px-3 w-96 min-h-full">
