@@ -26,7 +26,6 @@ exports.addFair = video => {
     if(!video.user.is_admin){
         let videoCount = 0;
         for(const vid of queue) {
-            console.log(vid.user);
             videoCount += vid.user.user_id === video.user.user_id;
         }
         if(videoCount >= parseInt(process.env.USER_MAX_VIDEOS_IN_QUEUE)) {
@@ -39,9 +38,15 @@ exports.addFair = video => {
 
 // Add multiple videos at once (playlist eg)
 exports.addAllFair = videos => {
+    let partiallyAdded = false;
     for(const video of videos) {
-        self.addFair(video);
+        try {
+            self.addFair(video);
+        } catch(e) {
+            partiallyAdded = true;
+        }
     }
+    if(partiallyAdded) throw new softError('Not all videos were added to the queue!');
     return SUCCESS;
 }
 

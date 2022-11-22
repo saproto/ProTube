@@ -76,7 +76,7 @@ async function addVideoToQueue(){
     videoStatusCode.value = data.success === true ? STATUS.SUCCESS : data.status;
     emit('display-toast', {
       status: data.status ?? STATUS.SUCCESS, 
-      message: data.message ?? "Successfully added tho the queue!"
+      message: data.message ?? "Successfully added to the queue!"
     });
 }
 

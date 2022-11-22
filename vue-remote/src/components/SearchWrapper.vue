@@ -28,16 +28,12 @@
 import { ref, onMounted, defineEmits, defineProps } from 'vue';
 import HeaderField from '@/layout/HeaderField.vue'
 import HeaderFieldButtons from '@/components/HeaderFieldButtons.vue'
-// import { getUserData } from '@/js/user_socket.js'
 import socket from '@/js-2/RemoteSocket'
+
 const searchString = ref("");
-// const userData = ref({
-//   name: null,
-//   isAdmin: false
-// });
 defineProps({
   user: Object
-})
+});
 
 const emit = defineEmits(['query-videos', 'query-single-video', 'query-playlist']);
 const openMenu = ref(false);
@@ -48,33 +44,26 @@ onMounted(async () => {
 socket.on("connect_error", async (err) => {
     console.log("v2:_searchwrapper");
     console.log("Socket connect error: ");
-    console.log(err.message);
-    console.log(socket.auth.token);
     if(err.message == 'no_cookie_please_reconnect'){
         await fetch('https://localhost:3000/api/test');
         socket.connect();
     } if(err.message == 'unauthorized') {
         console.log("no_auth");
-        // await fetch('http://localhost:3000/api/auth/example');
-        // location.href="/api/login";
-        // router.push({name: "Login"});
     }
 });
 
-function processQuery() {
+async function processQuery() {
   const query = searchString.value;
-  if(query.trim() === '') {
-    //nothing was filled in, so do nothing
-    return;
-  }
+  searchString.value = "";
+  //nothing was filled in, so do nothing
+  if(query.trim() === '') return;
 
   let url = {};
   try {
     url = new URL(query);
   }catch(e) {
     //failed to parse as url, treat as search query.
-    emit('query-videos', query);
-    return;
+    return emit('query-videos', query);
   }
 
   //get host, filtering out subdomains
@@ -82,15 +71,11 @@ function processQuery() {
   switch(host) {
     case 'youtube.com': {
       const playlistId = url.searchParams.get('list');
-      if(playlistId) {
-        emit('query-playlist', playlistId);
-        return;
-      }
+
+      if(playlistId) return emit('query-playlist', playlistId);
+      
       const videoId = url.pathname.startsWith('/v') ? url.pathname.substring(3, url.pathname.length - 1) : url.searchParams.get('v');
-      if(videoId) {
-        emit('query-single-video', videoId);
-        return;
-      }
+      if(videoId) return emit('query-single-video', videoId);
       break;
     }
     case 'spotify.com': {
@@ -99,6 +84,6 @@ function processQuery() {
   }
 
   //url was invalid or an unknown host. treat as search query
-  emit('query-videos', query);
+  return emit('query-videos', query);
 }
 </script>

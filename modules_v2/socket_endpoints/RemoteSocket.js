@@ -15,22 +15,28 @@ endpoint.on('connection', (socket) => {
     });
     
     socket.on('fetch-videos', async (query, callback) => {
-        const videos = await youtube.search(query);
+        const videos = await youtube.search(query, socket.request.user.admin);
         callback(videos);
         logger.youtubeInfo('Returned list of music to client (remote)');
     });
     
     socket.on('fetch-then-add-playlist', async (playlistId, callback) => {
-        const videos = await youtube.getVideosInPlaylist(playlistId);
-        videos.forEach(video => video.user = formatUser(socket));
-        callback(queueManager.addAllFair(videos));
+        try{
+            const videos = await youtube.getVideosInPlaylist(playlistId);
+            videos.forEach(video => video.user = formatUser(socket));
+            callback(queueManager.addAllFair(videos));
+        } catch(e){
+            callback(e.getInfo());
+        }
     });
     
     socket.on('fetch-then-add-video', async (videoId, callback) => {
-        const video = await youtube.getVideo(videoId);
-        video.user = formatUser(socket);
-        try { callback({success: queueManager.addFair(video)}) }
-        catch(e) {
+        try {
+            const video = await youtube.getVideo(videoId, socket.request.user.admin);
+            video.user = formatUser(socket);
+            
+            callback({success: queueManager.addFair(video)})
+        } catch(e){
             callback(e.getInfo());
         }
     });

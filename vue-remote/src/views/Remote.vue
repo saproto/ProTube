@@ -37,12 +37,9 @@ import PincodeModal from '@/components/modals/PincodeModal.vue'
 import LoadModal from '@/components/modals/LoadModal.vue'
 import CurrentQueue from '@/components/CurrentQueue.vue'
 import ToastsModal from '@/components/modals/ToastsModal.vue'
-// import { fetchVideosSocket, fetchThenAddVideoSocket, fetchThenAddPlaylistSocket } from '@/js/remote_socket'
 import socket, { connectSocket } from '@/js-2/RemoteSocket'
-// import { getUserVideoQueueSocket, socket } from '@/js/user_socket'
-// import { eventBus } from '@/js/eventbus'
+import { STATUS } from '../../../utils/constants'
 import { onMounted, ref, onBeforeMount, onBeforeUnmount } from 'vue'
-// import { useRouter } from 'vue-router'
 
 const loginModalVisible = ref(true);
 const loadModalVisible = ref(false);
@@ -62,7 +59,6 @@ onBeforeMount(async () => {
     const response = await fetch('/api/user');
     if(response.redirected) return window.location.href = response.url;
     const data = await response.json();
-    console.log(data);
     user.value.name = data.name;
     user.value.admin = data.admin;
     user.value.validRemote = data.hasValidRemote;
@@ -95,19 +91,32 @@ function displayToast(toast){
 async function fetchThenAddVideo(videoId) {
     loadModalVisible.value = true;
     loadModalMessage.value = 'Adding video...';
-    return new Promise(resolve => {
+    console.log(videoId);
+    const result = await new Promise(resolve => {
         socket.emit('fetch-then-add-video', videoId, result => {
             resolve(result);
         });
+    });
+    displayToast({
+      status: result.status ?? STATUS.SUCCESS, 
+      message: result.message ?? "Successfully added to the queue!"
     });
     loadModalVisible.value = false;
 }
 
 async function fetchThenAddPlaylist(playlistId) {
-  loadModalVisible.value = true;
-  loadModalMessage.value = 'Adding videos from playlist...';
-  await fetchThenAddPlaylistSocket(playlistId);
-  loadModalVisible.value = false;
+    loadModalVisible.value = true;
+    loadModalMessage.value = 'Adding videos from playlist...';
+    const result = await new Promise(resolve => {
+        socket.emit('fetch-then-add-playlist', playlistId, result => {
+            resolve(result);
+        });
+    });
+    displayToast({
+      status: result.status ?? STATUS.SUCCESS, 
+      message: result.message ?? "Successfully added playlist to the queue!"
+    });
+    loadModalVisible.value = false;
 }
 
 async function fetchVideos(query){
