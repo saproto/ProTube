@@ -18,9 +18,9 @@
         <transition name="results" mode="out-in" appear>
             <ContentField>
                 <div class="md:flex">
-                    <label class="text-gray-600 dark:text-white text-2xl absolute"> Master Controls</label>
+                    <label class="text-gray-600 dark:text-white text-2xl absolute"> Master controls</label>
                     <div class="w-full md:w-2/3 md:mt-12">
-                        <p class=" text-right md:text-center text-md text-gray-500 dark:text-white w-full "> Volume Slider</p>
+                        <p class=" text-right md:text-center text-md text-gray-500 dark:text-white w-full "> Volume slider</p>
                         <input @change="volumeChange" class="bg-proto_blue hover:bg-opacity-80 rounded-xl h-2 w-full border outline-none border-gray-500 appearance-none" type="range" min="0" max="100" :value="playerSettings.volume">
                         <!-- Has no functionality yet.. TODO -->
                         <!--<font-awesome-icon class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" icon="backward" />-->
@@ -33,7 +33,7 @@
                         </button>
                         <div class="flex items-center mx-auto ">
                             <span class="mr-3" id="annual-billing-label">
-                                <span class="text-sm font-medium text-gray-900 dark:text-white">Protube</span>
+                                <span class="text-sm font-medium text-gray-900 dark:text-white">ProTube</span>
                             </span>
                             <button @click="toggleRadioProtube" type="button" :class="playerSettings.playerType === TYPES.RADIO ? 'bg-proto_blue' : 'bg-proto_green'" class="bg-gray-200 relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false" aria-labelledby="annual-billing-label">
                                 <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
