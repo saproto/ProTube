@@ -1,7 +1,7 @@
 <template>    
     <ContentField>
         <label class="text-gray-600 dark:text-white text-2xl absolute"> The current queue - {{ queueDuration }}</label>
-            <div class="flex overflow-x-scroll pt-10 no-scrollbar">
+            <div class="flex overflow-x-scroll md:pt-10 pt-7 no-scrollbar">
                 <div v-if="skeletonLoading" class="flex flex-nowrap h-full">
                     <ul v-for="index in 10" :key="index" class="grid inline-block px-3 w-96 min-h-full">
                         <li class="group cursor-pointer col-span-1 flex group flex-col text-center  border-proto_blue border-l-4 rounded-sm shadow"> <!--divide-y dark:divide-proto_green divide-gray-500-->
@@ -9,8 +9,8 @@
                         </li>
                     </ul>
                 </div>
-                <div v-if="!skeletonLoading" class="flex flex-nowrap h-full">
-                    <ul v-for="(video, index) in queue" :video="video" :index="index" :key="video.id" class="grid inline-block px-3 w-96 min-h-full" >
+                <div v-if="!skeletonLoading" class="md:flex md:flex-nowrap h-full">
+                    <ul v-for="(video, index) in queue" :video="video" :index="index" :key="video.id" class="grid inline-block px-3 w-full md:w-96 min-h-full mt-3 md:mt-0 " >
                         <li :style='{background: `url(${video.thumbnail.url})`}' style="background-repeat: no-repeat; background-size: cover; background-position: center center;" :class="admin ? 'group cursor-pointer ' : ''" class="col-span-1 flex group flex-col text-center  border-proto_blue border-l-4 rounded-sm shadow"> <!--divide-y dark:divide-proto_green divide-gray-500-->
                             <div @click="removeFromQueue(video)" :class="admin ? 'group-hover:bg-opacity-60' : ''" class=" flex-1 rounded-m border-t border-b border-r dark:border-gray-800 border-gray-400 flex flex-col px-8 py-4 bg-white dark:bg-stone-800 bg-opacity-80">
                                 <h3 class="font-bold dark:text-stone-300 text-gray-800 text-left text-md">{{ video.title }}</h3>
