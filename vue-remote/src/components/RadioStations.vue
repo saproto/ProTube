@@ -1,7 +1,7 @@
 <template>
     <ContentField>
         <label class="text-gray-600 dark:text-white text-2xl absolute"> Radio stations</label>
-        <input minlength="1" v-model="radiofilter" class="bg-white min-w-min placeholder-gray-500  focus:placeholder-gray-600  text-gray-700 pl-2 rounded-md border border-gray-400 outline-none ml-48" placeholder="Filter"/>
+        <input v-model="radiofilter" class="bg-white placeholder-gray-500 w-32 sm:w-64 focus:placeholder-gray-600  text-gray-700 pl-2 rounded-md border border-gray-400 outline-none ml-48" placeholder="Filter"/>
         <div class="flex overflow-x-scroll pt-10 no-scrollbar">
             <div class="flex flex-nowrap ">
                 <template v-if="!skeletonLoading" >
