@@ -77,7 +77,7 @@ onMounted(() => {
       videoId: "",
       playerVars: {
         autoplay: 1,
-        controls: 1,
+        controls: 0,
         modestbranding: 0,
         loop: 0
       },
