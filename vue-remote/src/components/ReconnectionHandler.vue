@@ -10,6 +10,7 @@ const message = ref("");
 let connectionAttempts = 0;
 const router = useRouter();
 let stopConnecting = false;
+const connectionDelayS = 5;
 
 const props = defineProps({
     socket: Object,
@@ -32,7 +33,7 @@ props.socket.on('connect_error', async (err) => {
     message.value = `Connection attempt ${connectionAttempts} failed.`;
     if(props.maxAttempts < 0 || connectionAttempts < props.maxAttempts) {
         console.log("waiting");
-        await new Promise(resolve => { setTimeout(()=> { resolve() }, 1 * 1000 )});
+        await new Promise(resolve => { setTimeout(()=> { resolve() }, connectionDelayS * 1000 )});
         console.log("attempting connect")
         props.socket.connect();
     }
