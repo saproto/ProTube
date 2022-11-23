@@ -41,15 +41,9 @@ const openMenu = ref(false);
 onMounted(async () => {
 });
 
-socket.on("connect_error", async (err) => {
+socket.on("connect_error", async () => {
     console.log("v2:_searchwrapper");
     console.log("Socket connect error: ");
-    if(err.message == 'no_cookie_please_reconnect'){
-        await fetch('https://localhost:3000/api/test');
-        socket.connect();
-    } if(err.message == 'unauthorized') {
-        console.log("no_auth");
-    }
 });
 
 async function processQuery() {

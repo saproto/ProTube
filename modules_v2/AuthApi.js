@@ -1,12 +1,10 @@
 const express = require('express');
 const passport = require('passport');
 require('passport-oauth2');
-const bearerToken = require('express-bearer-token');
 const { checkAuthenticated } = require('./Middlewares');
 
 exports.authApi = express.Router();
 
-this.authApi.use(bearerToken());
 
 this.authApi.get('/home', function(req, res){
     res.send("hoii");
@@ -15,9 +13,6 @@ this.authApi.get('/home', function(req, res){
 this.authApi.get('/login', passport.authenticate('oauth2'));
 
 this.authApi.get('/user', checkAuthenticated, (req, res) => {
-    if(req.token === process.env.CLIENT_IDENTIFIER){
-        return res.send({name: "Protube App", admin: 1, hasValidRemote: 0});
-    }
     res.send({
         name: req.session.passport.user.name,
         admin: !!req.user.admin,

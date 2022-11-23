@@ -6,8 +6,7 @@ import AdminProtubeScreen from '@/views/AdminProtubeScreen.vue'
 import ErrorPage from '@/views/ErrorPage.vue'
 import LoginPage from '@/views/LoginPage.vue'
 import TestAuth from '@/views/TestAuth.vue'
-// import ExpiredSession from '@/views/ExpiredSession.vue'
-// import { socketDetails } from '@/js/authenticator'
+import LocalClientProtubeScreen from '@/views/LocalClientProtubeScreen.vue'
 
 const routes = [
   {
@@ -18,10 +17,6 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: LoginPage,
-    // props: route => ({
-    //   targetPath: String(route.params.targetPath || "Remote"),
-    //   requests_admin: route.params.requests_admin === 'true'
-    // }),
     meta: {
       transition: 'fade'
     }
@@ -53,6 +48,11 @@ const routes = [
     component: AdminProtubeScreen,
   },
   {
+    path: '/screen/local',
+    name: 'Local Admin Screen',
+    component: LocalClientProtubeScreen,
+  },
+  {
     path: '/error',
     name: "Error",
     component: ErrorPage,
@@ -73,26 +73,5 @@ const router = createRouter({
   history: createWebHistory(process.env.VUE_APP_PUBLIC_PATH),
   routes
 })
-
-// // authentication middleware
-// router.beforeEach((to, from, next) => {
-
-//   let socketdetails = socketDetails();
-//   // prevent login route looping
-//   if(to.name == 'Login' || to.name == 'Error' || to.name == 'Test') return next();
-//   // user is authenticated for the requested path
-//   if(   (to.meta.adminAuth && socketdetails.admin_socket.connected) 
-//     ||  (to.meta.auth && socketdetails.user_socket.connected)) return next();
- 
-//   // requested path is admin and the user had no admin socket
-//   else if(to.meta.adminAuth || to.meta.auth){
-//     return next({ name: 'Login' , params: {
-//       targetPath: to.name,
-//       requests_admin: to.meta.adminAuth
-//     }});
-//   }
-//   // Default to 404 error
-//   return next({ name: 'Error', params: { 'errorCode': 404 }});
-// });
 
 export default router

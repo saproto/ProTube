@@ -22,8 +22,7 @@ exports.sessionMiddleware = session({
 
 exports.checkAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) { return next() }
-    else if (req.token === process.env.CLIENT_IDENTIFIER) return next();
-    res.redirect("/protube/login")
+    res.redirect("/protube/login");
 }
 
 exports.socketCheckAuthenticated = (socket, next) => {
@@ -36,7 +35,8 @@ exports.socketCheckAdminAuthenticated = (socket, next) => {
         if(socket.request.user.admin) return next();
         else return next(new Error('forbidden'));
     }
-    else if(socket.request.headers?.authorization === `Bearer ${process.env.CLIENT_IDENTIFIER}`) return next();
+    // accept localhost connections also to be admin (local client)
+    else if(socket.handshake.address === `::ffff:127.0.0.1`) return next();
     next(new Error('unauthorized'));
 }
 

@@ -1,5 +1,5 @@
 <template>
-    <div v-if="currentRoute == 'Screen' || currentRoute == 'Admin Screen' || currentRoute == 'Error'">
+    <div v-if="currentRoute == 'Screen' || currentRoute == 'Admin Screen' || currentRoute == 'Error' || currentRoute == 'Local Admin Screen'">
         <router-view v-slot="{ Component, route }">
             <transition :name="route.meta.transition || ''">
                 <component :is="Component" />

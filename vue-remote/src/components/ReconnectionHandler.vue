@@ -27,7 +27,7 @@ props.socket.on('connect', () => {
 props.socket.on('connect_error', async (err) => {
     if(stopConnecting) return;
     console.log("disconnect handler errored");
-    if(err.message == 'unauthorized') return;
+    if(err.message == 'unauthorized') return router.push({name: "Error", params: { errorcode: 401 }});
     connectionAttempts++;
     message.value = `Connection attempt ${connectionAttempts} failed.`;
     if(props.maxAttempts < 0 || connectionAttempts < props.maxAttempts) {
