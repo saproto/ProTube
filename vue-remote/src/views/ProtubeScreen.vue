@@ -28,7 +28,7 @@
       </div>
     </div>
     <div v-show="playerState.playerType === TYPES.VIDEO && playerState.playerMode !== MODES.IDLE " >
-      <div ref="player" :id="playerID" class="w-full min-h-screen" />
+      <div :id="playerID" class="w-full min-h-screen" />
     </div>
   </div>
   <ReconnectionHandler v-if="screenCode === -1" :socket="socket" :maxAttempts="5"/>
