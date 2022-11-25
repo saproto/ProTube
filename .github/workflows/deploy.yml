@@ -40,14 +40,6 @@ jobs:
 
       - name: 📥 Installing frontend dependencies
         run: cd ./vue-remote && npm ci --ignore-scripts
-
-      - name: Creating .env build file
-        run: |
-          cd ./vue-remote
-          echo NODE_ENV=production > .env
-          echo VUE_APP_SOCKET_ADDRESS=${{ secrets.VUE_APP_SOCKET_ADDRESS }} >> .env
-          echo VUE_APP_NO_COOKIE_LOGIN_URL=${{ secrets.VUE_APP_NO_COOKIE_LOGIN_URL }} >> .env
-          echo VUE_APP_PUBLIC_PATH=${{ secrets.VUE_APP_PUBLIC_PATH }} >> .env
           
       - name: 🔨 Building frontend
         run: npm run build

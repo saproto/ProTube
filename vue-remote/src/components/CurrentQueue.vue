@@ -49,8 +49,8 @@
 import ContentField from '@/layout/ContentField.vue'
 import SkeletonResult from '@/components/skeletons/SkeletonResult.vue'
 import { defineProps, ref, computed, defineEmits } from 'vue'
-import adminSocket from '@/js-2/AdminRemoteSocket'
-import normalSocket from '@/js-2/RemoteSocket'
+import adminSocket from '@/js/AdminRemoteSocket'
+import normalSocket from '@/js/RemoteSocket'
 import { STATUS } from '../../../utils/constants'
 
 const emit = defineEmits(['display-toast']);

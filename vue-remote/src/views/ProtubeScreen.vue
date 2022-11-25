@@ -39,7 +39,7 @@
 import RadioScreen from '@/components/RadioScreen'
 import ReconnectionHandler from '@/components/ReconnectionHandler'
 import { onMounted, onBeforeUnmount, onBeforeMount, ref, defineProps, watch } from 'vue'
-import socket, { connectSocket } from '@/js-2/ScreenSocket'
+import socket, { connectSocket } from '@/js/ScreenSocket'
 import YoutubePlayer from 'youtube-player'
 import { MODES, TYPES } from '../../../utils/constants'
 

@@ -1,11 +1,10 @@
 {
-  "name": "ProTube",
-  "version": "0.1.0",
+  "name": "protube-vue",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --skip-plugins @vue/cli-plugin-eslint",
-    "dev": "vue-cli-service build --mode development --dest ../public/protube --watch ",
+    "dev": "vue-cli-service build --mode development --dest ../public --watch ",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

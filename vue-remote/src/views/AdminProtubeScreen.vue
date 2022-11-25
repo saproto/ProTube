@@ -6,7 +6,7 @@
 <script setup>
 import ProtubeScreen from '@/views/ProtubeScreen.vue'
 import ReconnectionHandler from '@/components/ReconnectionHandler'
-import socket, { connectSocket } from '@/js-2/AdminScreenSocket'
+import socket, { connectSocket } from '@/js/AdminScreenSocket'
 import { onBeforeUnmount, onBeforeMount, ref } from 'vue'
 import { useRouter } from 'vue-router'
 

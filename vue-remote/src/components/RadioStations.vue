@@ -27,7 +27,7 @@
 <script setup>
 import ContentField from '@/layout/ContentField.vue'
 import { ref, computed, defineEmits } from 'vue'
-import socket from '@/js-2/AdminRemoteSocket'
+import socket from '@/js/AdminRemoteSocket'
 import { STATUS } from '../../../utils/constants'
 
 const radioStations = ref([]);

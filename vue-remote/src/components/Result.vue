@@ -52,7 +52,7 @@
 
 <script setup>
 import { defineProps, defineEmits, ref } from 'vue';
-import socket from '@/js-2/RemoteSocket'
+import socket from '@/js/RemoteSocket'
 import gsap from 'gsap'
 import { STATUS } from '../../../utils/constants'
 

@@ -5,11 +5,6 @@ const { checkAuthenticated } = require('./Middlewares');
 
 exports.authApi = express.Router();
 
-
-this.authApi.get('/home', function(req, res){
-    res.send("hoii");
-});
-
 this.authApi.get('/login', passport.authenticate('oauth2'));
 
 this.authApi.get('/user', checkAuthenticated, (req, res) => {

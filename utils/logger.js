@@ -117,7 +117,6 @@ exports.sessionStoreInfo = message => {
 }
 
 exports.dbLog = message => {
-    // console.log
     dbLogger.info(message);
 }
 

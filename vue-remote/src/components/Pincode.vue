@@ -88,7 +88,7 @@
  
 <script setup>
 import { computed, reactive, ref, onMounted } from 'vue';
-import socket, { setPinCode, connectSocket } from '@/js-2/RemoteSocket'
+import socket, { setPinCode, connectSocket } from '@/js/RemoteSocket'
  
 const digitsFromInput = reactive({
   0: null,

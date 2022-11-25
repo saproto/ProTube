@@ -1,41 +1,43 @@
 require('dotenv').config();
-const { Server } = require('socket.io');
-const io = new Server();
+const { EventEmitter } = require('events');
 
-const clientSocketPort = 4444;
-const clientSocketGateway = io.of('/petra');
+// ffs kut versie errors
+if(process.version.match(/^v(\d+\.\d+)/)[1].split('.')[0] !== '16') console.log(`You are running node ${process.version} but this app is designed in v16`);
 
-io.attach(clientSocketPort, {
-  pingInterval: 10000,
-  pingTimeout: 5000,
-  cookie: false,
-});
-console.log(`[SERVER] Created socketio server at :${clientSocketPort}${clientSocketGateway.name}`);
+global.logger = require('./utils/logger');
+global.eventBus = new EventEmitter();
 
-clientSocketGateway.use((socket, next) => {
-  console.log(`[CLIENT] Client from ${socket.handshake.address} with id ${socket.id} attempted to connect, validating...`);
-  if(validateClient(socket.handshake.auth.token)) {
-    next();
-  } else {
-    next(new Error("Not authorized"));
-    console.log(`[CLIENT] ${socket.id} failed to authorize`);
-  }
-}).on('connection', socket => {
-  console.log(`[CLIENT] Succesfully authorized client ${socket.id}`);
-  socket.on('disconnect', () => {
-    console.log(`[CLIENT] Lost connection with authorized client ${socket.id}`);
-  });
-  //testing! for sending a sound
-  setTimeout(function() {
-    let sound = "test2.mp3"
-    console.log(`[CLIENT] Playing sound ${sound}`);
-    socket.emit('playsound', sound);
-  }, 3000);
-});
+const server = require('./modules/HTTPServer');
 
-//function to authenticate incoming socket connections
-function validateClient(socketHandshakeToken){
-  return socketHandshakeToken === process.env.CLIENT_IDENTIFIER;
+// todo migrate theses errors to global+update status codes to enums
+// more soft error, like a warning
+class softError extends Error {  
+    constructor (message) {
+      super(message)
+      this.message = message;
+    }
+    getInfo(){
+      return {
+        message: this.message,
+        success: false,
+        status: 1
+      }
+    }
 }
 
+class hardError extends Error {  
+  constructor (message) {
+    super(message)
+    this.message = message;
+  }
+  getInfo(){
+    return {
+      message: this.message,
+      success: false,
+      status: 2
+    }
+  }
+}
 
+global.softError = softError;
+global.hardError = hardError;

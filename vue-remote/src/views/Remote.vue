@@ -36,7 +36,7 @@ import PincodeModal from '@/components/modals/PincodeModal.vue'
 import LoadModal from '@/components/modals/LoadModal.vue'
 import CurrentQueue from '@/components/CurrentQueue.vue'
 import ToastsModal from '@/components/modals/ToastsModal.vue'
-import socket, { connectSocket } from '@/js-2/RemoteSocket'
+import socket, { connectSocket } from '@/js/RemoteSocket'
 import { STATUS } from '../../../utils/constants'
 import { onMounted, ref, onBeforeMount, onBeforeUnmount } from 'vue'
 
