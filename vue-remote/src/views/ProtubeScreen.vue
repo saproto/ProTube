@@ -88,6 +88,7 @@ onMounted(() => {
     player.on('error', (event) => {
       emit('youtube-media-error', event.data);
     });
+    
 });
 
 watch(() => props.volume, () => {

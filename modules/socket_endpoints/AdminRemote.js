@@ -44,7 +44,6 @@ endpoint.on('connection', (socket) => {
         logger.adminInfo(`${socket.id} Requested video removal of ${video.title}`)
         try {
             callback({success: queueManager.removeVideo(video.id)});
-            updateAdminPanels();
         } catch (e) {
             callback(e.getInfo());
         }
@@ -54,7 +53,6 @@ endpoint.on('connection', (socket) => {
         logger.adminInfo(`${socket.id} Toggling protube or radio`);
         try {
             callback({success: toggleType()});
-            updateAdminPanels();
         } catch (e) {
             callback(e.getInfo());
         }
@@ -64,7 +62,6 @@ endpoint.on('connection', (socket) => {
         logger.adminInfo(`${socket.id} Setting the radio to: ${stationID}`);
         try {
             callback({success: playRadio(stationID)});
-            updateAdminPanels();
         } catch (e) {
             callback(e.getInfo());
         }
@@ -74,7 +71,6 @@ endpoint.on('connection', (socket) => {
         logger.adminInfo(`${socket.id} Requested to play/pause the content`);
         try {
             callback({success: await playPause()});
-            updateAdminPanels();
         } catch (e) {
             callback(e.getInfo());
         }
@@ -84,7 +80,6 @@ endpoint.on('connection', (socket) => {
         logger.adminInfo(`${socket.id} Requested to skip a video`);
         try {
             callback({success: await playNextVideo()});
-            updateAdminPanels();
         } catch (e) {
             callback(e.getInfo());
         }
