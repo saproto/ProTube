@@ -28,7 +28,6 @@
 import { ref, onMounted, defineEmits, defineProps } from 'vue';
 import HeaderField from '@/layout/HeaderField.vue'
 import HeaderFieldButtons from '@/components/HeaderFieldButtons.vue'
-import socket from '@/js-2/RemoteSocket'
 
 const searchString = ref("");
 defineProps({

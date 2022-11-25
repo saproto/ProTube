@@ -1,3 +1,4 @@
+import router from '@/router/index'
 const io = window.io = require('socket.io-client');
 
 const serverUrl = `/socket/screen/admin`;
