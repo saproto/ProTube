@@ -16,7 +16,7 @@ this.authApi.get('/user', checkAuthenticated, (req, res) => {
     res.send({
         name: req.session.passport.user.name,
         admin: !!req.user.admin,
-        hasValidRemote: req.session?.screencode?.correct ?? false
+        hasValidRemote: (req?.user?.admin || req.session?.screencode?.correct) ?? false
     });
 });
 

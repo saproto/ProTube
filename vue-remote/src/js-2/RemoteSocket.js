@@ -5,7 +5,7 @@ const serverUrl = `/socket/remote`;
 
 const socket = new io(serverUrl, {
     auth: {
-        token: 1234 //socket handshake token
+        token: null //socket handshake token
     },
     timeout: 5*1000,
     forceNew: false,

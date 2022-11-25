@@ -60,8 +60,8 @@ exports.screenCodeCheck = async (socket, next) => {
             correct: false
         }
     }
-    // correctly entered screencode previously, accept
-    if(ses.screencode.correct === true) return next();
+    // correctly entered screencode previously or user is admin, accept
+    if(ses.screencode.correct === true || socket.request.user.admin === true) return next();
     // correct screencode, accept
     if(checkScreenCode(socket.handshake.auth.token)){
         ses.screencode.correct = true;
