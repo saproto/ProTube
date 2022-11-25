@@ -5,7 +5,6 @@ import ProtubeScreen from '@/views/ProtubeScreen.vue'
 import AdminProtubeScreen from '@/views/AdminProtubeScreen.vue'
 import ErrorPage from '@/views/ErrorPage.vue'
 import LoginPage from '@/views/LoginPage.vue'
-import TestAuth from '@/views/TestAuth.vue'
 import LocalClientProtubeScreen from '@/views/LocalClientProtubeScreen.vue'
 
 const routes = [
@@ -26,11 +25,6 @@ const routes = [
     name: 'Remote',
     component: Remote,
 
-  },
-  {
-    path: '/test',
-    name: 'Test',
-    component: TestAuth,
   },
   {
     path: '/remote/admin',

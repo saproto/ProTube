@@ -30,7 +30,6 @@
 
 
 <script setup>
-/* eslint-disable */
 import SearchWrapper from '@/components/SearchWrapper.vue'
 import ResultsWrapper from '@/components/ResultsWrapper.vue'
 import PincodeModal from '@/components/modals/PincodeModal.vue'
