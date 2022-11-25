@@ -74,7 +74,6 @@ onBeforeUnmount(() => {
 
 // does not get retriggered?
 socket.on("connect", () => {
-    console.log("socket accepted");
     setTimeout( () => {
         loginModalVisible.value = false;
     }, 200);
@@ -91,7 +90,6 @@ function displayToast(toast){
 async function fetchThenAddVideo(videoId) {
     loadModalVisible.value = true;
     loadModalMessage.value = 'Adding video...';
-    console.log(videoId);
     const result = await new Promise(resolve => {
         socket.emit('fetch-then-add-video', videoId, result => {
             resolve(result);

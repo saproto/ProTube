@@ -68,7 +68,6 @@ import ToastsModal from '@/components/modals/ToastsModal.vue'
 import RadioStations from '@/components/RadioStations.vue'
 import CurrentQueue from '@/components/CurrentQueue.vue'
 import socket, { connectSocket } from '@/js-2/AdminRemoteSocket'
-// import { getPlayerStatusSocket, getUserDataSocket, removeVideoSocket, playPauseSocket, getVideoQueueSocket, skipSocket, regenScreenCodeSocket, toggleRadioProtubeSocket, volumeChangeSocket, socket } from '@/js/admin_socket.js'
 import { ref, onBeforeMount, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { MODES, STATUS, TYPES } from '../../../utils/constants'
@@ -183,68 +182,6 @@ async function playPause() {
 }
 
 
-// function displayToast(message){
-//     let toastMessage = {
-//         message: message,
-//         type: 'message',
-//         id: Math.random()
-//     };
-//     toasts.value.push(toastMessage);
-//     setTimeout(() => {
-//         let index = toasts.value.indexOf(toastMessage);
-//         if (index !== -1) {
-//             toasts.value.splice(index, 1);
-//         }
-//     }, 2500);
-// }
-
-// async function toggleRadioProtube(){
-//     const previousPlayMode = currentPlayerMode.value;
-//     let newPlayStatus = await toggleRadioProtubeSocket();
-//     if(newPlayStatus.type === previousPlayMode) displayToast(`Failed to switch!`);
-//     else displayToast(`Switched to ${newPlayStatus.type}`);
-//     currentPlayerMode.value = newPlayStatus.type;
-// }
-
-
-// currently disabled, backend needs functionality for this
-// async function volumeChange(event){
-//     if(await volumeChangeSocket(event.target.value)) {
-//       displayToast("Successfully changed the volume!");
-//       return;
-//     }
-//     displayToast("Failed to change volume!");
-// }
-
-// async function regenScreenCode(){
-//     displayToast(`Setting new screencode`);
-//     await regenScreenCodeSocket();
-// }
-
-// async function playPause(){
-//     if(await playPauseSocket()) {
-//       await updatePlayingStatus();
-//       displayToast(`Successfully ${playing.value ? 'resumed' : 'paused'} ProTube!`);
-//       return;
-//     }
-//     displayToast(`Something went wrong trying to ${!playing.value ? 'resume' : 'pause'} ProTube.`);
-// }
-
-// async function skip() {
-//   if (await skipSocket()) {
-//     displayToast('Skipped current video!');
-//     return;
-//   }
-//   displayToast('Failed to skip current video!');
-// }
-
-// async function updatePlayingStatus() {
-//   let playerStatus = await getPlayerStatusSocket();
-//   currentPlayerMode.value = playerStatus.type;
-//   playing.value = playerStatus.status === 'playing';
-//   volume.value = playerStatus.volume;
-
-// }
 </script>
 
 <style scoped>

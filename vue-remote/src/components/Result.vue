@@ -63,7 +63,7 @@ const props = defineProps({
   index: Number
 });
 
-const videoStatusCode = ref(STATUS.NOTHING); //0 = nothing, 1= success, 2=duplicate, 3= error
+const videoStatusCode = ref(STATUS.NOTHING);
 
 async function addVideoToQueue(){
     // set to arbitrary value to disable the button

@@ -22,14 +22,7 @@ export const setPinCode = (newToken) => {
     socket.auth.token = newToken;
 }
 
-socket.on("disconnect", () => {
-    socket.disconnect();
-    // socket.removeAllListeners();
-});
-
 socket.on("connect_error", async (err) => {
-    console.log("v2:");
-    console.log("Socket connect error: ");
     if(err.message == 'unauthorized') router.push({name: "Login"});
 });
 

@@ -64,7 +64,6 @@ const props = defineProps({
 });
 
 
-//eslint-disable-next-line
 async function removeFromQueue(video) {
     if(!props.admin) return;
     //remove video from queue

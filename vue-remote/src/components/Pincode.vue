@@ -256,7 +256,6 @@ function processPinEntered(success, reason=""){
     passkeyAccepted.value = success;
     connectError.value = reason;
     loading.value = false;
-    console.log(loading.value);
     if(!success){
         resetPinCode();
         focusOnFirstInput();

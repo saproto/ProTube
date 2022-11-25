@@ -12,7 +12,6 @@
                     </div>
                     <div v-if="filteredRadioStations.length < 1" class="text-gray-400 ml-8 -mt-6"> No radio stations found.. </div>
                 </template>
-                <!-- <RadioStations v-on:added-radio="displayToast" :radiofilter="radiofilter" /> -->
                 <template v-else >
                     <div v-for="index in 10" :key="index" class="inline-block px-3">
                         <div class="p-4 w-48 truncate overflow-hidden rounded-lg shadow-md bg-proto_blue animate-pulse text-white hover:bg-opacity-80">
@@ -27,7 +26,6 @@
 
 <script setup>
 import ContentField from '@/layout/ContentField.vue'
-//eslint-disable-next-line
 import { ref, computed, defineEmits } from 'vue'
 import socket from '@/js-2/AdminRemoteSocket'
 import { STATUS } from '../../../utils/constants'
@@ -65,15 +63,4 @@ async function setRadio(event){
       message: data.message ?? `Successfully started playing: ${event.target.innerText}`
     });
 }
-// async function setRadio(event){
-//     var requested_radio = event.target.id;
-//     // if(await setRadioSocket(requested_radio)){
-//     //     emit('added-radio', `Started playing: ${event.target.name} `)
-//     // } else {
-//     //     emit('added-radio', `Failed to start: ${event.target.name} `)
-//     // }
-// }
 </script>
-
-<style>
-</style>

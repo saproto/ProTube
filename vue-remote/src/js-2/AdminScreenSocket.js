@@ -14,16 +14,8 @@ export const connectSocket = () => {
     socket.connect();
 };
 
-socket.on("disconnect", () => {
-    socket.disconnect();
-    // socket.removeAllListeners();
-});
-
 socket.on("connect_error", async (err) => {
-    console.log("v2:");
-    console.log("Socket connect error: ");
-    console.log(err);
-    // if(err.message == 'unauthorized') router.push({name: "Login"});
+    if(err.message == 'unauthorized') router.push({name: "Error", params: { errorcode: 401 }});
 });
 
 export default socket;

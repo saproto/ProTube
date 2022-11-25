@@ -66,8 +66,7 @@ const props = defineProps({
     }
 });
 
-onBeforeMount(async () => {
-    console.log("creating csreen")
+onBeforeMount(() => {
     connectSocket();
 });
 
@@ -99,12 +98,6 @@ socket.on('player-update', (newState) => {
         else player.pauseVideo();
     } else if(playerState.value.playerType === TYPES.VIDEO) player.stopVideo();
     playerState.value = newState;
-});
-
-socket.on("disconnect", () => {
-
-    // socket.disconnect();
-    // socket.removeAllListeners();
 });
 
 socket.on('new-video-timestamp', async (newStamp) => {

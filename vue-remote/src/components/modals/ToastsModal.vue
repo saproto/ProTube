@@ -14,10 +14,10 @@ import { defineProps, watch, ref } from 'vue'
 
 const toasts = ref([]);
 
+// latestToast items: duration (ms), message, status
 const props = defineProps({
   latestToast: Object
 });
-// latestToast items: duration (ms), message, status
 
 watch(() => props.latestToast, (newValue) => {
   // adding random string to prevent duplicate toasts

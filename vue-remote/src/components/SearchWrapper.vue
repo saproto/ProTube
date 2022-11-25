@@ -41,11 +41,6 @@ const openMenu = ref(false);
 onMounted(async () => {
 });
 
-socket.on("connect_error", async () => {
-    console.log("v2:_searchwrapper");
-    console.log("Socket connect error: ");
-});
-
 async function processQuery() {
   const query = searchString.value;
   searchString.value = "";

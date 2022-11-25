@@ -2,8 +2,7 @@
     <div>
         <label class="dark:text-white text-8xl"> {{ radio.o }} </label>
         <br />
-        <audio id="radio" autoplay :src="radio.m" frameborder="0" width="400" height="200" onCanPlay="console.log('done')"></audio>
-        <!--<iframe allow="autoplay" :src="radio.m" id="radio" width="400" height="200"></iframe> -->
+        <audio id="radio" autoplay :src="radio.m" frameborder="0" width="400" height="200"></audio>
         <button v-if="playButton" class="shadow-md bg-proto_blue hover:bg-opacity-80 text-white py-1 px-2 ml-5 rounded-md my-auto flex" @click="playClick"> play audio </button>
     </div>
 </template>
