@@ -1,7 +1,7 @@
 const endpoint = io.of('/socket/screen/admin');
 const { socketCheckAdminAuthenticated } = require('../Middlewares');
 const { getScreenCode } = require('../ScreenCode');
-const { getVolume } = require('../PlaybackManager');
+const { getVolume, playNextVideo } = require('../PlaybackManager');
 
 endpoint.use(socketCheckAdminAuthenticated);
 
@@ -21,9 +21,15 @@ endpoint.on('connection', (socket) => {
         logger.adminInfo(`Requested the screen code: ${socket.id}`);
         callback(getScreenCode());
     });
+
+    socket.on('player-error-skip', async (errorCode) => {
+        logger.adminInfo(`Current video generated error ${errorCode}, skipping to next video`);
+        try {
+            await playNextVideo();
+        } catch (e) { }
+    });
     
 });
 
 eventBus.on('volume-update', (newVolume)=> { endpoint.emit('volume-update', newVolume) });
 eventBus.on('new-screen-code', (screenCode) => { endpoint.emit('new-screen-code', screenCode) });
-// exports.updateCodeAdminScreen = (newCode) => endpoint.emit('new-screen-code', newCode);

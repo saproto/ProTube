@@ -1,5 +1,9 @@
 <template>
-    <ProtubeScreen :volume="volume" :screenCode="screenCode" />
+    <ProtubeScreen 
+        :volume="volume" 
+        :screenCode="screenCode" 
+        v-on:youtube-media-error="playerError"
+    />
     <ReconnectionHandler :socket="socket"/>
 </template>
 
@@ -32,6 +36,11 @@ socket.on('get-volume-code', (newData) => {
 socket.on('new-screen-code', (newCode) => {
     screenCode.value = newCode;
 });
+
+// player generated an error on the media, request player to skip to next video
+function playerError(errorCode){
+    socket.emit('player-error-skip', errorCode);
+}
 
 // soundboardddd
 

@@ -38,7 +38,7 @@
 <script setup>
 import RadioScreen from '@/components/RadioScreen'
 import ReconnectionHandler from '@/components/ReconnectionHandler'
-import { onMounted, onBeforeUnmount, onBeforeMount, ref, defineProps, watch } from 'vue'
+import { onMounted, onBeforeUnmount, onBeforeMount, ref, defineProps, watch, defineEmits } from 'vue'
 import socket, { connectSocket } from '@/js/ScreenSocket'
 import YoutubePlayer from 'youtube-player'
 import { MODES, TYPES } from '../../../utils/constants'
@@ -55,6 +55,7 @@ const playerState = ref({
   volume: 0,
 });
 
+const emit = defineEmits(['youtube-media-error']);
 const props = defineProps({
     volume: {
         type: Number,
@@ -80,6 +81,12 @@ onMounted(() => {
         modestbranding: 0,
         loop: 0
       },
+
+    });
+
+    // the iframe api player generates any error (unplayable media)
+    player.on('error', (event) => {
+      emit('youtube-media-error', event.data);
     });
 });
 
