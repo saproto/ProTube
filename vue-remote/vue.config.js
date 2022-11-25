@@ -1,4 +1,4 @@
 module.exports = {
-  publicPath: '/protube',
-  outputDir: '../public/protube'
+  publicPath: '/',
+  outputDir: '../public/'
 }

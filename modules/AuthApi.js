@@ -20,6 +20,6 @@ this.authApi.get('/auth', checkAuthenticated, (req, res) => {
 });
 
 this.authApi.get('/login/callback', passport.authenticate('oauth2', { failureRedirect: '/fail' }), (req, res)=>{
-    res.status(200).redirect('/protube/remote');
+    res.status(200).redirect('/remote');
 });
 
