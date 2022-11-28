@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Remote from '@/views/Remote.vue'
+import MainRemote from '@/views/MainRemote.vue'
 import AdminRemote from '@/views/AdminRemote.vue'
 import ProtubeScreen from '@/views/ProtubeScreen.vue'
 import AdminProtubeScreen from '@/views/AdminProtubeScreen.vue'
@@ -23,7 +23,7 @@ const routes = [
   {
     path: '/remote',
     name: 'Remote',
-    component: Remote,
+    component: MainRemote,
 
   },
   {

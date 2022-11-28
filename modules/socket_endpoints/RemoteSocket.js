@@ -26,7 +26,7 @@ endpoint.on('connection', (socket) => {
     
     socket.on('fetch-then-add-playlist', async (playlistId, callback) => {
         try{
-            const videos = await youtube.getVideosInPlaylist(playlistId);
+            const videos = await youtube.getVideosInPlaylist(playlistId, socket.request.user.admin);
             videos.forEach(video => video.user = formatUser(socket));
             callback(queueManager.addAllFair(videos));
         } catch(e){

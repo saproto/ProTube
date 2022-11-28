@@ -1,6 +1,6 @@
 const endpoint = io.of('/socket/remote/admin');
 const { socketCheckAdminAuthenticated } = require('../Middlewares')
-const { getVolume, playRadio, playPause, getPlayerMode, skipVideo, toggleType, playNextVideo, setVolume, getPlayerType, } = require('../PlaybackManager');
+const { getVolume, playRadio, playPause, getPlayerMode, toggleType, playNextVideo, setVolume, getPlayerType, } = require('../PlaybackManager');
 const { adminResetScreenCode } = require('../ScreenCode');
 const radio = require('../RadioStations');
 const queueManager = require('../QueueManager');
