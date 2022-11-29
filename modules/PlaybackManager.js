@@ -28,13 +28,23 @@ exports.playVideo = (video) => {
     playerMode = MODES.PLAYING;
     queueManager.setCurrentVideo(video);
 
-    playbackInterval = setInterval(async () => {
+    playbackInterval = setInterval(() => {
         if(timestamp < video.duration) {
             timestamp++;
             eventBus.emit('new-video-timestamp', timestamp);
         } else {
+            // video ended, add video to played videos
+            fetch(`${process.env.LARAVEL_ENDPOINT}/api/protube/played?` + new URLSearchParams({
+                secret: process.env.LARAVEL_API_KEY,
+                user_id: currentVideo.user.user_id,
+                video_id: currentVideo.id,
+                video_title: currentVideo.title
+            })).catch(function() {
+                // non asynchronous because we don't need to wait for this to be done to play the next video (it can do it in the background)
+                logger.serverError("Failed to send video data to protube site");
+            });
             try { 
-                await this.playNextVideo(); 
+                this.playNextVideo(); 
             } catch {}
             eventBus.emit('player-update');
         }
@@ -48,14 +58,14 @@ exports.pauseVideo = () => {
     eventBus.emit('player-update');
 }
 
-exports.playNextVideo = async () => {
+exports.playNextVideo = () => {
     if(playerType === TYPES.RADIO) throw new softError('Radio is currently playing!');
 
     const previouslyPlaying = queueManager.getCurrentVideo();
     this.stopVideo();
 
     try{
-        await queueManager.moveToNext();
+        queueManager.moveToNext();
         this.playVideo(queueManager.getCurrentVideo());
     } catch(e){
         // skip was pressed on an empty queue so we can't move and need to update the players 
@@ -83,9 +93,9 @@ exports.playRadio = (newStationId) => {
     return SUCCESS;
 };
 
-exports.playPause = async () => {
+exports.playPause = () => {
     if(playerMode === MODES.IDLE && playerType === TYPES.RADIO) return this.toggleType();
-    if(playerMode === MODES.PAUSED) return await this.playVideo(queueManager.getCurrentVideo());
+    if(playerMode === MODES.PAUSED) return this.playVideo(queueManager.getCurrentVideo());
     if(playerMode === MODES.PLAYING) return this.pauseVideo();
     throw new hardError("Can't resume ProTube!");
 };
@@ -128,8 +138,8 @@ exports.toggleType = () => {
 }
 
 // on queue update, if empty start playing
-eventBus.on('queue-update', async () => {
+eventBus.on('queue-update', () => {
     if(playerMode === MODES.IDLE && playerType === TYPES.VIDEO && !queueManager.isQueueEmpty() && isEmpty(queueManager.getCurrentVideo())) {
-        await this.playNextVideo();
+        this.playNextVideo();
     }
 });

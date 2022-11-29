@@ -61,26 +61,10 @@ exports.addToTop = video => {
 }
 
 //Update the current video with the video in queue position 0, and remove it from the queue
-exports.moveToNext = async () => {
+exports.moveToNext = () => {
     // Queue has an item, can be shifted
-    if(queue.length > 0){
-        currentVideo = queue.shift()
-        if(currentVideo.user.user_id) {
-            try {
-                await fetch(`${process.env.LARAVEL_ENDPOINT}/api/protube/played?` + new URLSearchParams({
-                    secret: process.env.LARAVEL_API_KEY,
-                    user_id: currentVideo.user.user_id,
-                    video_id: currentVideo.id,
-                    video_title: currentVideo.title
-                }));
-            } catch(e) {
-                //TODO add nice error
-                console.log("Failed to send video data to protube site");
-            }
-        };
-    }else {
-        throw new softError('Unable to move to the next item in the queue!');
-    }
+    if(queue.length > 0) currentVideo = queue.shift()
+    else throw new softError('Unable to move to the next item in the queue!');
 
     eventBus.emit('queue-update');
     return SUCCESS;
