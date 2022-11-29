@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 const { format_hh_mm_ss } = require('../utils/time-formatter');
 const { isEmpty } = require('lodash');
 const SUCCESS = true;
