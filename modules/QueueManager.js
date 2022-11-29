@@ -52,10 +52,12 @@ exports.addAllFair = videos => {
 
 //Add a video to the first position of the queue
 exports.addToTop = video => {
-    // Found a double! Move the video to the top
-    if(findDoppelganger(video)) queue.splice(queue.indexOf(doppelganger)).unshift(video);
-    //Video is not already in the queue, so add it to the top
-    else queue.unshift(video);
+    const doppelganger = findDoppelganger(video);
+
+    // Found a double! Remove the video from the queue
+    if(doppelganger) queue.splice(queue.indexOf(doppelganger), 1);
+    //Video is not in the queue, so add it to the top (prefer to insert original video again)
+    queue.unshift(doppelganger ?? video);
 }
 
 //Update the current video with the video in queue position 0, and remove it from the queue
