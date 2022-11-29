@@ -1,0 +1,17 @@
+name: 📌 Assign Project
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  assign_to_project:
+    runs-on: ubuntu-latest
+    name: Assign issues/pull-requests to project
+    steps:
+      - uses: actions/add-to-project@v0.3.0
+        with:
+          project-url: 'https://github.com/orgs/saproto/projects/1'
+          github-token: ${{ secrets.PROJECTS_TOKEN }}
