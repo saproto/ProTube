@@ -35,7 +35,7 @@
                             <span class="mr-3" id="annual-billing-label">
                                 <span class="text-sm font-medium text-gray-900 dark:text-white">ProTube</span>
                             </span>
-                            <button @click="toggleRadioProtube" type="button" :class="playerSettings.playerType === TYPES.RADIO ? 'bg-proto_blue' : 'bg-proto_green'" class="bg-gray-200 relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false" aria-labelledby="annual-billing-label">
+                            <button @click="toggleRadioProtube" type="button" :class="playerSettings.playerType === TYPES.RADIO ? 'bg-proto_blue' : 'bg-proto_green'" class=" relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false" aria-labelledby="annual-billing-label">
                                 <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
                                 <span aria-hidden="true" :class="playerSettings.playerType === TYPES.RADIO ? 'translate-x-5' : 'translate-x-0'" class="pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"></span>
                             </button>
