@@ -7,8 +7,10 @@ const youtube = new Client();
 //search for a YouTube video
 exports.search = async(query, isAdmin = false) => {
     logger.youtubeInfo(`Search initiated for query ${query}`);
-    const videos = await youtube.search(query, {type: 'video'});
+    let videos = await youtube.search(query, {type: 'video'});
+    videos = videos.items;
     if(!videos) return new Error('Could not find any videos');
+
     videos.map(video => sanitizeVideo(video));
     if(isAdmin) return videos;
 
@@ -32,26 +34,39 @@ exports.getVideo = async(videoId, isAdmin = false) => {
 }
 
 //get all videos of a playlist and return them
-exports.getVideosInPlaylist = async(playlistId) => {
+exports.getVideosInPlaylist = async (playlistId, isAdmin = false) => {
     logger.youtubeInfo(`Getting videos associated with playlist ${playlistId}`);
-    let playlist = await youtube.getPlaylist(playlistId);
+    let playlist, videos;
+    try {
+        playlist = await youtube.getPlaylist(playlistId);
+        videos = playlist.videos.items;
+    } catch(e){
+        throw new hardError('Error at fetching videos!');
+    }
     if(!playlist) throw new softError('Could not find that playlist');
-    let {videos} = playlist;
     if(!videos) throw new softError('Could not find any videos');
+
     videos.map(video => sanitizeVideo(video));
+    if(isAdmin) return videos;
+    
     return videos.filter(video => video.duration <= (parseInt(process.env.YOUTUBE_MAX_DURATION) || 600));
 }
 
 const sanitizeVideo = video => {
-    if(video.related) delete video.related;
-    if(video.comments) delete video.comments;
+    delete video.related;
+    delete video.description;
+    delete video.comments;
     delete video.client;
+    
     video.channel = video.channel.name;
     video.thumbnail = video.thumbnails[video.thumbnails.length - 1];
+    delete video.thumbnails;
+
     if(video.duration >= 3600) video.durationFormatted = format_hh_mm_ss(video.duration);
     else video.durationFormatted = format_mm_ss(video.duration);
+    
     video.viewsFormatted = formatViews(video.viewCount);
-    delete video.thumbnails;
+    
     return video;
 }
 

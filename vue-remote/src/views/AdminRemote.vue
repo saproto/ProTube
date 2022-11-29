@@ -28,14 +28,14 @@
                         <font-awesome-icon @click="skipVideo" class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" icon="forward" />
                     </div>
                     <div class="flex md:mt-12 mt-4 md:w-1/3">
-                        <button @click="resetScreenCode" class="shadow-md bg-proto_blue hover:bg-opacity-80 text-white py-1 px-2 md:ml-5 rounded-md my-auto flex">
+                        <!-- <button @click="resetScreenCode" class="shadow-md bg-proto_blue hover:bg-opacity-80 text-white py-1 px-2 md:ml-5 rounded-md my-auto flex">
                             New code
-                        </button>
+                        </button> -->
                         <div class="flex items-center mx-auto ">
                             <span class="mr-3" id="annual-billing-label">
                                 <span class="text-sm font-medium text-gray-900 dark:text-white">ProTube</span>
                             </span>
-                            <button @click="toggleRadioProtube" type="button" :class="playerSettings.playerType === TYPES.RADIO ? 'bg-proto_blue' : 'bg-proto_green'" class="bg-gray-200 relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false" aria-labelledby="annual-billing-label">
+                            <button @click="toggleRadioProtube" type="button" :class="playerSettings.playerType === TYPES.RADIO ? 'bg-proto_blue' : 'bg-proto_green'" class=" relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false" aria-labelledby="annual-billing-label">
                                 <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
                                 <span aria-hidden="true" :class="playerSettings.playerType === TYPES.RADIO ? 'translate-x-5' : 'translate-x-0'" class="pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"></span>
                             </button>
@@ -60,7 +60,6 @@
 </template>
 
 <script setup>
-/* eslint-disable */
 import HeaderField from '@/layout/HeaderField.vue'
 import HeaderFieldButtons from '@/components/HeaderFieldButtons.vue'
 import ContentField from '@/layout/ContentField.vue'
@@ -156,18 +155,18 @@ async function skipVideo() {
         message: data.message ?? `Successfully skipped video!`
     });
 }
-
-async function resetScreenCode() {
-    const data = await new Promise( resolve => {
-        socket.emit('reset-screen-code', callback => {
-            resolve(callback);
-        });
-    });
-    displayToast({
-        status: data.status ?? STATUS.SUCCESS, 
-        message: data.message ?? `Successfully reset the screencode!`
-    });
-}
+// todo fix new code button
+// async function resetScreenCode() {
+//     const data = await new Promise( resolve => {
+//         socket.emit('reset-screen-code', callback => {
+//             resolve(callback);
+//         });
+//     });
+//     displayToast({
+//         status: data.status ?? STATUS.SUCCESS, 
+//         message: data.message ?? `Successfully reset the screencode!`
+//     });
+// }
 
 async function playPause() {
     const data = await new Promise( resolve => {

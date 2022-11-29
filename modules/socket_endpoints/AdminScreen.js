@@ -22,10 +22,11 @@ endpoint.on('connection', (socket) => {
         callback(getScreenCode());
     });
 
-    socket.on('player-error-skip', async (errorCode) => {
+    // the ProTube app player (local) noticed the video was unplayable, skipping
+    socket.on('player-error-skip', (errorCode) => {
         logger.adminInfo(`Current video generated error ${errorCode}, skipping to next video`);
         try {
-            await playNextVideo();
+            playNextVideo();
         } catch (e) { }
     });
     

@@ -6,16 +6,18 @@
             <div class="flex flex-nowrap ">
                 <template v-if="!skeletonLoading" >
                     <div v-for="radio in filteredRadioStations" :key="radio" class="inline-block px-3">
-                        <button @click="setRadio" :id="radio.z" :name="radio.o" class="p-4 w-48 truncate overflow-hidden rounded-lg shadow-md bg-proto_blue text-white hover:bg-opacity-80">
-                            {{ radio.o }}
-                        </button>
+                        <div  @click="setRadio(radio.z, radio.o)"  class="w-24 h-[3.75rem] hover:cursor-pointer hover:opacity-80 rounded-lg">
+                            <img
+                                :alt="radio.o"
+                                class="truncate overflow-hidden rounded-lg bg-proto_blue text-white hover:bg-opacity-80"
+                                :src="`https://www.nederland.fm/i/l/${radio.z}.gif`" />
+                        </div>
                     </div>
                     <div v-if="filteredRadioStations.length < 1" class="text-gray-400 ml-8 -mt-6"> No radio stations found.. </div>
                 </template>
                 <template v-else >
-                    <div v-for="index in 10" :key="index" class="inline-block px-3">
-                        <div class="p-4 w-48 truncate overflow-hidden rounded-lg shadow-md bg-proto_blue animate-pulse text-white hover:bg-opacity-80">
-                            <div class="bg-gray-100 rounded-md w-28 p-3 animate-pulse" />
+                    <div v-for="index in 20" :key="index" class="inline-block px-3">
+                        <div class="w-24 h-[3.75rem] truncate overflow-hidden rounded-lg shadow-md bg-proto_blue animate-pulse text-white hover:bg-opacity-80">
                         </div>
                     </div>
                 </template>
@@ -51,16 +53,15 @@ const filteredRadioStations = computed(() => {
     return radioStations.value.filter((station) => station.o.toLowerCase().includes(radiofilter.value.toLowerCase()));
 });
 
-async function setRadio(event){
-    const requestedRadioID = event.target.id;
+async function setRadio(radioID, name){
     const data = await new Promise( resolve => {
-        socket.emit('play-radio', requestedRadioID, callback => {
+        socket.emit('play-radio', radioID, callback => {
             resolve(callback);
         });
     });
     emit('display-toast', {
       status: data.status ?? STATUS.SUCCESS, 
-      message: data.message ?? `Successfully started playing: ${event.target.innerText}`
+      message: data.message ?? `Successfully started playing: ${name}`
     });
 }
 </script>

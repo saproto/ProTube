@@ -2,14 +2,14 @@
     <div aria-live="assertive" class="fixed inset-0 flex px-4 py-6 pointer-events-none sm:p-6 items-start">
         <div class="w-full flex flex-col items-center space-y-4">
             <transition-group name="list">
-                <Toast v-for="toast in toasts" :message="toast.message" :status="toast.status" :key="toast"/>
+                <ToastComponent v-for="toast in toasts" :message="toast.message" :status="toast.status" :key="toast"/>
             </transition-group>
         </div>
     </div>
 </template>
 
 <script setup>
-import Toast from '@/components/Toast.vue'
+import ToastComponent from '@/components/ToastComponent.vue'
 import { defineProps, watch, ref } from 'vue'
 
 const toasts = ref([]);

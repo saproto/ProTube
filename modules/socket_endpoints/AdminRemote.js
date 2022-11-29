@@ -1,6 +1,6 @@
 const endpoint = io.of('/socket/remote/admin');
 const { socketCheckAdminAuthenticated } = require('../Middlewares')
-const { getVolume, playRadio, playPause, getPlayerMode, skipVideo, toggleType, playNextVideo, setVolume, getPlayerType, } = require('../PlaybackManager');
+const { getVolume, playRadio, playPause, getPlayerMode, toggleType, playNextVideo, setVolume, getPlayerType, } = require('../PlaybackManager');
 const { adminResetScreenCode } = require('../ScreenCode');
 const radio = require('../RadioStations');
 const queueManager = require('../QueueManager');
@@ -67,19 +67,19 @@ endpoint.on('connection', (socket) => {
         }
     });
     
-    socket.on('play-pause', async (callback) => {
+    socket.on('play-pause', (callback) => {
         logger.adminInfo(`${socket.id} Requested to play/pause the content`);
         try {
-            callback({success: await playPause()});
+            callback({success: playPause()});
         } catch (e) {
             callback(e.getInfo());
         }
     });
     
-    socket.on('skip-video', async (callback) => {
+    socket.on('skip-video', (callback) => {
         logger.adminInfo(`${socket.id} Requested to skip a video`);
         try {
-            callback({success: await playNextVideo()});
+            callback({success: playNextVideo()});
         } catch (e) {
             callback(e.getInfo());
         }

@@ -9,12 +9,12 @@
             <div class="inline-block text-xl dark:text-gray-50 align-bottom dark:bg-proto_background_gray-dark bg-white my-auto rounded-md px-6 pt-5 pb-4 w-full lg:w-8/12 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
                 Connect to the ProTube display
                 <div class="text-sm ml-1 text-gray-400 pb-4">Enter the PIN on the ProTube screen</div>
-                <Pincode />
+                <PincodeComponent />
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import Pincode from '@/components/Pincode.vue'
+import PincodeComponent from '@/components/PincodeComponent.vue'
 </script>

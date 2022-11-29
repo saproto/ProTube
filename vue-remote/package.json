@@ -12,30 +12,20 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/vue-fontawesome": "^3.0.0-5",
     "@mdi/font": "6.5.95",
-    "@tailwindcss/aspect-ratio": "^0.2.1",
-    "@tailwindcss/forms": "^0.3.3",
-    "@tailwindcss/postcss7-compat": "^2.2.17",
     "@vue/cli-plugin-babel": "~5.0.3",
     "@vue/cli-plugin-eslint": "~5.0.3",
     "@vue/cli-service": "~5.0.3",
     "@vue/compiler-sfc": "^3.2.31",
-    "autoprefixer": "^10",
-    "babel-eslint": "^10.1.0",
     "core-js": "^3.21.1",
-    "eslint": "^7.5.0",
-    "eslint-plugin-vue": "^8.5.0",
     "gsap": "^3.9.1",
     "jquery": "^3.6.0",
     "mitt": "^3.0.0",
-    "postcss": "^8.1.0",
     "roboto-fontface": "*",
     "sass": "~1.49.9",
     "sass-loader": "^12.6.0",
-    "socket.io-client": "^4.4.1",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
+    "socket.io-client": "^4.5.4",
     "vue": "^3.2.31",
-    "vue-cli-plugin-tailwind": "~2.0.6",
-    "vue-router": "^4.0.12",
+    "vue-router": "^4.1.6",
     "youtube-player": "^5.5.2"
   },
   "eslintConfig": {
@@ -48,7 +38,7 @@
       "eslint:recommended"
     ],
     "parserOptions": {
-      "parser": "babel-eslint"
+      "parser": "@babel/eslint-parser"
     },
     "rules": {}
   },
@@ -58,6 +48,17 @@
     "not dead"
   ],
   "devDependencies": {
-    "@vue/devtools": "^6.0.12"
+    "@babel/core": "^7.20.5",
+    "@babel/eslint-parser": "^7.19.1",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.3",
+    "@tailwindcss/line-clamp": "^0.4.2",
+    "@tailwindcss/typography": "^0.5.8",
+    "@vue/devtools": "^6.0.12",
+    "autoprefixer": "^10.4.13",
+    "eslint": "^8.28.0",
+    "eslint-plugin-vue": "^9.8.0",
+    "postcss": "^8.4.19",
+    "tailwindcss": "^3.2.4"
   }
 }
