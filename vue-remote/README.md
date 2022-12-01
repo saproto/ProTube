@@ -23,14 +23,3 @@ This Vue 3 project is automatically installed and build together with the back-e
 
 ## Development
 As mentioned in the root README of this repository you can watch for changes in the Vue project using `npm run dev` in this directory.
-
-## Environment
-This Vue project uses some values from the `.env` file in the root directory.
-
-###### NODE_ENV=development
-Defines the node environment the application is started in. Should be set to `development` during development and `production` in the production environment.
-###### VUE_APP_SOCKET_ADDRESS=https://localhost:3000
-Address of which it can connect with to the backend (for dev most likely https://localhost:3000)
-###### VUE_APP_PUBLIC_PATH=
-Needs to stay empty during development, only used in the production environment.
-
