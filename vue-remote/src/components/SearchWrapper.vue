@@ -55,7 +55,7 @@ async function processQuery() {
   }
 
   //get host, filtering out subdomains
-  const host = url.host.replace(/^[^.]+\./g, "");
+  const host = url.host.replace(/^[^.]*\.(?=\w+\.\w+$)/g, "");
   switch(host) {
     case 'youtube.com': {
       const playlistId = url.searchParams.get('list');
