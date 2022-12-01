@@ -8,7 +8,7 @@ const authURL = `${process.env.LARAVEL_ENDPOINT}/oauth/authorize`;
 const tokenURL = `${process.env.LARAVEL_ENDPOINT}/oauth/token`;
 
 // passport setup
-passport.use('oauth2',
+passport.use(
     new OAuth2Strategy({
       authorizationURL: authURL,
       tokenURL: tokenURL,
