@@ -37,9 +37,9 @@ exports.playVideo = (video) => {
             // video ended, add video to played videos
             fetch(`${process.env.LARAVEL_ENDPOINT}/api/protube/played?` + new URLSearchParams({
                 secret: process.env.LARAVEL_API_KEY,
-                user_id: currentVideo.user.user_id,
-                video_id: currentVideo.id,
-                video_title: currentVideo.title
+                user_id: video.user.user_id,
+                video_id: video.id,
+                video_title: video.title
             })).catch(function() {
                 // non asynchronous because we don't need to wait for this to be done to play the next video (it can do it in the background)
                 logger.serverError("Failed to send video data to protube site");
