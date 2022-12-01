@@ -12,8 +12,8 @@ passport.use(
     new OAuth2Strategy({
       authorizationURL: authURL,
       tokenURL: tokenURL,
-      clientID: process.env.OAUTH_PROTUBE_ID,
-      clientSecret: process.env.OAUTH_SECRET,
+      clientID: process.env.OAUTH_CLIENT_ID,
+      clientSecret: process.env.OAUTH_CLIENT_SECRET,
       //callbackURL: "http://localhost:3000/api/auth/example/callback"
     },
     async function(accessToken, refreshToken, profile, done) {

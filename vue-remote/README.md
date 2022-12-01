@@ -1,34 +1,25 @@
-# Vue remote
-This is the vue 3 project for the remote of ProTube
+<h1 align="center">
+    <a href="https://proto.utwente.nl">
+        <img alt="Proto logo" src="https://raw.githubusercontent.com/saproto/saproto/master/public/images/logo/banner-regular.png" width="100%">
+    </a>
+    <br>
+    ProTube
+</h1>
+
+<p align="center"> 
+    <b>ProTube Vue front-end</b><br> 
+    Letting members play awesome tunes for S.A. Proto!<br>
+    <a href="https://github.com/saproto/ProTube/issues">
+        <img alt="issues badge" src="https://img.shields.io/github/issues/saproto/ProTube?color=%2503b71a">
+    </a>
+    <a href="https://github.com/saproto/ProTube/graphs/contributors">
+        <img alt="contributors badge" src="https://img.shields.io/github/contributors/saproto/ProTube?color=%2503b71a">
+    </a>
+    <img alt="open source badge" src="https://badges.frapsoft.com/os/v2/open-source.svg?v=103">
+</p>
 
 ## Installation
-Open up a terminal and run 
-```sh
-npm install
-```
-To start the project for development
-```sh
-npm run serve
-```
-This should start the remote at localhost:8080
+This Vue 3 project is automatically installed and build together with the back-end in the root of this repository.
 
-## Production
-To compile the project for production
-```sh
-npm run build
-```
-### Dotenv
-#### Development
-This env is used during the development of the remote
-###### NODE_ENV=development
-Defines the dotenv file
-###### VUE_APP_SOCKET_ADDRESS
-Address of which it can connect with to the backend (for dev most likely http://localhost:3000)
-###### VUE_APP_PUBLIC_PATH=""
-Needs to stay empty, used in the production env
-
-#### Production
-This env is used during the compilation of the remote
-###### NODE_ENV=production
-Defines the dotenv file
-
+## Development
+As mentioned in the root README of this repository you can watch for changes in the Vue project using `npm run dev` in this directory.

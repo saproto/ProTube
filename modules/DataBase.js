@@ -2,14 +2,14 @@ require('dotenv').config();
 const { Sequelize, DataTypes } = require('sequelize');
 
 exports.sequelize = new Sequelize(
-    process.env.MYSQL_DB,
-    process.env.MYSQL_USER,
-    process.env.MYSQL_PASSWORD,
+    process.env.DATABASE_DB,
+    process.env.DATABASE_USER,
+    process.env.DATABASE_PASSWORD,
     {
-        host: process.env.MYSQL_HOST,
-        port: process.env.MYSQL_PORT,
+        host: process.env.DATABASE_HOST,
+        port: process.env.DATABASE_PORT,
         dialect: 'mysql',
-        logging: process.env.MYSQL_QUERY_LOGGING === 'true' ? (msg) => logger.dbLog(msg) : false,
+        logging: process.env.DATABASE_QUERY_LOGGING === 'true' ? (msg) => logger.dbLog(msg) : false,
     }
 );
 

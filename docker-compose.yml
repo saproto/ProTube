@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  mysql:
+    container_name: '${DOCKER_CONTAINER_NAME}-mysql'
+    image: 'mysql:8.0'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'thisisareallystrongpassword123'
+      MYSQL_DATABASE: '${DATABASE_DB}'
+      MYSQL_USER: '${DATABASE_USER}'
+      MYSQL_PASSWORD: '${DATABASE_PASSWORD}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    ports:
+      - '${DATABASE_PORT}:3306'
