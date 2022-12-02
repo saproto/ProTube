@@ -20,7 +20,7 @@
   
   @for $i from 1 through 100 {
     .snowflake:nth-child(#{$i}) {
-      --size: #{random(5) * 0.2}vh;
+      --size: #{random(5) * 0.4}vh;
       --left-ini: #{random(20) - 10}vw;
       --left-end: #{random(20) - 10}vw;
       left: #{random(100)}vw;
