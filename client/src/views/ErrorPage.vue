@@ -17,8 +17,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
-
 // See https://en.wikipedia.org/wiki/List_of_HTTP_status_codes for the error codes
 defineProps({
     errorcode: {

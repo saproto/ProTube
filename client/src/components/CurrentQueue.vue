@@ -48,7 +48,7 @@
 <script setup>
 import ContentField from '@/layout/ContentField.vue'
 import SkeletonResult from '@/components/skeletons/SkeletonResult.vue'
-import { defineProps, ref, computed, defineEmits } from 'vue'
+import { ref, computed} from 'vue'
 import adminSocket from '@/js/AdminRemoteSocket'
 import normalSocket from '@/js/RemoteSocket'
 

@@ -30,8 +30,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
-
 const { STATUS } = require( '../../../utils/constants')
 
 defineProps({

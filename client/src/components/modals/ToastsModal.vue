@@ -10,7 +10,7 @@
 
 <script setup>
 import ToastComponent from '@/components/ToastComponent.vue'
-import { defineProps, watch, ref } from 'vue'
+import { watch, ref } from 'vue'
 
 const toasts = ref([]);
 

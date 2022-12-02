@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineEmits, defineProps } from 'vue';
+import { ref, onMounted } from 'vue';
 import HeaderField from '@/layout/HeaderField.vue'
 import HeaderFieldButtons from '@/components/HeaderFieldButtons.vue'
 

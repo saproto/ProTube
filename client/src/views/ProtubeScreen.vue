@@ -38,7 +38,7 @@
 <script setup>
 import RadioScreen from '@/components/RadioScreen'
 import ReconnectionHandler from '@/components/ReconnectionHandler'
-import { onMounted, onBeforeUnmount, onBeforeMount, ref, defineProps, watch, defineEmits } from 'vue'
+import { onMounted, onBeforeUnmount, onBeforeMount, ref, watch } from 'vue'
 import socket, { connectSocket } from '@/js/ScreenSocket'
 import YoutubePlayer from 'youtube-player'
 

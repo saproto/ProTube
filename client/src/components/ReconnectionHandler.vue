@@ -3,7 +3,7 @@
 </template>
 <script setup>
 import LoadModal from '@/components/modals/LoadModal'
-import { ref, defineProps } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const message = ref("");

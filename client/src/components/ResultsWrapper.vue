@@ -19,7 +19,6 @@
 <script setup>
 import SearchResult from '@/components/SearchResult.vue'
 import SkeletonResult from '@/components/skeletons/SkeletonResult.vue'
-import { defineProps } from 'vue'
 import ContentField from '@/layout/ContentField.vue'
 
 defineProps({

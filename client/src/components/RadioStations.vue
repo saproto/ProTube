@@ -28,7 +28,7 @@
 
 <script setup>
 import ContentField from '@/layout/ContentField.vue'
-import { ref, computed, defineEmits } from 'vue'
+import { ref, computed } from 'vue'
 import socket from '@/js/AdminRemoteSocket'
 
 const { STATUS } = require( '../../../utils/constants')
