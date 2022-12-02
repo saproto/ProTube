@@ -20,7 +20,7 @@
             <PincodeModal v-if="loginModalVisible" />
         </transition>
         <transition name="modal" appear >
-            <LoadModal :message="loadModalMessage" :opacity="70" v-if="loadModalVisible && !loginModalVisible" />
+            <LoadModal :message="loadModalMessage" v-if="loadModalVisible && !loginModalVisible" />
         </transition>
         <transition name="results" mode="out-in" appear>
             <CurrentQueue />
