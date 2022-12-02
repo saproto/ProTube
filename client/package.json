@@ -1,9 +1,7 @@
 {
   "name": "protube-vue",
-  "version": "1.0.0",
-  "private": true,
   "scripts": {
-    "dev": "vite build --watch",
+    "dev": "vite build --watch --mode development --emptyOutDir",
     "build": "vite build",
     "serve": "vite preview"
   },

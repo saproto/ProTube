@@ -1,12 +1,9 @@
 import router from '@/router/index'
-const io = window.io = require('socket.io-client');
+import { io } from 'socket.io-client';
 
-const serverUrl = `/socket/remote`;
+const serverUrl = `/socket/remote/admin`;
 
 const socket = new io(serverUrl, {
-    auth: {
-        token: null //socket handshake token
-    },
     timeout: 5*1000,
     forceNew: false,
     withCredentials: true,
@@ -17,10 +14,6 @@ const socket = new io(serverUrl, {
 export const connectSocket = () => {
     socket.connect();
 };
-
-export const setPinCode = (newToken) => {
-    socket.auth.token = newToken;
-}
 
 socket.on("connect_error", async (err) => {
     if(err.message == 'unauthorized') router.push({name: "Login"});

@@ -1,43 +1,17 @@
 {
-    "name": "protube",
-    "version": "1.0.0",
-    "description": "ProTube is an application used by Study Association Proto to play videos and music from YouTube.",
-    "main": "app.js",
-    "scripts": {
-        "postinstall": "cd vue-remote && npm install",
-        "build": "cd vue-remote && npm run build",
-        "start": "node app",
-        "watch": "nodemon app",
-        "dev": "run-p -r start vue-run-dev",
-        "madge": "madge ./app.js -i ./madge.jpg"
-    },
-    "dependencies": {
-        "colors": "^1.4.0",
-        "connect-history-api-fallback": "^2.0.0",
-        "connect-session-sequelize": "^7.1.5",
-        "cookie-parser": "^1.4.6",
-        "cors": "^2.8.5",
-        "crypto": "^1.0.1",
-        "dotenv": "^16.0.3",
-        "express": "^4.17.1",
-        "express-bearer-token": "^2.4.0",
-        "express-mysql-session": "^2.1.8",
-        "express-session": "^1.17.2",
-        "lodash": "^4.17.21",
-        "moment": "^2.29.1",
-        "mysql2": "^2.3.3",
-        "node-fetch": "^2.6.7",
-        "passport": "^0.6.0",
-        "passport-oauth2": "^1.6.1",
-        "sequelize": "^6.25.3",
-        "socket.io": "^4.5.4",
-        "winston": "^3.7.2",
-        "winston-daily-rotate-file": "^4.6.1",
-        "youtubei": "^1.0.0-rc.7"
-    },
-    "devDependencies": {
-        "autoprefixer": "^10.3.1",
-        "madge": "^5.0.1",
-        "nodemon": "^2.0.19"
-    }
+  "name": "protube",
+  "version": "1.0.0",
+  "description": "ProTube is an application used by Study Association Proto to play videos and music from YouTube.",
+  "scripts": {
+    "postinstall": "concurrently \"npm:install-*\"",
+    "install-client": "cd client && npm install",
+    "install-server": "cd server && npm install",
+    "dev": "concurrently \"npm:dev-*\"",
+    "dev-client": "cd client && npm run dev",
+    "dev-server": "cd server && npm run start",
+    "build": "cd client && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  }
 }

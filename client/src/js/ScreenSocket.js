@@ -1,4 +1,4 @@
-const io = window.io = require('socket.io-client');
+import { io } from 'socket.io-client';
 
 const serverUrl = `/socket/screen`;
 
