@@ -31,7 +31,8 @@
 
 <script setup>
 import { defineProps } from 'vue';
-import { STATUS } from '../../../utils/constants'
+
+const { STATUS } = require( '../../../utils/constants')
 
 defineProps({
   message: String,

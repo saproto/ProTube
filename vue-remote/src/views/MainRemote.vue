@@ -37,9 +37,9 @@ import LoadModal from '@/components/modals/LoadModal.vue'
 import CurrentQueue from '@/components/CurrentQueue.vue'
 import ToastsModal from '@/components/modals/ToastsModal.vue'
 import socket, { connectSocket } from '@/js/RemoteSocket'
-import { STATUS } from '../../../utils/constants'
 import { onMounted, ref, onBeforeMount, onBeforeUnmount } from 'vue'
 
+const { STATUS } = require( '../../../utils/constants')
 const loginModalVisible = ref(true);
 const loadModalVisible = ref(false);
 const resultsWrapperSkeletons = ref(false);

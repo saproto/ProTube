@@ -69,8 +69,8 @@ import CurrentQueue from '@/components/CurrentQueue.vue'
 import socket, { connectSocket } from '@/js/AdminRemoteSocket'
 import { ref, onBeforeMount, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
-import { MODES, STATUS, TYPES } from '../../../utils/constants'
 
+const { MODES, STATUS, TYPES } = require( '../../../utils/constants')
 const latestToast = ref(null);
 const mobileMenuOpen = ref(false);
 
