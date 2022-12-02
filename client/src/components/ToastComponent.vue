@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-const { STATUS } = require( '../../../utils/constants')
+import { STATUS } from '@/constants'
 
 defineProps({
   message: String,

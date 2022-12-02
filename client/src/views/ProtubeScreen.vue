@@ -41,8 +41,8 @@ import ReconnectionHandler from '@/components/ReconnectionHandler'
 import { onMounted, onBeforeUnmount, onBeforeMount, ref, watch } from 'vue'
 import socket, { connectSocket } from '@/js/ScreenSocket'
 import YoutubePlayer from 'youtube-player'
+import { MODES, TYPES } from '@/constants'
 
-const { MODES, TYPES } = require( '../../../utils/constants')
 const playerID = "player-"+Math.random();
 let player;
 const playerState = ref({

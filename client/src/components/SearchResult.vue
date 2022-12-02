@@ -54,8 +54,7 @@
 import { ref } from 'vue';
 import socket from '@/js/RemoteSocket'
 import gsap from 'gsap'
-
-const { STATUS } = require('../../../utils/constants')
+import { STATUS } from '@/constants'
 
 const emit = defineEmits(['display-toast'])
 
