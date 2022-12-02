@@ -1,7 +1,7 @@
 <template>
-    <div> 
+    <div class="bg-proto_background_gray-dark"> 
         <transition name="modal">
-            <LoadModal message="Authenticating..." :opacity="100" />
+            <LoadModal message="Authenticating..." />
         </transition>
     </div>
 </template>
