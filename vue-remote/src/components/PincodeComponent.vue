@@ -22,15 +22,14 @@
               w-12
               h-16
               rounded-md
-              dark:bg-gray-50
+              dark:bg-gray-50/50
               shadow-md
-              bg-gray-200
+              bg-gray-200/50
               border-none
               text-center
               text-gray-800
               font-bold
               text-4xl
-              bg-opacity-50
               select-none
             "
             tabindex="1"
