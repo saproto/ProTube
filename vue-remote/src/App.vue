@@ -1,4 +1,8 @@
 <template>
+    <!-- snowflake (after use delete entire keepalive block) -->
+    <keep-alive>
+        <SnowFall :class="currentRoute == 'Screen' || currentRoute == 'Admin Screen' || currentRoute == 'Error' || currentRoute == 'Local Admin Screen' ? '' : '-z-10'"/>
+    </keep-alive>
     <div v-if="currentRoute == 'Screen' || currentRoute == 'Admin Screen' || currentRoute == 'Error' || currentRoute == 'Local Admin Screen'">
         <router-view v-slot="{ Component, route }">
             <transition :name="route.meta.transition || ''">
@@ -18,6 +22,8 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
+// snowflake (after use delete import statement)
+import SnowFall from '@/components/SnowFall'
 
 const currentRoute = computed(() => {
     return useRoute().name;
