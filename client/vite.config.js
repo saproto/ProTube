@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 const path = require("path");
+const fs = require('fs');
 
 // https://vitejs.dev/config/
 export default defineConfig(({command, mode}) => {
@@ -17,7 +18,10 @@ export default defineConfig(({command, mode}) => {
     },
     server: {
       port: 3000,
-      https: process.env.HTTPS === 'true',
+      https: process.env.HTTPS === 'true' ? {
+        key: fs.readFileSync(`../server/${process.env.SSL_KEY_FILE}`),
+        cert: fs.readFileSync(`../server/${process.env.SSL_CERT_FILE}`),
+      } : false,
       proxy: {
         // send all api requests to the nodejs server
         '^/api/.': {
