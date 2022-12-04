@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-const { STATUS } = require( '../../../utils/constants')
+const { STATUS } = require( '../../../server/utils/constants')
 
 defineProps({
   message: String,

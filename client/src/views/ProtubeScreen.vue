@@ -42,7 +42,7 @@ import { onMounted, onBeforeUnmount, onBeforeMount, ref, watch } from 'vue'
 import socket, { connectSocket } from '@/js/ScreenSocket'
 import YoutubePlayer from 'youtube-player'
 
-const { MODES, TYPES } = require( '../../../utils/constants')
+const { MODES, TYPES } = require( '../../../server/utils/constants')
 const playerID = "player-"+Math.random();
 let player;
 const playerState = ref({

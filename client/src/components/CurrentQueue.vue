@@ -52,7 +52,7 @@ import { ref, computed} from 'vue'
 import adminSocket from '@/js/AdminRemoteSocket'
 import normalSocket from '@/js/RemoteSocket'
 
-const { STATUS } = require( '../../../utils/constants')
+const { STATUS } = require( '../../../server/utils/constants')
 const emit = defineEmits(['display-toast']);
 const skeletonLoading = ref(true);
 const queue = ref([]);

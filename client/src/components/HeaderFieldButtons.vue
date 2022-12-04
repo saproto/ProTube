@@ -11,11 +11,12 @@
         </div>
     </div>
     <div  class="hidden lg:block shrink-0 mr-6 my-auto">
-        <img class="w-30 h-0 md:h-32 object-cover shrink-0 mx-auto" :src="require('@/assets/logo_classic.png')" />
+        <img class="w-30 h-0 md:h-32 object-cover shrink-0 mx-auto" :src="classicLogo" />
     </div>
 </template>
 
 <script setup>
+import classicLogo from '@/assets/logo_classic.png'
 defineProps({
     screen: {
         type: Boolean,

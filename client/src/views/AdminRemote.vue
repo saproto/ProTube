@@ -70,7 +70,7 @@ import socket, { connectSocket } from '@/js/AdminRemoteSocket'
 import { ref, onBeforeMount, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 
-const { MODES, STATUS, TYPES } = require( '../../../utils/constants')
+const { MODES, STATUS, TYPES } = require( '../../../server/utils/constants')
 const latestToast = ref(null);
 const mobileMenuOpen = ref(false);
 

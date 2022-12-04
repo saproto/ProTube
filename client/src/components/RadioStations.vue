@@ -31,7 +31,7 @@ import ContentField from '@/layout/ContentField.vue'
 import { ref, computed } from 'vue'
 import socket from '@/js/AdminRemoteSocket'
 
-const { STATUS } = require( '../../../utils/constants')
+const { STATUS } = require( '../../../server/utils/constants')
 const radioStations = ref([]);
 const skeletonLoading = ref(true);
 const radiofilter = ref('');

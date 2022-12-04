@@ -39,7 +39,7 @@ import ToastsModal from '@/components/modals/ToastsModal.vue'
 import socket, { connectSocket } from '@/js/RemoteSocket'
 import { onMounted, ref, onBeforeMount, onBeforeUnmount } from 'vue'
 
-const { STATUS } = require( '../../../utils/constants')
+const { STATUS } = require( '../../../server/utils/constants')
 const loginModalVisible = ref(true);
 const loadModalVisible = ref(false);
 const resultsWrapperSkeletons = ref(false);
