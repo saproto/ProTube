@@ -13,9 +13,21 @@ import {
   faBackward,
   faForward,
   faBars,
+  faUser,
+  faMicrophone,
+  faClock,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add([faPlay, faPause, faBackward, faForward, faBars]);
+library.add(
+  faPlay,
+  faPause,
+  faBackward,
+  faForward,
+  faBars,
+  faUser,
+  faMicrophone,
+  faClock
+);
 
 import "./assets/tailwind.css";
 
