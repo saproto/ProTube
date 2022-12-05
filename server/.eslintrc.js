@@ -1,18 +1,21 @@
 module.exports = {
   env: {
     node: true,
-    commonjs: true,
-    es2021: true
+    es6: true,
   },
-  extends: [
-    'eslint:recommended',
-    'prettier',
-    'eslint-config-prettier'
-  ],
+  extends: ["eslint:recommended", "prettier", "eslint-config-prettier"],
   overrides: [],
   parserOptions: {
-    ecmaVersion: 'latest'
+    ecmaVersion: "latest",
   },
-  rules: {
-  }
-}
+  rules: {},
+  globals: {
+    io: "readonly",
+    logger: "readonly",
+    error: "readonly",
+    enums: "readonly",
+    eventBus: "readonly",
+    softError: "readonly",
+    hardError: "readonly",
+  },
+};

@@ -19,7 +19,9 @@
 </p>
 
 ## Installation
+
 This Vue 3 project is automatically installed and build together with the back-end in the root of this repository.
 
 ## Development
+
 As mentioned in the root README of this repository you can watch for changes in the Vue project using `npm run dev` in this directory.
