@@ -1,7 +1,5 @@
 const { format_hh_mm_ss } = require('../utils/time-formatter');
 const { isEmpty } = require('lodash');
-const SUCCESS = true;
-const FAIL = false;
 
 let queue = [];
 let currentVideo = {};
@@ -32,7 +30,7 @@ exports.addFair = video => {
         }
     }
     performFairAdd(video);
-    return SUCCESS;
+    return enums.SUCCESS;
 }
 
 // Add multiple videos at once (playlist eg)
@@ -46,7 +44,7 @@ exports.addAllFair = videos => {
         }
     }
     if(partiallyAdded) throw new softError('Not all videos were added to the queue!');
-    return SUCCESS;
+    return enums.SUCCESS;
 }
 
 //Add a video to the first position of the queue
@@ -66,7 +64,7 @@ exports.moveToNext = () => {
     else throw new softError('Unable to move to the next item in the queue!');
 
     eventBus.emit('queue-update');
-    return SUCCESS;
+    return enums.SUCCESS;
 }
 
 // Removing a specific video from the queue
@@ -76,15 +74,15 @@ exports.removeVideo = (videoID) => {
     queue.forEach((item, index) => {
         if(item.id === videoID){
             toDeleteIndex = index;
-            return SUCCESS;
-        } return FAIL;
+            return enums.SUCCESS;
+        } return enums.FAIL;
     });
     if(toDeleteIndex >= 0){
         queue.splice(toDeleteIndex, 1);
         eventBus.emit('queue-update');
-        return SUCCESS;
+        return enums.SUCCESS;
     }
-    return FAIL;
+    return enums.FAIL;
 }
 
 exports.setCurrentVideo = (video) => {

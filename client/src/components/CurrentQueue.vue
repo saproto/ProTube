@@ -51,8 +51,8 @@ import SkeletonResult from '@/components/skeletons/SkeletonResult.vue'
 import { ref, computed} from 'vue'
 import adminSocket from '@/js/AdminRemoteSocket'
 import normalSocket from '@/js/RemoteSocket'
+import enums from '@/js/Enums'
 
-const { STATUS } = require( '../../../server/utils/constants')
 const emit = defineEmits(['display-toast']);
 const skeletonLoading = ref(true);
 const queue = ref([]);
@@ -80,7 +80,7 @@ async function removeFromQueue(video) {
         });
     });
     emit('display-toast', {
-        status: data.status ?? STATUS.SUCCESS, 
+        status: data.status ?? enums.STATUS.SUCCESS, 
         message: data.message ?? `Successfully skipped video!`
     });
 }

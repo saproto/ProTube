@@ -2,10 +2,9 @@ const queueManager = require('./QueueManager');
 const radio = require('./RadioStations');
 const fetch = require('node-fetch');
 const { isEmpty } = require('lodash')
-const { MODES, SUCCESS, TYPES } = require('../utils/constants')
 
-let playerMode = MODES.IDLE;
-let playerType = TYPES.VIDEO;
+let playerMode = enums.MODES.IDLE;
+let playerType = enums.TYPES.VIDEO;
 
 let selectedRadioStation = {};
 let playbackInterval;
@@ -21,12 +20,12 @@ exports.getVolume = () => volume;
 exports.setVolume = (newVolume) => {
     if(newVolume > 100 || newVolume < 0) throw new hardError('Invalid volume!');
     volume = parseInt(newVolume);
-    return SUCCESS;
+    return enums.SUCCESS;
 }
 
 exports.playVideo = (video) => {
-    playerType = TYPES.VIDEO;
-    playerMode = MODES.PLAYING;
+    playerType = enums.TYPES.VIDEO;
+    playerMode = enums.MODES.PLAYING;
     queueManager.setCurrentVideo(video);
 
     playbackInterval = setInterval(() => {
@@ -55,12 +54,12 @@ exports.playVideo = (video) => {
 
 exports.pauseVideo = () => {
     clearInterval(playbackInterval);
-    playerMode = MODES.PAUSED;
+    playerMode = enums.MODES.PAUSED;
     eventBus.emit('player-update');
 }
 
 exports.playNextVideo = () => {
-    if(playerType === TYPES.RADIO) throw new softError('Radio is currently playing!');
+    if(playerType === enums.TYPES.RADIO) throw new softError('Radio is currently playing!');
 
     const previouslyPlaying = queueManager.getCurrentVideo();
     this.stopVideo();
@@ -73,12 +72,12 @@ exports.playNextVideo = () => {
         if(!isEmpty(previouslyPlaying)) eventBus.emit('player-update');
         throw e;    
     }
-    return SUCCESS;
+    return enums.SUCCESS;
 }
 
 exports.stopVideo = () => {
     clearInterval(playbackInterval);
-    playerMode = MODES.IDLE;
+    playerMode = enums.MODES.IDLE;
     timestamp = 0;
     queueManager.setCurrentVideo({});
 }
@@ -89,24 +88,24 @@ exports.playRadio = (newStationId) => {
     if(!newRadio) throw new hardError('Radio station not found!');
 
     selectedRadioStation = newRadio;
-    if(playerType === TYPES.VIDEO) this.toggleType();
+    if(playerType === enums.TYPES.VIDEO) this.toggleType();
     else eventBus.emit('player-update');
-    return SUCCESS;
+    return enums.SUCCESS;
 };
 
 exports.playPause = () => {
-    if(playerMode === MODES.IDLE && playerType === TYPES.RADIO) return this.toggleType();
-    if(playerMode === MODES.PAUSED) return this.playVideo(queueManager.getCurrentVideo());
-    if(playerMode === MODES.PLAYING) return this.pauseVideo();
+    if(playerMode === enums.MODES.IDLE && playerType === enums.TYPES.RADIO) return this.toggleType();
+    if(playerMode === enums.MODES.PAUSED) return this.playVideo(queueManager.getCurrentVideo());
+    if(playerMode === enums.MODES.PLAYING) return this.pauseVideo();
     throw new hardError("Can't resume ProTube!");
 };
 
 exports.toggleType = () => {
-    if(playerType === TYPES.RADIO){
-        playerType = TYPES.VIDEO;
+    if(playerType === enums.TYPES.RADIO){
+        playerType = enums.TYPES.VIDEO;
         this.playNextVideo();
         eventBus.emit('player-update');
-        return SUCCESS;
+        return enums.SUCCESS;
     }
 
     //check if there is a radio set, if not, try to
@@ -119,12 +118,12 @@ exports.toggleType = () => {
     }
 
     //add the current playing video back into the queue
-    if(playerMode !== MODES.IDLE) {
+    if(playerMode !== enums.MODES.IDLE) {
         queueManager.addToTop(queueManager.getCurrentVideo());
         eventBus.emit('queue-update');
     }
     this.stopVideo();
-    playerType = TYPES.RADIO;
+    playerType = enums.TYPES.RADIO;
 
     try {
         this.playRadio(selectedRadioStation.z);
@@ -135,12 +134,12 @@ exports.toggleType = () => {
     }
     
     // eventBus.emit('player-update');
-    return SUCCESS;
+    return enums.SUCCESS;
 }
 
 // on queue update, if empty start playing
 eventBus.on('queue-update', () => {
-    if(playerMode === MODES.IDLE && playerType === TYPES.VIDEO && !queueManager.isQueueEmpty() && isEmpty(queueManager.getCurrentVideo())) {
+    if(playerMode === enums.MODES.IDLE && playerType === enums.TYPES.VIDEO && !queueManager.isQueueEmpty() && isEmpty(queueManager.getCurrentVideo())) {
         this.playNextVideo();
     }
 });

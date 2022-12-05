@@ -1,5 +1,4 @@
 const { loggers } = require('winston');
-const { STATUS } = require('./constants')
 
 // more soft error, like a warning
 class softError extends Error {  
@@ -11,7 +10,7 @@ class softError extends Error {
       return {
         message: this.message,
         success: false,
-        status: STATUS.WARNING
+        status: enums.STATUS.WARNING
       }
     }
 }
@@ -27,7 +26,7 @@ class hardError extends Error {
     return {
       message: this.message,
       success: false,
-      status: STATUS.ERROR
+      status: enums.STATUS.ERROR
     }
   }
 }
@@ -39,7 +38,7 @@ global.Error.prototype.getInfo = function(){
     return {
         message: "An unknown error occurred!",
         success: false,
-        status: STATUS.ERROR
+        status: enums.STATUS.ERROR
     }
 }
 

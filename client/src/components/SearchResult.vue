@@ -2,9 +2,9 @@
 <transition @before-enter="beforeEnter" @enter="enter" appear>
     <li :style='{background: "url("+video.thumbnail.url+")"}' style="background-repeat: no-repeat; background-size: cover; background-position: center center;" class="col-span-1 flex group flex-col text-center  border-proto_blue border-l-4 rounded-sm shadow"> <!--divide-y dark:divide-proto_green divide-gray-500-->
     <button 
-        :disabled="videoStatusCode !== STATUS.NOTHING" 
+        :disabled="videoStatusCode !== enums.STATUS.NOTHING" 
         @click="addVideoToQueue()" 
-        :class='(videoStatusCode !== STATUS.NOTHING) ? "cursor-default" : "group-hover:bg-white/60 group-hover:dark:bg-stone-800/60"' 
+        :class='(videoStatusCode !== enums.STATUS.NOTHING) ? "cursor-default" : "group-hover:bg-white/60 group-hover:dark:bg-stone-800/60"' 
         class="flex-1 duration-200 rounded-m border-t border-b border-r dark:border-gray-800 border-gray-400 flex flex-col px-8 py-4 bg-white/80 dark:bg-stone-800/80"
       >
       <h3 class="font-bold dark:text-stone-300 text-gray-800 text-left text-md">{{ video.title }}</h3>
@@ -29,17 +29,17 @@
           <span class="text-gray-900 dark:text-stone-300 text-sm font-medium truncate">{{ video.viewsFormatted }}</span>
 
             <!-- Heroicon name: check/success -->
-            <svg v-show="videoStatusCode === STATUS.SUCCESS" class="w-5 h-5 ml-auto text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg v-show="videoStatusCode === enums.STATUS.SUCCESS" class="w-5 h-5 ml-auto text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
 
             <!-- Heroicon name: warning/duplicate -->
-            <svg v-show="videoStatusCode === STATUS.WARNING" class="w-5 h-5 ml-auto text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg v-show="videoStatusCode === enums.STATUS.WARNING" class="w-5 h-5 ml-auto text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
             </svg>
 
             <!-- Heroicon name: cross/error -->
-            <svg v-show="videoStatusCode === STATUS.ERROR" class="w-5 h-5 ml-auto text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg v-show="videoStatusCode === enums.STATUS.ERROR" class="w-5 h-5 ml-auto text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
 
@@ -54,8 +54,7 @@
 import { ref } from 'vue';
 import socket from '@/js/RemoteSocket'
 import gsap from 'gsap'
-
-const { STATUS } = require('../../../server/utils/constants')
+import enums from '@/js/Enums'
 
 const emit = defineEmits(['display-toast'])
 
@@ -64,7 +63,7 @@ const props = defineProps({
   index: Number
 });
 
-const videoStatusCode = ref(STATUS.NOTHING);
+const videoStatusCode = ref(enums.STATUS.NOTHING);
 
 async function addVideoToQueue(){
     // set to arbitrary value to disable the button
@@ -74,9 +73,9 @@ async function addVideoToQueue(){
             resolve(callback);
         });
     });
-    videoStatusCode.value = data.success === true ? STATUS.SUCCESS : data.status;
+    videoStatusCode.value = data.success === true ? enums.STATUS.SUCCESS : data.status;
     emit('display-toast', {
-      status: data.status ?? STATUS.SUCCESS, 
+      status: data.status ?? enums.STATUS.SUCCESS, 
       message: data.message ?? "Successfully added to the queue!"
     });
 }

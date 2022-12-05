@@ -38,8 +38,8 @@ import CurrentQueue from '@/components/CurrentQueue.vue'
 import ToastsModal from '@/components/modals/ToastsModal.vue'
 import socket, { connectSocket } from '@/js/RemoteSocket'
 import { onMounted, ref, onBeforeMount, onBeforeUnmount } from 'vue'
+import enums from '@/js/Enums'
 
-const { STATUS } = require( '../../../server/utils/constants')
 const loginModalVisible = ref(true);
 const loadModalVisible = ref(false);
 const resultsWrapperSkeletons = ref(false);
@@ -95,7 +95,7 @@ async function fetchThenAddVideo(videoId) {
         });
     });
     displayToast({
-      status: result.status ?? STATUS.SUCCESS, 
+      status: result.status ?? enums.STATUS.SUCCESS, 
       message: result.message ?? "Successfully added to the queue!"
     });
     loadModalVisible.value = false;
@@ -110,7 +110,7 @@ async function fetchThenAddPlaylist(playlistId) {
         });
     });
     displayToast({
-      status: result.status ?? STATUS.SUCCESS, 
+      status: result.status ?? enums.STATUS.SUCCESS, 
       message: result.message ?? "Successfully added playlist to the queue!"
     });
     loadModalVisible.value = false;

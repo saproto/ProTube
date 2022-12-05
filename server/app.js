@@ -3,6 +3,7 @@ if(process.version.match(/^v(\d+\.\d+)/)[1].split('.')[0] !== '16') console.log(
 
 require('dotenv').config();
 global.logger = require('./utils/logger');
+global.enums = require('./utils/Enums').enums;
 const { EventEmitter } = require('events');
 require('./utils/CustomErrors');
 
