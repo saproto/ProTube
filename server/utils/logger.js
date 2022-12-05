@@ -131,5 +131,6 @@ process.on('unhandledRejection', (reason, p) => {
     logger.error(reason, 'Unhandled Rejection at Promise', p);
   }).on('uncaughtException', err => {
     logger.error(err, 'Uncaught Exception thrown');
+    if (process.env.NODE_ENV !== "production") console.log(err);
     process.exit(1);
   });

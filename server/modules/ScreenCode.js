@@ -3,7 +3,6 @@ const { getCurrentUnix } = require('../utils/time-formatter');
 const { sequelize, Session } = require('./DataBase');
 
 let sessionStore;
-const SUCCESS = true;
 let recreateScreencodeInterval = setInterval(regenerateAuthToken, parseInt(process.env.CODE_REFRESH_INTERVAL)*1000);
 let screenCode;
 regenerateAuthToken();
@@ -37,7 +36,7 @@ exports.adminResetScreenCode = () => {
         }
     });
     io.of('/socket/remote').disconnectSockets(true);
-    return SUCCESS;
+    return enums.SUCCESS;
 }
 
 exports.checkScreenCode = (code) => {

@@ -1,7 +1,6 @@
 const fetch = require('node-fetch');
 
 let allRadioStations = [];
-const FAIL = false;
 
 exports.getAllRadioStations = () => allRadioStations;
 
@@ -22,7 +21,7 @@ async function updateRadioStations(){
   
 // check if the radio we're trying to set is really valid
 exports.validateRadioStation = (radiostationId) => {
-    let foundStation = FAIL;
+    let foundStation = enums.FAIL;
     allRadioStations.forEach((station) => {
         if(radiostationId === station.z) foundStation = station;
     });

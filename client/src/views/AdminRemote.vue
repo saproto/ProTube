@@ -24,7 +24,7 @@
                         <input @change="volumeChange" class="bg-proto_blue hover:bg-proto_blue/80 rounded-xl h-2 w-full border outline-none border-gray-500 appearance-none" type="range" min="0" max="100" :value="playerSettings.volume">
                         <!-- Has no functionality yet.. TODO -->
                         <!--<font-awesome-icon class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" icon="backward" />-->
-                        <font-awesome-icon @click="playPause" class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" :icon="playerSettings.playerMode !== MODES.PLAYING ? 'play' : 'pause'"/>
+                        <font-awesome-icon @click="playPause" class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" :icon="playerSettings.playerMode !== enums.MODES.PLAYING ? 'play' : 'pause'"/>
                         <font-awesome-icon @click="skipVideo" class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" icon="forward" />
                     </div>
                     <div class="flex md:mt-12 mt-4 md:w-1/3">
@@ -35,9 +35,9 @@
                             <span class="mr-3" id="annual-billing-label">
                                 <span class="text-sm font-medium text-gray-900 dark:text-white">ProTube</span>
                             </span>
-                            <button @click="toggleRadioProtube" type="button" :class="playerSettings.playerType === TYPES.RADIO ? 'bg-proto_blue' : 'bg-proto_green'" class=" relative inline-flex shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false" aria-labelledby="annual-billing-label">
+                            <button @click="toggleRadioProtube" type="button" :class="playerSettings.playerType === enums.TYPES.RADIO ? 'bg-proto_blue' : 'bg-proto_green'" class=" relative inline-flex shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" role="switch" aria-checked="false" aria-labelledby="annual-billing-label">
                                 <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
-                                <span aria-hidden="true" :class="playerSettings.playerType === TYPES.RADIO ? 'translate-x-5' : 'translate-x-0'" class="pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"></span>
+                                <span aria-hidden="true" :class="playerSettings.playerType === enums.TYPES.RADIO ? 'translate-x-5' : 'translate-x-0'" class="pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"></span>
                             </button>
                             <span class="ml-3" id="annual-billing-label">
                                 <span class="text-sm font-medium text-gray-900 dark:text-white">Radio</span>
@@ -69,16 +69,16 @@ import CurrentQueue from '@/components/CurrentQueue.vue'
 import socket, { connectSocket } from '@/js/AdminRemoteSocket'
 import { ref, onBeforeMount, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
+import enums from '@/js/Enums'
 
-const { MODES, STATUS, TYPES } = require( '../../../server/utils/constants')
 const latestToast = ref(null);
 const mobileMenuOpen = ref(false);
 
 const user = ref({});
 const playerSettings = ref({
     volume: 75,
-    playerMode: MODES.IDLE,
-    playerType: TYPES.VIDEO
+    playerMode: enums.MODES.IDLE,
+    playerType: enums.TYPES.VIDEO
 });
 
 const router = useRouter();
@@ -117,7 +117,7 @@ async function volumeChange(event){
     const volume = event.target.value;
     if(volume > 100 || volume < 0) {
         return displayToast({
-            status: STATUS.ERROR,
+            status: enums.STATUS.ERROR,
             message: "Invalid volume!"
         })
     }
@@ -127,7 +127,7 @@ async function volumeChange(event){
         });
     });
     displayToast({
-        status: data.status ?? STATUS.SUCCESS, 
+        status: data.status ?? enums.STATUS.SUCCESS, 
         message: data.message ?? `Successfully Updated the volume to: ${volume}`
     });
 }
@@ -139,8 +139,8 @@ async function toggleRadioProtube(){
         });
     });
     displayToast({
-        status: data.status ?? STATUS.SUCCESS, 
-        message: data.message ?? `Successfully switched to: ${playerSettings.value.playerType === TYPES.RADIO ? 'Radio' : 'ProTube'}`
+        status: data.status ?? enums.STATUS.SUCCESS, 
+        message: data.message ?? `Successfully switched to: ${playerSettings.value.playerType === enums.TYPES.RADIO ? 'Radio' : 'ProTube'}`
     });
 }
 
@@ -151,7 +151,7 @@ async function skipVideo() {
         });
     });
     displayToast({
-        status: data.status ?? STATUS.SUCCESS, 
+        status: data.status ?? enums.STATUS.SUCCESS, 
         message: data.message ?? `Successfully skipped video!`
     });
 }
@@ -175,8 +175,8 @@ async function playPause() {
         });
     });
     displayToast({
-        status: data.status ?? STATUS.SUCCESS, 
-        message: data.message ?? `Successfully ${playerSettings.value.playerMode === MODES.PLAYING ? 'paused' : 'resumed'} video!`
+        status: data.status ?? enums.STATUS.SUCCESS, 
+        message: data.message ?? `Successfully ${playerSettings.value.playerMode === enums.MODES.PLAYING ? 'paused' : 'resumed'} video!`
     });
 }
 

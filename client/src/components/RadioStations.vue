@@ -30,8 +30,8 @@
 import ContentField from '@/layout/ContentField.vue'
 import { ref, computed } from 'vue'
 import socket from '@/js/AdminRemoteSocket'
+import enums from '@/js/Enums'
 
-const { STATUS } = require( '../../../server/utils/constants')
 const radioStations = ref([]);
 const skeletonLoading = ref(true);
 const radiofilter = ref('');
@@ -60,7 +60,7 @@ async function setRadio(radioID, name){
         });
     });
     emit('display-toast', {
-      status: data.status ?? STATUS.SUCCESS, 
+      status: data.status ?? enums.STATUS.SUCCESS, 
       message: data.message ?? `Successfully started playing: ${name}`
     });
 }

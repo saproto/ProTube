@@ -5,7 +5,7 @@
       <div >
         <div v-show="screenCode !== -1" class="bg-white dark:bg-proto_secondary_gray-dark shadow-lg rounded-lg ring-1 ring-black ring-opacity-5 text-2xl px-4 py-2 mx-auto font-medium text-gray-900 dark:text-gray-50 max-w-min">{{ screenCode }}</div>
       </div>
-      <div v-show="playerState.playerMode !== MODES.IDLE" class="bg-white dark:bg-proto_secondary_gray-dark shadow-lg rounded-lg ring-1 ring-black ring-opacity-5 px-4 py-2 ml-auto mr-4 font-medium text-gray-900 dark:text-gray-50 ">
+      <div v-show="playerState.playerMode !== enums.MODES.IDLE" class="bg-white dark:bg-proto_secondary_gray-dark shadow-lg rounded-lg ring-1 ring-black ring-opacity-5 px-4 py-2 ml-auto mr-4 font-medium text-gray-900 dark:text-gray-50 ">
         <div class="text-sm text-gray-600 dark:text-gray-300 mr-1">
           Now playing:
         </div>
@@ -20,14 +20,14 @@
         </div>
       </div>
     </div>
-    <div v-if="playerState.playerMode === MODES.IDLE" class="grid place-items-center min-h-screen">
-      <RadioScreen v-if="playerState.playerType === TYPES.RADIO" :radio="playerState.radio" :volume="volume"/>
+    <div v-if="playerState.playerMode === enums.MODES.IDLE" class="grid place-items-center min-h-screen">
+      <RadioScreen v-if="playerState.playerType === enums.TYPES.RADIO" :radio="playerState.radio" :volume="volume"/>
       <div v-else class="dark:text-white text-4xl">
           Nothing currently in the queue...<br>
           Visit protu.be to add some tunes!
       </div>
     </div>
-    <div v-show="playerState.playerType === TYPES.VIDEO && playerState.playerMode !== MODES.IDLE " >
+    <div v-show="playerState.playerType === enums.TYPES.VIDEO && playerState.playerMode !== enums.MODES.IDLE " >
       <div :id="playerID" class="w-full min-h-screen" />
     </div>
   </div>
@@ -41,13 +41,13 @@ import ReconnectionHandler from '@/components/ReconnectionHandler'
 import { onMounted, onBeforeUnmount, onBeforeMount, ref, watch } from 'vue'
 import socket, { connectSocket } from '@/js/ScreenSocket'
 import YoutubePlayer from 'youtube-player'
+import enums from '@/js/Enums'
 
-const { MODES, TYPES } = require( '../../../server/utils/constants')
 const playerID = "player-"+Math.random();
 let player;
 const playerState = ref({
-  playerMode: MODES.IDLE,
-  playerType: TYPES.VIDEO,
+  playerMode: enums.MODES.IDLE,
+  playerType: enums.TYPES.VIDEO,
   queue: [],
   radio: {},
   timestamp: 0,
@@ -101,10 +101,10 @@ onBeforeUnmount(() => {
 });
 
 socket.on('player-update', (newState) => {
-    if(newState.playerType === TYPES.VIDEO){
-        if(newState.playerMode === MODES.PLAYING) player.loadVideoById(newState.video.id, newState.timestamp);
+    if(newState.playerType === enums.TYPES.VIDEO){
+        if(newState.playerMode === enums.MODES.PLAYING) player.loadVideoById(newState.video.id, newState.timestamp);
         else player.pauseVideo();
-    } else if(playerState.value.playerType === TYPES.VIDEO) player.stopVideo();
+    } else if(playerState.value.playerType === enums.TYPES.VIDEO) player.stopVideo();
     playerState.value = newState;
 });
 

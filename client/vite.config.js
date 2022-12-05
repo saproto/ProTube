@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import commonjs from "vite-plugin-commonjs"
+// import commonjs from "vite-plugin-commonjs"
+import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
 import eslint from 'vite-plugin-eslint'
 
 const path = require("path");
@@ -13,7 +14,7 @@ export default defineConfig(({command, mode}) => {
   let serverHTTPS = process.env.HTTPS === 'true' ? 'https' : 'http';
 
   return {
-    plugins: [vue(), commonjs(), eslint()],
+    plugins: [vue(), viteCommonjs(), eslint()],
     resolve: {
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
       alias: {
@@ -43,7 +44,26 @@ export default defineConfig(({command, mode}) => {
       }
     },
     build: {
-      outDir: '../server/public'
-    }
+      outDir: '../server/public',
+      // commonjsOptions: {
+      //   transformMixedEsModules: true,
+      //   commonjsOptions: {
+      //     include: '../server/utils/constants.cjs'
+      //     // include: ['../server/utils/constants'],
+      //     // esmExternals: '../server/utilts/constants.cjs'
+      //   },
+      // },
+      // commonjsOptions: {
+      //   // include: ['constants.cjs'],
+      //   extensions: ['.cjs']
+      // },
+    },
+    // optimizeDeps:{
+    //   esbuildOptions:{
+    //     plugins:[
+    //       esbuildCommonjs(['../server/utils/constants.js']) 
+    //     ]
+    //   }
+    // }
   }
 })
