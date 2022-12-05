@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import commonjs from "vite-plugin-commonjs"
+import eslint from 'vite-plugin-eslint'
 
 const path = require("path");
 const fs = require('fs');
@@ -12,7 +13,7 @@ export default defineConfig(({command, mode}) => {
   let serverHTTPS = process.env.HTTPS === 'true' ? 'https' : 'http';
 
   return {
-    plugins: [vue(), commonjs()],
+    plugins: [vue(), commonjs(), eslint()],
     resolve: {
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
       alias: {
