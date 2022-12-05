@@ -1,7 +1,5 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-// import commonjs from "vite-plugin-commonjs"
-import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
 import eslint from 'vite-plugin-eslint'
 
 const path = require("path");
@@ -45,25 +43,6 @@ export default defineConfig(({command, mode}) => {
     },
     build: {
       outDir: '../server/public',
-      // commonjsOptions: {
-      //   transformMixedEsModules: true,
-      //   commonjsOptions: {
-      //     include: '../server/utils/constants.cjs'
-      //     // include: ['../server/utils/constants'],
-      //     // esmExternals: '../server/utilts/constants.cjs'
-      //   },
-      // },
-      // commonjsOptions: {
-      //   // include: ['constants.cjs'],
-      //   extensions: ['.cjs']
-      // },
     },
-    // optimizeDeps:{
-    //   esbuildOptions:{
-    //     plugins:[
-    //       esbuildCommonjs(['../server/utils/constants.js']) 
-    //     ]
-    //   }
-    // }
   }
 })
