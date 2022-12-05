@@ -1,15 +1,15 @@
 module.exports = {
   env: {
     node: true,
+    browser: true,
   },
   extends: [
-    'eslint:recommended',
-    'plugin:vue/vue3-recommended',
-    'prettier',
-    'eslint-config-prettier'
+    "eslint:recommended",
+    "plugin:vue/vue3-recommended",
+    "prettier",
+    "eslint-config-prettier",
   ],
   rules: {
-    // override/add rules settings here, such as:
-    // 'vue/no-unused-vars': 'error'
-  }
-}
+    "vue/component-definition-name-casing": "off",
+  },
+};

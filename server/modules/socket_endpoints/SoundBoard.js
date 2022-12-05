@@ -8,6 +8,6 @@
 // });
 
 exports.playSound = () => {
-    console.log("playing sound...");
-    // endpoint.emit('playsound', 'whatever');
-}
+  console.log("playing sound...");
+  // endpoint.emit('playsound', 'whatever');
+};
