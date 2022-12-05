@@ -5,7 +5,9 @@
     "build": "vite build --emptyOutDir",
     "serve": "vite preview",
     "lint:check": "eslint .",
-    "lint:write": "eslint . --fix"
+    "lint:write": "eslint . --fix",
+    "format:check": "prettier .",
+    "format:write": "prettier --write ."
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",

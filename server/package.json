@@ -5,7 +5,9 @@
         "start": "node app",
         "watch": "nodemon app",
         "lint:check": "eslint .",
-        "lint:write": "eslint --fix ."
+        "lint:write": "eslint --fix .",
+        "format:check": "prettier .",
+        "format:write": "prettier --write ."
     },
     "dependencies": {
         "colors": "^1.4.0",
