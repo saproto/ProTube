@@ -9,7 +9,13 @@
     "dev": "concurrently \"npm:dev-*\"",
     "dev-client": "cd client && npm run dev",
     "dev-server": "cd server && npm run watch",
-    "build": "cd client && npm run build"
+    "build": "cd client && npm run build",
+    "lint:check": "concurrently \"npm:lint:check-*\"",
+    "lint:check-client": "cd client && npm run lint:check",
+    "lint:check-server": "cd server && npm run lint:check",
+    "lint:write": "concurrently \"npm:lint:write-*\"",
+    "lint:write-client": "cd client && npm run lint:write",
+    "lint:write-server": "cd server && npm run lint:write"
   },
   "devDependencies": {
     "concurrently": "^7.6.0"

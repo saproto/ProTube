@@ -6,13 +6,13 @@ const path = require("path");
 const fs = require('fs');
 
 // https://vitejs.dev/config/
-export default defineConfig(({command, mode}) => {
+export default defineConfig(() => {
   require('dotenv').config({ path: `../server/.env` });
   let serverPort = process.env.PORT;
   let serverHTTPS = process.env.HTTPS === 'true' ? 'https' : 'http';
 
   return {
-    plugins: [vue(), viteCommonjs(), eslint()],
+    plugins: [vue(), eslint()],
     resolve: {
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
       alias: {
@@ -33,7 +33,7 @@ export default defineConfig(({command, mode}) => {
           secure: false
         },
         // send all socket connections to the nodejs server
-        '^/socket\.io/.': {
+        '^/socket.io/.': {
           target: `${serverHTTPS}://localhost:${serverPort}`,
           secure: false,
           ws: true,

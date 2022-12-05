@@ -9,7 +9,6 @@ module.exports = {
     'eslint-config-prettier'
   ],
   rules: {
-    // override/add rules settings here, such as:
-    // 'vue/no-unused-vars': 'error'
+    'vue/component-definition-name-casing': 'off'
   }
 }

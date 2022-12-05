@@ -3,7 +3,9 @@
     "main": "app.js",
     "scripts": {
         "start": "node app",
-        "watch": "nodemon app"
+        "watch": "nodemon app",
+        "lint:check": "eslint .",
+        "lint:write": "eslint --fix ."
     },
     "dependencies": {
         "colors": "^1.4.0",
@@ -31,6 +33,13 @@
     },
     "devDependencies": {
         "autoprefixer": "^10.3.1",
-        "nodemon": "^2.0.19"
+        "eslint": "^8.29.0",
+        "eslint-config-standard": "^17.0.0",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-n": "^15.6.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "eslint-plugin-promise": "^6.1.1",
+        "nodemon": "^2.0.19",
+        "prettier": "^2.8.0"
     }
 }
