@@ -11,7 +11,7 @@
       height="200"></audio>
     <button
       v-if="playButton"
-      class="my-auto ml-5 flex rounded-md bg-proto_blue py-1 px-2 text-white shadow-md hover:bg-proto_blue/80"
+      class="bg-proto_blue hover:bg-proto_blue/80 my-auto ml-5 flex rounded-md py-1 px-2 text-white shadow-md"
       @click="playClick">
       play audio
     </button>

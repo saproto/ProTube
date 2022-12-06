@@ -7,7 +7,7 @@
         background-size: cover;
         background-position: center center;
       "
-      class="group col-span-1 flex flex-col rounded-sm border-l-4 border-proto_blue text-center shadow">
+      class="border-proto_blue group col-span-1 flex flex-col rounded-sm border-l-4 text-center shadow">
       <!--divide-y dark:divide-proto_green divide-gray-500-->
       <button
         :disabled="videoStatusCode !== enums.STATUS.NOTHING"

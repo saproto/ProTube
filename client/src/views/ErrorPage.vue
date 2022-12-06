@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid min-h-screen place-items-center dark:bg-proto_background_gray-dark">
+    class="dark:bg-proto_background_gray-dark grid min-h-screen place-items-center">
     <!-- snowflake (after use remove 'z-50 class')-->
     <div
       class="z-50 mx-auto max-w-fit content-center rounded-md bg-white p-8 shadow-md">
@@ -21,13 +21,13 @@
         :to="routeback"
         v-if="routeback"
         :replace="true"
-        class="mx-auto mt-2 flex justify-center rounded-md bg-proto_blue p-2 text-white hover:bg-proto_blue/80">
+        class="bg-proto_blue hover:bg-proto_blue/80 mx-auto mt-2 flex justify-center rounded-md p-2 text-white">
         Go Back
       </router-link>
       <router-link
         :to="'/remote'"
         :replace="true"
-        class="mx-auto mt-2 flex justify-center rounded-md bg-proto_blue p-2 text-white hover:bg-proto_blue/80">
+        class="bg-proto_blue hover:bg-proto_blue/80 mx-auto mt-2 flex justify-center rounded-md p-2 text-white">
         Return home
       </router-link>
     </div>

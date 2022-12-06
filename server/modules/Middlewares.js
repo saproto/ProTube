@@ -136,6 +136,5 @@ exports.checkBearerToken = (req, res, next) => {
 };
 
 exports.checkLocalClientToken = (socket, next) => {
-  if (req.token === process.env.CLIENT_IDENTIFIER) return next();
   next(new Error("Invalid token!"));
 };

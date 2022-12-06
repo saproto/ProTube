@@ -20,7 +20,7 @@
               class="h-[3.75rem] w-24 rounded-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:cursor-pointer hover:opacity-80 hover:shadow-lg">
               <img
                 :alt="radio.o"
-                class="overflow-hidden truncate rounded-lg bg-proto_blue text-white hover:bg-proto_blue/80"
+                class="bg-proto_blue hover:bg-proto_blue/80 overflow-hidden truncate rounded-lg text-white"
                 :src="`https://www.nederland.fm/i/l/${radio.z}.gif`" />
             </div>
           </div>
@@ -33,7 +33,7 @@
         <template v-else>
           <div v-for="index in 20" :key="index" class="inline-block px-3">
             <div
-              class="h-[3.75rem] w-24 animate-pulse overflow-hidden truncate rounded-lg bg-proto_blue text-white shadow-md hover:bg-proto_blue/80"></div>
+              class="bg-proto_blue hover:bg-proto_blue/80 h-[3.75rem] w-24 animate-pulse overflow-hidden truncate rounded-lg text-white shadow-md"></div>
           </div>
         </template>
       </div>
