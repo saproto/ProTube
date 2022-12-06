@@ -3,11 +3,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build --emptyOutDir",
-    "serve": "vite preview",
-    "lint:check": "eslint .",
-    "lint:write": "eslint . --fix",
-    "format:check": "prettier .",
-    "format:write": "prettier --write ."
+    "serve": "vite preview"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
@@ -35,12 +31,8 @@
     "@vue/devtools": "^6.0.12",
     "autoprefixer": "^10.4.13",
     "dotenv": "^16.0.3",
-    "eslint": "^8.29.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-vue": "^9.8.0",
     "postcss": "^8.4.19",
     "prettier": "^2.8.0",
-    "tailwindcss": "^3.2.4",
-    "vite-plugin-eslint": "^1.8.1"
+    "tailwindcss": "^3.2.4"
   }
 }

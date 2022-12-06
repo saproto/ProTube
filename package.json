@@ -10,20 +10,23 @@
     "dev-client": "cd client && npm run dev",
     "dev-server": "cd server && npm run watch",
     "build": "cd client && npm run build",
-    "lint:check": "concurrently \"npm:lint:check-*\"",
-    "lint:check-client": "cd client && npm run lint:check",
-    "lint:check-server": "cd server && npm run lint:check",
-    "lint:write": "concurrently \"npm:lint:write-*\"",
-    "lint:write-client": "cd client && npm run lint:write",
-    "lint:write-server": "cd server && npm run lint:write",
-    "format:check": "concurrently \"npm:format:check-*\"",
-    "format:check-client": "cd client && npm run format:check",
-    "format:check-server": "cd server && npm run format:check",
-    "format:write": "concurrently \"npm:format:write-*\"",
-    "format:write-client": "cd client && npm run format:write",
-    "format:write-server": "cd server && npm run format:write"
+    "lint:check": "eslint .",
+    "lint:write": "eslint . --fix",
+    "format:check": "prettier .",
+    "format:write": "prettier --write ."
   },
   "devDependencies": {
-    "concurrently": "^7.6.0"
+    "concurrently": "^7.6.0",
+    "eslint": "^8.29.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.6.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-vue": "^9.8.0"
+  },
+  "dependencies": {
+    "prettier": "^2.8.0",
+    "prettier-plugin-tailwindcss": "^0.2.0",
+    "vite-plugin-eslint": "^1.8.1"
   }
 }

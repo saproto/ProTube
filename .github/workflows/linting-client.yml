@@ -1,4 +1,4 @@
-name: Lint Client
+name: Lint
 
 on:
   pull_request:
@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 jobs:
-  linting-server:
+  run-linters:
     name: Run linters
     runs-on: ubuntu-latest
 
@@ -26,13 +26,10 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: cd client && npm install
+        run: npm install
 
-      - name: Run linters for server
+      - name: Run linters
         uses: wearerequired/lint-action@v2
         with:
-          check_name: ${linter}-client
           eslint: true
-          eslint_dir: client/
           prettier: true
-          prettier_dir: client/
