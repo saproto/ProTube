@@ -19,9 +19,11 @@
 </p>
 
 ## Contributors
+
 [Here](https://github.com/saproto/ProTube/graphs/contributors) you can find the people that have contributed to the code of this project. But, let's not forget the other members of the [HYTTIOAOAc](https://www.proto.utwente.nl/committee/haveyoutriedturningitoffandonagain)!
 
 ## Prerequisites
+
 This application requires Node.js and npm. It is highly advised to use [nvm](https://github.com/nvm-sh/nvm) to manage your Node.js versions.
 
 > ⚠️ ATTENTION  
@@ -31,21 +33,28 @@ To run this project you need some kind of database to connect to Node.js server.
 
 ## Installation
 
-#### Node.js version 
+#### Node.js version
+
 Open up a terminal and make sure you have the correct version of Node.js as specified in `.nvmrc`. If you have nvm, you can run:
+
 ```sh
 nvm use
 ```
+
 to make sure you have the correct version.
 
 #### Dependencies
+
 Now, install the project dependencies with npm using the following command:
+
 ```sh
 npm install
 ```
 
 #### Environment variables
+
 To set your environment variables correctly, first copy .env.example as .env:
+
 ```sh
 (cd server && cp .env.example .env)
 ```
@@ -53,7 +62,9 @@ To set your environment variables correctly, first copy .env.example as .env:
 Now edit your .env file in the server directory to make sure all the variables are set correctly. On your local Proto website instance you might also need to create a new OAuth2 client if you haven't already or, you recently refreshed the database.
 
 #### Creating an OAuth client
+
 To create a new OAuth client, you can run `sail artisan passport:client` in the directory from where you run your Proto website instance. This command will prompt you with a couple of settings:
+
 - User ID: `1`
 - Name: `protube`
 - Callback: `https://localhost:3000/api/login/callback`
@@ -63,17 +74,21 @@ The above command will return a `Client ID` and `Client Secret` which you can ad
 After this it might be necessary to run `sail artisan passport:keys` to generate oauth encryption keys for your Proto website.
 
 #### Running the development server
+
 For the database you first need to start the mysql docker container:
+
 ```sh
 (cd server && docker-compose up)
 ```
 
 To start the dev server:
+
 ```sh
 npm run dev
 ```
 
 This should start the development server on `localhost:3000` or whatever port was set in `.env`. On this host the following pages are available:
+
 - Screen: `/screen`
 - Screen (with code): `/screen/admin`.
 - Remote: `/remote`

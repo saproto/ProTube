@@ -40,7 +40,7 @@
             </p>
             <input
               @change="volumeChange"
-              class="h-2 w-full appearance-none rounded-xl border border-gray-500 bg-proto_blue outline-none hover:bg-proto_blue/80"
+              class="bg-proto_blue hover:bg-proto_blue/80 h-2 w-full appearance-none rounded-xl border border-gray-500 outline-none"
               type="range"
               min="0"
               max="100"

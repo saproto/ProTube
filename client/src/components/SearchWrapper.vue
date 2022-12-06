@@ -27,7 +27,7 @@
                 ? 'hover:border-search_button_border hover:bg-search_button_background hover:text-white'
                 : 'cursor-default opacity-80'
             "
-            class="mx-auto inline-flex items-center justify-center rounded-r-md border bg-search_button_background-light p-2 font-medium shadow-sm duration-200 focus:border-search_button_border focus:bg-search_button_background focus:text-white focus:outline-none dark:border-search_button_background-dark dark:bg-search_button_background-dark dark:text-white">
+            class="bg-search_button_background-light focus:border-search_button_border focus:bg-search_button_background dark:border-search_button_background-dark dark:bg-search_button_background-dark mx-auto inline-flex items-center justify-center rounded-r-md border p-2 font-medium shadow-sm duration-200 focus:text-white focus:outline-none dark:text-white">
             <svg
               class="mx-1 h-5 w-5"
               id="searchIcon"

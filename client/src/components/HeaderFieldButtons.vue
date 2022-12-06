@@ -8,37 +8,37 @@
       <router-link
         to="/remote/admin"
         v-if="adminRemote"
-        class="rounded-md bg-proto_blue py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
         >Admin remote</router-link
       >
       <router-link
         to="/screen/admin"
         v-if="adminScreen"
-        class="rounded-md bg-proto_blue py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
         >Admin screen</router-link
       >
       <router-link
         to="/screen"
         v-if="screen"
-        class="rounded-md bg-proto_blue py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
         >Screen</router-link
       >
       <router-link
         to="/statistics"
         v-if="statistics"
-        class="rounded-md bg-proto_blue py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
         >Statistics</router-link
       >
       <router-link
         to="/remote"
         v-if="remote"
-        class="rounded-md bg-proto_blue py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
         >Remote</router-link
       >
       <router-link
         to="/soundboard"
         v-if="soundboard"
-        class="rounded-md bg-proto_blue py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
         >Soundboard</router-link
       >
     </div>

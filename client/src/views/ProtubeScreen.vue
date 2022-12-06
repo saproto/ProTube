@@ -6,13 +6,13 @@
       <div>
         <div
           v-show="screenCode !== -1"
-          class="mx-auto max-w-min rounded-lg bg-white px-4 py-2 text-2xl font-medium text-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-proto_secondary_gray-dark dark:text-gray-50">
+          class="dark:bg-proto_secondary_gray-dark mx-auto max-w-min rounded-lg bg-white px-4 py-2 text-2xl font-medium text-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
           {{ screenCode }}
         </div>
       </div>
       <div
         v-show="playerState.playerMode !== enums.MODES.IDLE"
-        class="ml-auto mr-4 rounded-lg bg-white px-4 py-2 font-medium text-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-proto_secondary_gray-dark dark:text-gray-50">
+        class="dark:bg-proto_secondary_gray-dark ml-auto mr-4 rounded-lg bg-white px-4 py-2 font-medium text-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
         <div class="mr-1 text-sm text-gray-600 dark:text-gray-300">
           Now playing:
         </div>

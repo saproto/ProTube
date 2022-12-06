@@ -10,7 +10,7 @@
           :key="index"
           class="inline-block grid min-h-full w-96 px-3">
           <li
-            class="group group col-span-1 flex cursor-pointer flex-col rounded-sm border-l-4 border-proto_blue text-center shadow">
+            class="border-proto_blue group group col-span-1 flex cursor-pointer flex-col rounded-sm border-l-4 text-center shadow">
             <!--divide-y dark:divide-proto_green divide-gray-500-->
             <SkeletonResult />
           </li>
@@ -31,7 +31,7 @@
               background-position: center center;
             "
             :class="admin ? 'group cursor-pointer ' : ''"
-            class="group col-span-1 flex flex-col rounded-sm border-l-4 border-proto_blue text-center shadow">
+            class="border-proto_blue group col-span-1 flex flex-col rounded-sm border-l-4 text-center shadow">
             <!--divide-y dark:divide-proto_green divide-gray-500-->
             <div
               @click="removeFromQueue(video)"

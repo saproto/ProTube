@@ -1,5 +1,5 @@
 <template>
-  <li class="rounded-sm border-l-4 border-proto_blue shadow">
+  <li class="border-proto_blue rounded-sm border-l-4 shadow">
     <!--divide-y dark:divide-proto_green divide-gray-500-->
     <div
       class="rounded-m animate-pulse border-t border-b border-r border-gray-400 bg-gray-100 px-8 py-4 dark:border-gray-800 dark:bg-stone-800">

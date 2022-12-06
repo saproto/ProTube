@@ -7,7 +7,7 @@
     <div
       class="flex h-5/6 items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
       <div
-        class="fixed inset-0 bg-proto_background_gray-dark/50 transition-opacity"
+        class="bg-proto_background_gray-dark/50 fixed inset-0 transition-opacity"
         aria-hidden="true"></div>
 
       <!-- This element is to trick the browser into centering the modal contents. -->

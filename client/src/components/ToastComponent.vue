@@ -1,6 +1,6 @@
 <template>
   <div
-    class="pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-proto_secondary_gray-dark">
+    class="dark:bg-proto_secondary_gray-dark pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
     <div class="p-4">
       <div class="flex items-center">
         <div class="flex w-0 flex-1 justify-between">
