@@ -91,7 +91,7 @@ async function processQuery() {
       break;
     }
     case "spotify.com": {
-      // TODO: implement other hosts
+      // TODO: Implement other music/video hosts
     }
   }
 

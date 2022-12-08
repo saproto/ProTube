@@ -45,7 +45,7 @@
               min="0"
               max="100"
               :value="playerSettings.volume" />
-            <!-- Has no functionality yet.. TODO -->
+            <!-- TODO: Add back button in admin controls -->
             <!--<font-awesome-icon class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" icon="backward" />-->
             <font-awesome-icon
               @click="playPause"
@@ -214,7 +214,7 @@ async function skipVideo() {
     message: data.message ?? `Successfully skipped video!`,
   });
 }
-// todo fix new code button
+// TODO: Fix new screencode button
 // async function resetScreenCode() {
 //     const data = await new Promise( resolve => {
 //         socket.emit('reset-screen-code', callback => {
