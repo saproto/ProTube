@@ -16,6 +16,14 @@ import {
   faUser,
   faMicrophone,
   faClock,
+  faXmark,
+  faXmarkCircle,
+  faCircleNotch,
+  faCheck,
+  faCheckCircle,
+  faWarning,
+  faEye,
+  faSearch
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -26,7 +34,15 @@ library.add(
   faBars,
   faUser,
   faMicrophone,
-  faClock
+  faClock,
+  faXmark,
+  faXmarkCircle,
+  faCircleNotch,
+  faCheck,
+  faCheckCircle,
+  faWarning,
+  faEye,
+  faSearch
 );
 
 import "./assets/tailwind.css";

@@ -51,8 +51,8 @@
                   <span class="fa-li">
                     <font-awesome-icon
                       icon="fa-solid fa-user"
-                      class="fill-gray-800 dark:fill-stone-300"
-                      fixed-width />
+                      fixed-width >
+                    </font-awesome-icon>
                   </span>
                   <span class="truncate">
                     {{ video.user.name }}
@@ -62,8 +62,8 @@
                   <span class="fa-li">
                     <font-awesome-icon
                       icon="fa-solid fa-microphone"
-                      class="fill-gray-800 dark:fill-stone-300"
-                      fixed-width />
+                      fixed-width>
+                    </font-awesome-icon>
                   </span>
                   <span class="truncate">
                     {{ video.channel }}
@@ -73,8 +73,8 @@
                   <span class="fa-li">
                     <font-awesome-icon
                       icon="fa-solid fa-clock fa-li"
-                      class="fill-gray-800 dark:fill-stone-300"
-                      fixed-width />
+                      fixed-width>
+                    </font-awesome-icon>
                   </span>
                   <span class="truncate">
                     {{ video.durationFormatted }}

@@ -47,7 +47,7 @@ exports.screenCodeCheck = async (socket, next) => {
   if (socket.request.user.screencode.banned)
     return next(
       new Error(
-        `Ban hammer lifted ${moment
+        `Your ban is lifted ${moment
           .duration(
             socket.request.user.screencode.banned_until - getCurrentUnix(),
             "seconds"
@@ -113,7 +113,7 @@ exports.screenCodeCheck = async (socket, next) => {
     );
     return next(
       new Error(
-        `Ban hammer lifted ${moment
+        `Your ban is lifted ${moment
           .duration(parseInt(process.env.FAIL_2_BAN_DURATION), "seconds")
           .humanize(true)}`
       )
