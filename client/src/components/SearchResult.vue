@@ -22,12 +22,11 @@
           class="text-md text-left font-bold text-gray-800 dark:text-stone-300">
           {{ video.title }}
         </h3>
-        <ul class="mt-auto ml-5 w-full text-gray-900 dark:text-stone-300 text-sm font-medium fa-ul text-right">
+        <ul
+          class="fa-ul mt-auto ml-5 w-full text-right text-sm font-medium text-gray-900 dark:text-stone-300">
           <li class="justify-bottom mt-auto flex flex-1 align-bottom">
             <span class="fa-li">
-              <font-awesome-icon
-                icon="fa-solid fa-user"
-                fixed-width>
+              <font-awesome-icon icon="fa-solid fa-user" fixed-width>
               </font-awesome-icon>
             </span>
             <span class="truncate">
@@ -36,20 +35,17 @@
           </li>
           <li class="flex flex-1">
             <span class="fa-li">
-              <font-awesome-icon
-                icon="fa-solid fa-clock"
-                fixed-width>
+              <font-awesome-icon icon="fa-solid fa-clock" fixed-width>
               </font-awesome-icon>
             </span>
-            <span class="truncate text-sm font-medium text-gray-900 dark:text-stone-300">
+            <span
+              class="truncate text-sm font-medium text-gray-900 dark:text-stone-300">
               {{ video.durationFormatted }}
             </span>
           </li>
           <li class="flex w-full flex-1">
             <span class="fa-li">
-              <font-awesome-icon
-                icon="fa-solid fa-eye"
-                fixed-width>
+              <font-awesome-icon icon="fa-solid fa-eye" fixed-width>
               </font-awesome-icon>
             </span>
             <span

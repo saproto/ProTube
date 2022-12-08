@@ -23,7 +23,7 @@ import {
   faCheckCircle,
   faWarning,
   faEye,
-  faSearch
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(

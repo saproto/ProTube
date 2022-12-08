@@ -28,7 +28,9 @@
                 : 'cursor-default opacity-80'
             "
             class="bg-search_button_background-light focus:border-search_button_border focus:bg-search_button_background dark:border-search_button_background-dark dark:bg-search_button_background-dark mx-auto inline-flex items-center justify-center rounded-r-md border p-2 font-medium shadow-sm duration-200 focus:text-white focus:outline-none dark:text-white">
-            <font-awesome-icon icon="fa-solid fa-search" class="mx-1"></font-awesome-icon>
+            <font-awesome-icon
+              icon="fa-solid fa-search"
+              class="mx-1"></font-awesome-icon>
           </button>
         </div>
       </form>

@@ -49,9 +49,7 @@
                 <li
                   class="justify-bottom mt-auto flex flex-1 text-right align-bottom">
                   <span class="fa-li">
-                    <font-awesome-icon
-                      icon="fa-solid fa-user"
-                      fixed-width >
+                    <font-awesome-icon icon="fa-solid fa-user" fixed-width>
                     </font-awesome-icon>
                   </span>
                   <span class="truncate">
