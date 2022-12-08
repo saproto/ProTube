@@ -91,8 +91,8 @@
         </ul>
         <div
           v-if="!skeletonLoading && queue.length < 1"
-          class="ml-8 text-gray-400">
-          Empty queue
+          class="mt-5 text-gray-400">
+          The queue is empty, try searching for some fun tunes!
         </div>
       </div>
     </div>

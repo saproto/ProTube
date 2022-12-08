@@ -12,7 +12,7 @@
               class="block cursor-pointer duration-500 md:hidden"
               icon="bars" />
           </h3>
-          <div class="mt-2 max-w-xl text-sm text-gray-200">
+          <div class="my-2 max-w-xl text-sm text-gray-200">
             <p>With great power comes great responsibility</p>
           </div>
           <h2
