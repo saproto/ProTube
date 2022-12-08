@@ -50,6 +50,12 @@ cp .env.example .env
 
 Now edit your .env file to make sure all the variables are specified correctly. If you are running a local Proto website instance you might need to create a new OAuth2 client.
 
+#### Running the MySQL database in Docker
+To spin up the docker container that runs the MySQL database, run the following:
+```sh
+docker compose up -d
+```
+
 #### Creating an OAuth client
 To create a new OAuth client, you can run `sail artisan passport:client` in the directory from where you run your Proto website instance. This command will prompt you with a couple of settings:
 - User ID: `1`
