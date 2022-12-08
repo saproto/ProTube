@@ -69,7 +69,7 @@
 
             <font-awesome-icon
               v-show="videoStatusCode === enums.STATUS.ERROR"
-              icon="fa-solid fa-xmark-cicle"
+              icon="fa-solid fa-xmark-circle"
               size="lg"
               class="ml-auto mr-2 text-red-500">
             </font-awesome-icon>
