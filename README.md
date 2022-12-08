@@ -74,7 +74,7 @@ npm run start
 
 To build the vue frontend for dev mode:
 ```sh
-cd (./vue-remote && npm run dev)
+cd ./vue-remote && npm run dev
 ```
 
 This should start the development server on `localhost:3000` or whatever port was set in `.env`. On this host the following pages are available:
