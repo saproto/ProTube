@@ -27,89 +27,93 @@
           remote />
       </HeaderField>
     </transition>
-    <transition name="results" mode="out-in" appear>
-      <ContentField>
-        <div class="md:flex">
-          <label class="absolute text-2xl text-gray-600 dark:text-white">
-            Master controls</label
-          >
-          <div class="w-full md:mt-12 md:w-2/3">
-            <p
-              class="text-md w-full text-right text-gray-500 dark:text-white md:text-center">
-              Volume slider
-            </p>
-            <input
-              @change="volumeChange"
-              class="bg-proto_blue hover:bg-proto_blue/80 h-2 w-full appearance-none rounded-xl border border-gray-500 outline-none"
-              type="range"
-              min="0"
-              max="100"
-              :value="playerSettings.volume" />
-            <!-- TODO: Add back button in admin controls -->
-            <!--<font-awesome-icon class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" icon="backward" />-->
-            <font-awesome-icon
-              @click="playPause"
-              class="mx-2 cursor-pointer text-2xl text-gray-600 dark:text-white"
-              :icon="
-                playerSettings.playerMode !== enums.MODES.PLAYING
-                  ? 'play'
-                  : 'pause'
-              " />
-            <font-awesome-icon
-              @click="skipVideo"
-              class="mx-2 cursor-pointer text-2xl text-gray-600 dark:text-white"
-              icon="forward" />
-          </div>
-          <div class="mt-4 flex md:mt-12 md:w-1/3">
-            <!-- <button @click="resetScreenCode" class="shadow-md bg-proto_blue hover:bg-proto_blue/80 text-white py-1 px-2 md:ml-5 rounded-md my-auto flex">
-                            New code
-                        </button> -->
-            <div class="mx-auto flex items-center">
-              <span class="mr-3" id="annual-billing-label">
-                <span class="text-sm font-medium text-gray-900 dark:text-white"
-                  >ProTube</span
-                >
-              </span>
-              <button
-                @click="toggleRadioProtube"
-                type="button"
-                :class="
-                  playerSettings.playerType === enums.TYPES.RADIO
-                    ? 'bg-proto_blue'
-                    : 'bg-proto_green'
-                "
-                class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                role="switch"
-                aria-checked="false"
-                aria-labelledby="annual-billing-label">
-                <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
-                <span
-                  aria-hidden="true"
+    <div class="md:grid md:grid-cols-[70%_30%] gap-2 ">
+      <div>
+      <transition name="results" mode="out-in" appear>
+        <ContentField>
+          <div class="md:flex">
+            <label class="absolute text-2xl text-gray-600 dark:text-white">
+              Master controls</label
+            >
+            <div class="w-full md:mt-12 md:w-2/3">
+              <p
+                class="text-md w-full text-right text-gray-500 dark:text-white md:text-center">
+                Volume slider
+              </p>
+              <input
+                @change="volumeChange"
+                class="bg-proto_blue hover:bg-proto_blue/80 h-2 w-full appearance-none rounded-xl border border-gray-500 outline-none"
+                type="range"
+                min="0"
+                max="100"
+                :value="playerSettings.volume" />
+              <!-- TODO: Add back button in admin controls -->
+              <!--<font-awesome-icon class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" icon="backward" />-->
+              <font-awesome-icon
+                @click="playPause"
+                class="mx-2 cursor-pointer text-2xl text-gray-600 dark:text-white"
+                :icon="
+                  playerSettings.playerMode !== enums.MODES.PLAYING
+                    ? 'play'
+                    : 'pause'
+                " />
+              <font-awesome-icon
+                @click="skipVideo"
+                class="mx-2 cursor-pointer text-2xl text-gray-600 dark:text-white"
+                icon="forward" />
+            </div>
+            <div class="mt-4 flex md:mt-12 md:w-1/3">
+              <!-- <button @click="resetScreenCode" class="shadow-md bg-proto_blue hover:bg-proto_blue/80 text-white py-1 px-2 md:ml-5 rounded-md my-auto flex">
+                              New code
+                          </button> -->
+              <div class="mx-auto flex items-center">
+                <span class="mr-3" id="annual-billing-label">
+                  <span class="text-sm font-medium text-gray-900 dark:text-white"
+                    >ProTube</span
+                  >
+                </span>
+                <button
+                  @click="toggleRadioProtube"
+                  type="button"
                   :class="
                     playerSettings.playerType === enums.TYPES.RADIO
-                      ? 'translate-x-5'
-                      : 'translate-x-0'
+                      ? 'bg-proto_blue'
+                      : 'bg-proto_green'
                   "
-                  class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
-              </button>
-              <span class="ml-3" id="annual-billing-label">
-                <span class="text-sm font-medium text-gray-900 dark:text-white"
-                  >Radio</span
-                >
-              </span>
+                  class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                  role="switch"
+                  aria-checked="false"
+                  aria-labelledby="annual-billing-label">
+                  <!-- Enabled: "translate-x-5", Not Enabled: "translate-x-0" -->
+                  <span
+                    aria-hidden="true"
+                    :class="
+                      playerSettings.playerType === enums.TYPES.RADIO
+                        ? 'translate-x-5'
+                        : 'translate-x-0'
+                    "
+                    class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+                </button>
+                <span class="ml-3" id="annual-billing-label">
+                  <span class="text-sm font-medium text-gray-900 dark:text-white"
+                    >Radio</span
+                  >
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      </ContentField>
-    </transition>
-    <transition name="results" mode="out-in" appear>
-      <RadioStations v-on:display-toast="displayToast" />
-    </transition>
-
-    <transition name="results" mode="out-in" appear>
-      <CurrentQueue v-on:display-toast="displayToast" admin />
-    </transition>
-
+        </ContentField>
+      </transition>
+      <transition name="results" mode="out-in" appear>
+        <RadioStations v-on:display-toast="displayToast" />
+      </transition>
+      </div>
+      <div>
+        <transition name="results" mode="out-in" appear>
+          <CurrentQueue v-on:display-toast="displayToast" admin />
+        </transition>
+      </div>
+    </div>
     <ToastsModal :latestToast="latestToast" />
   </div>
 </template>

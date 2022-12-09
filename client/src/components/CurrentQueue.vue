@@ -1,28 +1,30 @@
 <template>
   <ContentField>
+    <div class="h-10">
     <label class="absolute text-2xl text-gray-600 dark:text-white">
       The current queue - {{ queueDuration }}</label
     >
+    </div>
     <div
-      class="scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 flex overflow-x-scroll py-5 md:pt-10">
-      <div v-if="skeletonLoading" class="flex h-full flex-nowrap">
+      class="scrollbar-thin scrollbar-thumb-gray-600 overflow-y-auto h-[65vh] scrollbar-track-gray-900 py-5 pt-10">
+      <div v-if="skeletonLoading" class="flex-nowrap">
         <ul
           v-for="index in 10"
           :key="index"
-          class="inline-block grid min-h-full w-96 px-3">
+          class="inline-block grid min-h-full w-96 mt-1 px-3">
           <li
             class="border-proto_blue group group col-span-1 flex cursor-pointer flex-col rounded-sm border-l-4 text-center shadow">
             <SkeletonResult />
           </li>
         </ul>
       </div>
-      <div v-if="!skeletonLoading" class="h-full md:flex md:flex-nowrap">
+      <div v-if="!skeletonLoading" class="flex-no-wrap">
         <ul
           v-for="(video, index) in queue"
           :video="video"
           :index="index"
           :key="video.id"
-          class="mt-3 inline-block grid min-h-full w-full px-3 md:mt-0 md:w-96">
+          class="inline-block grid min-h-full px-3 mt-1 w-96">
           <li
             :style="{ background: `url(${video.thumbnail.url})` }"
             style="

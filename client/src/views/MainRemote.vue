@@ -7,24 +7,31 @@
         v-on:query-single-video="fetchThenAddVideo"
         v-on:query-playlist="fetchThenAddPlaylist" />
     </transition>
-    <transition name="results" mode="out-in" appear>
-      <ResultsWrapper
-        v-on:display-toast="displayToast"
-        :videos="foundVideos"
-        :skeletonLoading="resultsWrapperSkeletons" />
-    </transition>
-    <ToastsModal :latestToast="latestToast" />
-    <transition name="modal" appear>
-      <PincodeModal v-if="loginModalVisible" />
-    </transition>
-    <transition name="modal" appear>
-      <LoadModal
-        :message="loadModalMessage"
-        v-if="loadModalVisible && !loginModalVisible" />
-    </transition>
-    <transition name="results" mode="out-in" appear>
-      <CurrentQueue />
-    </transition>
+
+    <div class="md:grid md:grid-cols-[70%_30%] gap-2 ">
+      <div>
+        <transition name="results" mode="out-in" appear>
+          <ResultsWrapper
+              v-on:display-toast="displayToast"
+              :videos="foundVideos"
+              :skeletonLoading="resultsWrapperSkeletons" />
+        </transition>
+        <ToastsModal :latestToast="latestToast" />
+        <transition name="modal" appear>
+          <PincodeModal v-if="loginModalVisible" />
+        </transition>
+        <transition name="modal" appear>
+          <LoadModal
+              :message="loadModalMessage"
+              v-if="loadModalVisible && !loginModalVisible" />
+        </transition>
+      </div>
+      <div>
+        <transition name="results" mode="out-in" appear>
+          <CurrentQueue />
+        </transition>
+      </div>
+  </div>
   </div>
 </template>
 
