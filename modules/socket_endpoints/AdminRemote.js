@@ -47,16 +47,7 @@ endpoint.on('connection', (socket) => {
         } catch (e) {
             callback(e.getInfo());
         }
-    });
-
-    socket.on('clear-queue', (_, callback) => {
-        logger.adminInfo(`${socket.id} Requested to clear the queue`)
-        try {
-            callback({success: queueManager.clearQueue()})
-        } catch (e) {
-            callback(e.getInfo());
-        }
-    });
+      });
     
       socket.on('toggle-radio-protube', async (callback) => {
         logger.adminInfo(`${socket.id} Toggling protube or radio`);
