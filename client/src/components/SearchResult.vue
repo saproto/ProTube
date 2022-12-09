@@ -8,7 +8,6 @@
         background-position: center center;
       "
       class="border-proto_blue group col-span-1 flex flex-col rounded-sm border-l-4 text-center shadow">
-      <!--divide-y dark:divide-proto_green divide-gray-500-->
       <button
         :disabled="videoStatusCode !== enums.STATUS.NOTHING"
         @click="addVideoToQueue()"
@@ -18,10 +17,10 @@
             : 'group-hover:bg-white/60 group-hover:dark:bg-stone-800/60'
         "
         class="rounded-m flex flex-1 flex-col border-t border-b border-r border-gray-400 bg-white/80 px-8 py-4 duration-200 dark:border-gray-800 dark:bg-stone-800/80">
-        <h3
-          class="text-md text-left font-bold text-gray-800 dark:text-stone-300">
+        <span
+          class="text-md text-lg text-left font-bold text-gray-800 dark:text-stone-300">
           {{ video.title }}
-        </h3>
+        </span>
         <ul
           class="fa-ul mt-auto ml-5 w-full text-right text-sm font-medium text-gray-900 dark:text-stone-300">
           <li class="justify-bottom mt-auto flex flex-1 align-bottom">

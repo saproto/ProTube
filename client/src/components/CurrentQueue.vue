@@ -4,7 +4,7 @@
       The current queue - {{ queueDuration }}</label
     >
     <div
-      class="scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 flex overflow-x-scroll py-5 md:pt-10">
+      class="scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 flex overflow-x-scroll pb-5 pt-10">
       <div v-if="skeletonLoading" class="flex h-full flex-nowrap">
         <ul
           v-for="index in 10"

@@ -1,6 +1,10 @@
 <template>
   <div>
-    <label class="text-8xl dark:text-white"> {{ radio.o }} </label>
+    <img
+      :alt="radio.o"
+      class="bg-proto_blue hover:bg-proto_blue/80 overflow-hidden truncate rounded-lg text-white"
+      style="width: 150px"
+      :src="`https://www.nederland.fm/i/l/${radio.z}.gif`" />
     <br />
     <audio
       id="radio"
@@ -8,10 +12,11 @@
       :src="radio.m"
       frameborder="0"
       width="400"
-      height="200"></audio>
+      height="200">
+    </audio>
     <button
       v-if="playButton"
-      class="bg-proto_blue hover:bg-proto_blue/80 my-auto ml-5 flex rounded-md py-1 px-2 text-white shadow-md"
+      class="bg-proto_blue hover:bg-proto_blue/80 my-auto mx-auto mt-5 flex rounded-md py-1 px-2 text-white shadow-md"
       @click="playClick">
       play audio
     </button>
