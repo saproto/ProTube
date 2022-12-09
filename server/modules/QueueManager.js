@@ -88,9 +88,9 @@ exports.removeVideo = (videoID) => {
 
 exports.clearQueue = () => {
   queue = [];
-  eventBus.emit('queue-update');
+  eventBus.emit("queue-update");
   return enums.SUCCESS;
-}
+};
 
 exports.setCurrentVideo = (video) => {
   currentVideo = video;

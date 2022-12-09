@@ -57,10 +57,10 @@ endpoint.on("connection", (socket) => {
     }
   });
 
-  socket.on('clear-queue', (_, callback) => {
-    logger.adminInfo(`${socket.id} Requested to clear the queue`)
+  socket.on("clear-queue", (_, callback) => {
+    logger.adminInfo(`${socket.id} Requested to clear the queue`);
     try {
-      callback({ success: queueManager.clearQueue() })
+      callback({ success: queueManager.clearQueue() });
     } catch (e) {
       callback(e.getInfo());
     }
