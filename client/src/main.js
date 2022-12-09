@@ -13,9 +13,37 @@ import {
   faBackward,
   faForward,
   faBars,
+  faUser,
+  faMicrophone,
+  faClock,
+  faXmark,
+  faXmarkCircle,
+  faCircleNotch,
+  faCheck,
+  faCheckCircle,
+  faWarning,
+  faEye,
+  faSearch,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add([faPlay, faPause, faBackward, faForward, faBars]);
+library.add(
+  faPlay,
+  faPause,
+  faBackward,
+  faForward,
+  faBars,
+  faUser,
+  faMicrophone,
+  faClock,
+  faXmark,
+  faXmarkCircle,
+  faCircleNotch,
+  faCheck,
+  faCheckCircle,
+  faWarning,
+  faEye,
+  faSearch
+);
 
 import "./assets/tailwind.css";
 

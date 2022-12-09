@@ -28,72 +28,33 @@
           v-show="passkeyAccepted || loading || passkeyAccepted == false"
           class="flex h-16 w-16 items-center justify-center rounded-md opacity-75 outline-none"
           :class="codeStatusIndicatorStyle">
-          <!-- green check icon -->
-          <transition name="icon">
-            <svg
-              v-show="passkeyAccepted && !loading"
-              class="m-2 h-full w-full"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                fill-rule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clip-rule="evenodd"></path>
-            </svg>
-          </transition>
+          <font-awesome-icon
+            v-show="passkeyAccepted && !loading"
+            icon="fa-solid fa-check">
+          </font-awesome-icon>
 
-          <!-- red error icon -->
-          <transition name="icon">
-            <svg
-              v-show="!passkeyAccepted && !loading"
-              class="m-2 h-full w-full"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </transition>
+          <font-awesome-icon
+            v-show="!passkeyAccepted && !loading"
+            icon="fa-solid fa-xmark"
+            size="2x">
+          </font-awesome-icon>
 
-          <!-- gray loading icon -->
-          <svg
+          <font-awesome-icon
             v-show="loading"
-            class="m-2 h-full w-full animate-spin"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-          </svg>
+            icon="fa-solid fa-circle-notch"
+            size="2x"
+            spin>
+          </font-awesome-icon>
         </div>
       </div>
     </div>
     <transition name="errormessage">
       <div
         v-show="passkeyAccepted == false"
-        class="mx-auto mt-3 -mb-1 flex justify-center rounded-md bg-red-300 py-1 text-center text-sm text-red-600">
-        <svg
-          class="mt-0.5 mr-2 h-3.5 w-3.5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        {{ connectError }}
+        class="mx-auto mt-3 flex justify-center rounded-md bg-red-300 py-1 text-center text-sm text-red-600">
+        <font-awesome-icon icon="fa-solid fa-warning" class="mr-1 self-center">
+        </font-awesome-icon>
+        <span>{{ connectError }}</span>
       </div>
     </transition>
   </div>
@@ -102,6 +63,7 @@
 <script setup>
 import { computed, reactive, ref, onMounted } from "vue";
 import socket, { setPinCode, connectSocket } from "@/js/RemoteSocket";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const digitsFromInput = reactive({
   0: null,

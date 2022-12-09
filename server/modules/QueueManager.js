@@ -69,7 +69,7 @@ exports.moveToNext = () => {
 
 // Removing a specific video from the queue
 exports.removeVideo = (videoID) => {
-  // todo array.fiter instead of this
+  // TODO: Use Array.filter instead of weird forEach loop
   let toDeleteIndex = null;
   queue.forEach((item, index) => {
     if (item.id === videoID) {

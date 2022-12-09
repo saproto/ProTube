@@ -28,19 +28,9 @@
                 : 'cursor-default opacity-80'
             "
             class="bg-search_button_background-light focus:border-search_button_border focus:bg-search_button_background dark:border-search_button_background-dark dark:bg-search_button_background-dark mx-auto inline-flex items-center justify-center rounded-r-md border p-2 font-medium shadow-sm duration-200 focus:text-white focus:outline-none dark:text-white">
-            <svg
-              class="mx-1 h-5 w-5"
-              id="searchIcon"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="3"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
+            <font-awesome-icon
+              icon="fa-solid fa-search"
+              class="mx-1"></font-awesome-icon>
           </button>
         </div>
       </form>
@@ -58,6 +48,7 @@
 import { ref, onMounted } from "vue";
 import HeaderField from "@/layout/HeaderField.vue";
 import HeaderFieldButtons from "@/components/HeaderFieldButtons.vue";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const searchString = ref("");
 defineProps({
@@ -102,7 +93,7 @@ async function processQuery() {
       break;
     }
     case "spotify.com": {
-      //todo implement other hosts
+      // TODO: Implement other music/video hosts
     }
   }
 
