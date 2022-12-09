@@ -1,7 +1,7 @@
 <template>
   <div
     :class="classes"
-    class="display-block mr-6 ml-2 mt-auto shrink-0 justify-center">
+    class="display-block mr-6 ml-10 mt-auto shrink-0 justify-center">
     <div v-if="name" class="my-2 text-2xl text-white">Welcome {{ name }}!</div>
     <div
       class="grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-2 xl:grid-cols-4">
