@@ -1,7 +1,7 @@
 const logger = require("./logger");
 const { format_mm_ss, format_hh_mm_ss } = require("./time-formatter");
 
-const { Client, Continuable, SearchResult } = require("youtubei");
+const { Client, SearchResult } = require("youtubei");
 const youtube = new Client();
 
 //search for a YouTube video
