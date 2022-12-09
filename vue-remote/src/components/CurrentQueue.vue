@@ -9,7 +9,7 @@
                         </li>
                     </ul>
                 </div>
-                <div v-else class="md:flex md:flex-nowrap h-full">
+                <div v-else class="md:flex md:flex-nowrap">
                     <ul v-for="(video, index) in queue" :video="video" :index="index" :key="video.id" class="grid inline-block w-full md:w-96 min-h-full mt-3 md:mt-0 " >
                         <li :style='{background: `url(${video.thumbnail.url})`}' style="background-repeat: no-repeat; background-size: cover; background-position: center center;" :class="admin ? 'group cursor-pointer ' : ''" class="col-span-1 flex group flex-col text-center  border-proto_blue border-l-4 rounded-sm shadow mr-6"> <!--divide-y dark:divide-proto_green divide-gray-500-->
                             <div @click="removeFromQueue(video)" :class="admin ? 'group-hover:bg-white/60 group-hover:dark:bg-stone-800/60' : ''" class="duration-200 flex-1 rounded-m border-t border-b border-r dark:border-gray-800/80 border-gray-400 flex flex-col px-8 py-4 bg-white/80 dark:bg-stone-800/80">
