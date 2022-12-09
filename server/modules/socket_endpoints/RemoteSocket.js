@@ -16,7 +16,11 @@ endpoint.on("connection", (socket) => {
 
   socket.on("fetch-videos", async (request, callback) => {
     try {
-      const result = await youtube.search(request.query, request.continuationToken, socket.request.user.admin);
+      const result = await youtube.search(
+        request.query,
+        request.continuationToken,
+        socket.request.user.admin
+      );
       callback(result);
       logger.youtubeInfo("Returned list of music to client (remote)");
     } catch (e) {

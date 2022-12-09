@@ -16,7 +16,7 @@ exports.search = async (query, continuationToken, isAdmin = false) => {
   } else {
     logger.youtubeInfo(`Searching the next page for query`);
     //search the next page of the query (we have to create a new SearchResult due to library restrictions)
-    result = new SearchResult({client: youtube});
+    result = new SearchResult({ client: youtube });
     result.continuation = continuationToken;
     videos = await result.next();
   }
@@ -28,14 +28,16 @@ exports.search = async (query, continuationToken, isAdmin = false) => {
   videos.map((video) => sanitizeVideo(video));
 
   return {
-    videos: isAdmin ? videos : videos.filter(
-      (video) =>
-        video.duration <= (parseInt(process.env.YOUTUBE_MAX_DURATION) || 600)
-    ),
-    continuationToken: newContinuation
+    videos: isAdmin
+      ? videos
+      : videos.filter(
+          (video) =>
+            video.duration <=
+            (parseInt(process.env.YOUTUBE_MAX_DURATION) || 600)
+        ),
+    continuationToken: newContinuation,
   };
 };
-
 
 //get metadata for a single YouTube video
 exports.getVideo = async (videoId, isAdmin = false) => {

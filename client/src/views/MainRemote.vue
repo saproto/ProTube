@@ -13,8 +13,8 @@
         v-on:display-toast="displayToast"
         :videos="foundVideos"
         :continuationToken="continuationToken"
-        :skeletonLoading="resultsWrapperSkeletons" 
-        :fetchVideos="fetchVideos"/>
+        :skeletonLoading="resultsWrapperSkeletons"
+        :fetchVideos="fetchVideos" />
     </transition>
     <ToastsModal :latestToast="latestToast" />
     <transition name="modal" appear>
@@ -118,14 +118,16 @@ async function fetchThenAddPlaylist(playlistId) {
 }
 
 async function fetchVideos(query) {
-  if(query) {
+  if (query) {
     continuationToken.value = null;
-  }else{
-    window.scrollTo({top: 0, behavior: 'smooth'});
+  } else {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
   loadModalVisible.value = true;
   resultsWrapperSkeletons.value = true;
-  loadModalMessage.value = query ? `Searching for ${query}...` : 'Getting results from next page...';
+  loadModalMessage.value = query
+    ? `Searching for ${query}...`
+    : "Getting results from next page...";
   let result = await new Promise((resolve) => {
     socket.emit(
       "fetch-videos",
