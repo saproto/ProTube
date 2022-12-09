@@ -1,96 +1,190 @@
 <template>
   <ContentField>
-    <label class="absolute text-2xl text-gray-600 dark:text-white">
-      The current queue - {{ queueDuration }}</label
-    >
-    <div
-      class="scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 flex overflow-x-scroll py-5 md:pt-10">
-      <div v-if="skeletonLoading" class="flex h-full flex-nowrap">
-        <ul
-          v-for="index in 10"
-          :key="index"
-          class="inline-block grid min-h-full w-96 px-3">
-          <li
-            class="border-proto_blue group group col-span-1 flex cursor-pointer flex-col rounded-sm border-l-4 text-center shadow">
-            <SkeletonResult />
-          </li>
-        </ul>
+    <div class="flex flex-col">
+      <div class="flex flex-col md:flex-row justify-between items-top">
+        <label class="text-2xl text-gray-600 dark:text-white">
+          The current queue - {{ queueDuration }}</label
+        >
+        <button
+          @click="clearQueue()"
+          v-if="queue.length >= 1 && admin"
+          class="
+            mt-4
+            md:mt-0
+            flex-none
+            text-center
+            py-2
+            px-4
+            bg-proto_blue
+            text-white
+            hover:opacity-80
+            duration-200
+            hover:shadow-lg hover:-translate-x-1 hover:-translate-y-0.5
+            rounded-md
+          ">
+          Clear queue
+        </button>
       </div>
-      <div v-if="!skeletonLoading" class="h-full md:flex md:flex-nowrap">
-        <ul
-          v-for="(video, index) in queue"
-          :video="video"
-          :index="index"
-          :key="video.id"
-          class="mt-3 inline-block grid min-h-full w-full px-3 md:mt-0 md:w-96">
-          <li
-            :style="{ background: `url(${video.thumbnail.url})` }"
-            style="
-              background-repeat: no-repeat;
-              background-size: cover;
-              background-position: center center;
-            "
-            :class="admin ? 'group cursor-pointer ' : ''"
-            class="border-proto_blue group col-span-1 flex flex-col rounded-sm border-l-4 text-center shadow">
-            <div
-              @click="removeFromQueue(video)"
-              :class="
-                admin
-                  ? 'group-hover:bg-white/60 group-hover:dark:bg-stone-800/60'
-                  : ''
+      <div
+        class="
+          scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900
+          flex
+          overflow-x-auto
+          md:py-5
+        ">
+        <div v-if="skeletonLoading" class="md:flex h-full flex-nowrap">
+          <ul
+            v-for="index in 10"
+            :key="index"
+            class="mt-3 inline-block grid min-h-full w-96">
+            <li
+              class="
+                border-proto_blue
+                group group
+                col-span-1
+                flex
+                cursor-pointer
+                flex-col
+                rounded-sm
+                border-l-4
+                text-center
+                shadow
+                mr-0
+                md:mr-6
+              ">
+              <SkeletonResult />
+            </li>
+          </ul>
+        </div>
+        <div v-else class="h-full md:flex md:flex-nowrap">
+          <ul
+            v-for="(video, index) in queue"
+            :video="video"
+            :index="index"
+            :key="video.id"
+            class="mt-3 inline-block grid min-h-full w-full md:mt-0 md:w-96">
+            <li
+              :style="{ background: `url(${video.thumbnail.url})` }"
+              style="
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center center;
               "
-              class="rounded-m flex flex-1 flex-col border-t border-b border-r border-gray-400 bg-white/80 px-8 py-4 duration-200 dark:border-gray-800/80 dark:bg-stone-800/80">
-              <h3
-                class="text-md text-left font-bold text-gray-800 dark:text-stone-300">
-                {{ video.title }}
-              </h3>
-              <ul
-                class="fa-ul mt-auto ml-5 w-full text-sm font-medium text-gray-900 dark:text-stone-300">
-                <li
-                  class="justify-bottom mt-auto flex flex-1 text-right align-bottom">
-                  <span class="fa-li">
-                    <font-awesome-icon icon="fa-solid fa-user" fixed-width>
-                    </font-awesome-icon>
-                  </span>
-                  <span class="truncate">
-                    {{ video.user.name }}
-                  </span>
-                </li>
-                <li class="flex flex-1 text-right">
-                  <span class="fa-li">
-                    <font-awesome-icon
-                      icon="fa-solid fa-microphone"
-                      fixed-width>
-                    </font-awesome-icon>
-                  </span>
-                  <span class="truncate">
-                    {{ video.channel }}
-                  </span>
-                </li>
-                <li class="flex flex-1 text-right">
-                  <span class="fa-li">
-                    <font-awesome-icon
-                      icon="fa-solid fa-clock fa-li"
-                      fixed-width>
-                    </font-awesome-icon>
-                  </span>
-                  <span class="truncate">
-                    {{ video.durationFormatted }}
-                  </span>
-                  <span
-                    v-if="admin"
-                    class="ml-auto truncate rounded-sm bg-red-600 p-1 text-xs font-medium text-white opacity-0 shadow-lg duration-300 group-hover:opacity-100">
-                    Remove
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-        <div
-          v-if="!skeletonLoading && queue.length < 1"
-          class="mt-5 text-gray-400">
-          The queue is empty, try searching for some fun tunes!
+              :class="admin ? 'group cursor-pointer ' : ''"
+              class="
+                border-proto_blue
+                group
+                col-span-1
+                flex flex-col
+                rounded-sm
+                border-l-4
+                text-center
+                shadow
+                mr-0
+                md:mr-6
+              ">
+              <div
+                @click="removeFromQueue(video)"
+                :class="
+                  admin
+                    ? 'group-hover:bg-white/60 group-hover:dark:bg-stone-800/60'
+                    : ''
+                "
+                class="
+                  rounded-m
+                  flex flex-1 flex-col
+                  border-t border-b border-r border-gray-400
+                  bg-white/80
+                  px-8
+                  py-4
+                  duration-200
+                  dark:border-gray-800/80 dark:bg-stone-800/80
+                ">
+                <h3
+                  class="
+                    text-md text-left
+                    font-bold
+                    text-gray-800
+                    dark:text-stone-300
+                  ">
+                  {{ video.title }}
+                </h3>
+                <ul
+                  class="
+                    fa-ul
+                    mt-auto
+                    ml-5
+                    w-full
+                    text-sm
+                    font-medium
+                    text-gray-900
+                    dark:text-stone-300
+                  ">
+                  <li
+                    class="
+                      justify-bottom
+                      mt-auto
+                      flex flex-1
+                      text-right
+                      align-bottom
+                    ">
+                    <span class="fa-li">
+                      <font-awesome-icon icon="fa-solid fa-user" fixed-width>
+                      </font-awesome-icon>
+                    </span>
+                    <span class="truncate">
+                      {{ video.user.name }}
+                    </span>
+                  </li>
+                  <li class="flex flex-1 text-right">
+                    <span class="fa-li">
+                      <font-awesome-icon
+                        icon="fa-solid fa-microphone"
+                        fixed-width>
+                      </font-awesome-icon>
+                    </span>
+                    <span class="truncate">
+                      {{ video.channel }}
+                    </span>
+                  </li>
+                  <li class="flex flex-1 text-right">
+                    <span class="fa-li">
+                      <font-awesome-icon
+                        icon="fa-solid fa-clock fa-li"
+                        fixed-width>
+                      </font-awesome-icon>
+                    </span>
+                    <span class="truncate">
+                      {{ video.durationFormatted }}
+                    </span>
+                    <span
+                      v-if="admin"
+                      class="
+                        ml-auto
+                        truncate
+                        rounded-sm
+                        bg-red-600
+                        p-1
+                        text-xs
+                        font-medium
+                        text-white
+                        opacity-0
+                        shadow-lg
+                        duration-300
+                        group-hover:opacity-100
+                      ">
+                      Remove
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+          <div
+            v-if="!skeletonLoading && queue.length < 1"
+            class="mt-5 text-gray-400">
+            The queue is empty, try searching for some fun tunes!
+          </div>
         </div>
       </div>
     </div>
@@ -134,6 +228,20 @@ async function removeFromQueue(video) {
   emit("display-toast", {
     status: data.status ?? enums.STATUS.SUCCESS,
     message: data.message ?? `Successfully skipped video!`,
+  });
+}
+
+async function clearQueue() {
+  if (!props.admin) return;
+  //remove all videos from the queue
+  const data = await new Promise((resolve) => {
+    socket.emit("clear-queue", null, (callback) => {
+      resolve(callback);
+    });
+  });
+  emit("display-toast", {
+    status: data.status ?? enums.STATUS.SUCCESS,
+    message: data.message ?? `Succesfully removed all videos from the queue!`,
   });
 }
 
