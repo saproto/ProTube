@@ -8,7 +8,7 @@
         "build": "cd vue-remote && npm run build",
         "start": "node app",
         "watch": "nodemon app",
-        "dev": "run-p -r start vue-run-dev",
+        "dev": "concurrently --kill-others \"npm run start\" \"cd vue-remote && npm run dev\"",
         "madge": "madge ./app.js -i ./madge.jpg"
     },
     "dependencies": {
@@ -37,6 +37,7 @@
     },
     "devDependencies": {
         "autoprefixer": "^10.3.1",
+        "concurrently": "^7.6.0",
         "madge": "^5.0.1",
         "nodemon": "^2.0.19"
     }
