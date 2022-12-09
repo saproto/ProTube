@@ -14,13 +14,13 @@ endpoint.on("connection", (socket) => {
     logger.clientInfo(`Disconnected socket: ${socket.id}`);
   });
 
-  socket.on("fetch-videos", async (query, callback) => {
+  socket.on("fetch-videos", async (request, callback) => {
     try {
-      const videos = await youtube.search(query, socket.request.user.admin);
-      callback(videos);
+      const result = await youtube.search(request.query, request.continuationToken, socket.request.user.admin);
+      callback(result);
       logger.youtubeInfo("Returned list of music to client (remote)");
     } catch (e) {
-      callback([]);
+      callback({});
     }
   });
 

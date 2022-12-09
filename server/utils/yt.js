@@ -1,24 +1,41 @@
 const logger = require("./logger");
 const { format_mm_ss, format_hh_mm_ss } = require("./time-formatter");
 
-const { Client } = require("youtubei");
+const { Client, Continuable, SearchResult } = require("youtubei");
 const youtube = new Client();
 
 //search for a YouTube video
-exports.search = async (query, isAdmin = false) => {
-  logger.youtubeInfo(`Search initiated for query ${query}`);
-  let videos = await youtube.search(query, { type: "video" });
-  videos = videos.items;
+exports.search = async (query, continuationToken, isAdmin = false) => {
+  let result;
+  let videos;
+
+  if (!continuationToken) {
+    logger.youtubeInfo(`Search initiated for query ${query}`);
+    result = await youtube.search(query, { type: "video" });
+    videos = result.items;
+  } else {
+    logger.youtubeInfo(`Searching the next page for query`);
+    //search the next page of the query (we have to create a new SearchResult due to library restrictions)
+    result = new SearchResult({client: youtube});
+    result.continuation = continuationToken;
+    videos = await result.next();
+  }
+
+  let newContinuation = result.continuation;
+
   if (!videos) return new Error("Could not find any videos");
 
   videos.map((video) => sanitizeVideo(video));
-  if (isAdmin) return videos;
 
-  return videos.filter(
-    (video) =>
-      video.duration <= (parseInt(process.env.YOUTUBE_MAX_DURATION) || 600)
-  );
+  return {
+    videos: isAdmin ? videos : videos.filter(
+      (video) =>
+        video.duration <= (parseInt(process.env.YOUTUBE_MAX_DURATION) || 600)
+    ),
+    continuationToken: newContinuation
+  };
 };
+
 
 //get metadata for a single YouTube video
 exports.getVideo = async (videoId, isAdmin = false) => {

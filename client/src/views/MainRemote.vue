@@ -9,9 +9,12 @@
     </transition>
     <transition name="results" mode="out-in" appear>
       <ResultsWrapper
+        v-on:next-page="fetchVideos"
         v-on:display-toast="displayToast"
         :videos="foundVideos"
-        :skeletonLoading="resultsWrapperSkeletons" />
+        :continuationToken="continuationToken"
+        :skeletonLoading="resultsWrapperSkeletons" 
+        :fetchVideos="fetchVideos"/>
     </transition>
     <ToastsModal :latestToast="latestToast" />
     <transition name="modal" appear>
@@ -44,6 +47,7 @@ const loadModalVisible = ref(false);
 const resultsWrapperSkeletons = ref(false);
 const loadModalMessage = ref("");
 const foundVideos = ref([]);
+const continuationToken = ref(null);
 const latestToast = ref(null);
 
 const user = ref({
@@ -114,14 +118,28 @@ async function fetchThenAddPlaylist(playlistId) {
 }
 
 async function fetchVideos(query) {
+  if(query) {
+    continuationToken.value = null;
+  }else{
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
   loadModalVisible.value = true;
   resultsWrapperSkeletons.value = true;
-  loadModalMessage.value = `Searching for ${query}...`;
-  foundVideos.value = await new Promise((resolve) => {
-    socket.emit("fetch-videos", query, (result) => {
-      resolve(result);
-    });
+  loadModalMessage.value = query ? `Searching for ${query}...` : 'Getting results from next page...';
+  let result = await new Promise((resolve) => {
+    socket.emit(
+      "fetch-videos",
+      {
+        query,
+        continuationToken: continuationToken.value,
+      },
+      (result) => {
+        resolve(result);
+      }
+    );
   });
+  foundVideos.value = result.videos;
+  continuationToken.value = result.continuationToken;
   loadModalVisible.value = false;
   resultsWrapperSkeletons.value = false;
 }
