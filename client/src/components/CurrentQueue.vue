@@ -1,12 +1,12 @@
 <template>
-  <ContentField>
+  <ContentField id="nav">
     <div class="h-10">
     <label class="absolute text-2xl text-gray-600 dark:text-white">
       The current queue - {{ queueDuration }}</label
     >
     </div>
     <div
-      class="scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 flex overflow-y-scroll overflow-x-hidden overscroll-contain max-h-screen px-0 pt-10">
+      class="scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 flex overflow-y-scroll overflow-x-hidden overscroll-contain max-h-[29rem] px-0 pt-10">
       <div v-if="skeletonLoading" class="flex-nowrap">
         <ul
           v-for="index in 10"
@@ -155,4 +155,33 @@ socket.on("queue-update", (newQueue) => {
   queueDuration.value = newQueue.duration;
   queue.value = newQueue.queue;
 });
+
+// code borrowed from https://stackoverflow.com/a/17494943
+let startProductBarPos = -1;
+window.onscroll=function(){
+  var bar = document.getElementById('nav');
+  if(startProductBarPos<0)startProductBarPos=findPosY(bar);
+
+  if(scrollY>startProductBarPos){
+    bar.style.position='fixed';
+    bar.style.top=0;
+  }else{
+    bar.style.position='relative';
+  }
+
+};
+
+function findPosY(obj) {
+  let curtop = 0;
+  if (typeof (obj.offsetParent) != 'undefined' && obj.offsetParent) {
+    while (obj.offsetParent) {
+      curtop += obj.offsetTop;
+      obj = obj.offsetParent;
+    }
+    curtop += obj.offsetTop;
+  }
+  else if (obj.y)
+    curtop += obj.y;
+  return curtop;
+}
 </script>
