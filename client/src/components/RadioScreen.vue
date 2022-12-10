@@ -12,8 +12,7 @@
       :src="radio.m"
       frameborder="0"
       width="400"
-      height="200">
-    </audio>
+      height="200"></audio>
     <button
       v-if="playButton"
       class="bg-proto_blue hover:bg-proto_blue/80 my-auto mx-auto mt-5 flex rounded-md py-1 px-2 text-white shadow-md"

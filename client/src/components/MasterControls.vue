@@ -1,12 +1,12 @@
 <template>
   <ContentField>
-    <h3 class="text-2xl text-gray-600 dark:text-white h-full">
+    <h3 class="h-full text-2xl text-gray-600 dark:text-white">
       Master controls
     </h3>
     <div class="md:flex">
-      <div class="w-full md:w-2/3 mx-auto text-center">
+      <div class="mx-auto w-full text-center md:w-2/3">
         <span
-          class="w-full text-lg text-right text-gray-500 dark:text-white md:text-center">
+          class="w-full text-right text-lg text-gray-500 dark:text-white md:text-center">
           Volume - {{ playerSettings.volume }}
         </span>
         <input
@@ -28,18 +28,18 @@
               @click="toggleRadioProtube"
               type="button"
               :class="
-                  playerSettings.playerType === enums.TYPES.RADIO
-                    ? 'bg-proto_blue'
-                    : 'bg-proto_green'
-                "
+                playerSettings.playerType === enums.TYPES.RADIO
+                  ? 'bg-proto_blue'
+                  : 'bg-proto_green'
+              "
               class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               role="switch">
               <span
                 :class="
-                      playerSettings.playerType === enums.TYPES.RADIO
-                        ? 'translate-x-5'
-                        : 'translate-x-0'
-                    "
+                  playerSettings.playerType === enums.TYPES.RADIO
+                    ? 'translate-x-5'
+                    : 'translate-x-0'
+                "
                 class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out">
               </span>
             </button>
@@ -50,17 +50,17 @@
             </span>
           </div>
           <!--   Video controls   -->
-          <div class="mt-2 mx-auto">
+          <div class="mx-auto mt-2">
             <!-- TODO: Add back button in admin controls -->
             <!--<font-awesome-icon class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" icon="backward" />-->
             <font-awesome-icon
               @click="playPause"
               class="cursor-pointer text-2xl text-gray-600 dark:text-white"
               :icon="
-                  playerSettings.playerMode === enums.MODES.PLAYING
-                    ? 'pause'
-                    : 'play'
-                ">
+                playerSettings.playerMode === enums.MODES.PLAYING
+                  ? 'pause'
+                  : 'play'
+              ">
             </font-awesome-icon>
             <font-awesome-icon
               @click="skipVideo"
@@ -70,11 +70,11 @@
           </div>
         </div>
       </div>
-<!--      <div class="mt-4 flex md:mt-12 md:w-1/3">-->
-<!--        &lt;!&ndash; <button @click="resetScreenCode" class="shadow-md bg-proto_blue hover:bg-proto_blue/80 text-white py-1 px-2 md:ml-5 rounded-md my-auto flex">-->
-<!--            New code-->
-<!--        </button> &ndash;&gt;-->
-<!--      </div>-->
+      <!--      <div class="mt-4 flex md:mt-12 md:w-1/3">-->
+      <!--        &lt;!&ndash; <button @click="resetScreenCode" class="shadow-md bg-proto_blue hover:bg-proto_blue/80 text-white py-1 px-2 md:ml-5 rounded-md my-auto flex">-->
+      <!--            New code-->
+      <!--        </button> &ndash;&gt;-->
+      <!--      </div>-->
     </div>
   </ContentField>
 </template>
