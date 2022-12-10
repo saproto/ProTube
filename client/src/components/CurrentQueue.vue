@@ -1,17 +1,17 @@
 <template>
   <ContentField id="nav">
     <div class="h-10">
-    <label class="absolute text-2xl text-gray-600 dark:text-white">
-      The current queue - {{ queueDuration }}</label
-    >
+      <label class="absolute text-2xl text-gray-600 dark:text-white">
+        The current queue - {{ queueDuration }}</label
+      >
     </div>
     <div
-      class="scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 flex overflow-y-scroll overflow-x-hidden overscroll-contain max-h-[29rem] px-0 pt-10">
+      class="scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 flex max-h-[29rem] overflow-x-hidden overflow-y-scroll overscroll-contain px-0 pt-10">
       <div v-if="skeletonLoading" class="flex-nowrap">
         <ul
           v-for="index in 10"
           :key="index"
-          class="mt-2 inline-block grid mx-2 md:w-96">
+          class="mx-2 mt-2 inline-block grid md:w-96">
           <li
             class="border-proto_blue group group col-span-1 flex grow cursor-pointer flex-col rounded-sm border-l-4 text-center shadow">
             <SkeletonResult />
@@ -24,7 +24,7 @@
           :video="video"
           :index="index"
           :key="video.id"
-          class="mt-2 inline-block grid w-full mx-2 md:w-96">
+          class="mx-2 mt-2 inline-block grid w-full md:w-96">
           <li
             :style="{ background: `url(${video.thumbnail.url})` }"
             style="
@@ -41,7 +41,7 @@
                   ? 'group-hover:bg-white/60 group-hover:dark:bg-stone-800/60'
                   : ''
               "
-              class="rounded-m flex w-100 flex-col border-t border-b border-r border-gray-400 bg-white/80 px-8 py-4 duration-200 dark:border-gray-800/80 dark:bg-stone-800/80">
+              class="rounded-m w-100 flex flex-col border-t border-b border-r border-gray-400 bg-white/80 px-8 py-4 duration-200 dark:border-gray-800/80 dark:bg-stone-800/80">
               <h3
                 class="text-md text-left font-bold text-gray-800 dark:text-stone-300">
                 {{ video.title }}
@@ -158,30 +158,27 @@ socket.on("queue-update", (newQueue) => {
 
 // code borrowed from https://stackoverflow.com/a/17494943
 let startProductBarPos = -1;
-window.onscroll=function(){
-  var bar = document.getElementById('nav');
-  if(startProductBarPos<0)startProductBarPos=findPosY(bar);
+window.onscroll = function () {
+  var bar = document.getElementById("nav");
+  if (startProductBarPos < 0) startProductBarPos = findPosY(bar);
 
-  if(scrollY>startProductBarPos){
-    bar.style.position='fixed';
-    bar.style.top=0;
-  }else{
-    bar.style.position='relative';
+  if (scrollY > startProductBarPos) {
+    bar.style.position = "fixed";
+    bar.style.top = 0;
+  } else {
+    bar.style.position = "relative";
   }
-
 };
 
 function findPosY(obj) {
   let curtop = 0;
-  if (typeof (obj.offsetParent) != 'undefined' && obj.offsetParent) {
+  if (typeof obj.offsetParent != "undefined" && obj.offsetParent) {
     while (obj.offsetParent) {
       curtop += obj.offsetTop;
       obj = obj.offsetParent;
     }
     curtop += obj.offsetTop;
-  }
-  else if (obj.y)
-    curtop += obj.y;
+  } else if (obj.y) curtop += obj.y;
   return curtop;
 }
 </script>
