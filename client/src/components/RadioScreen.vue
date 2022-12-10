@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="z-50">
     <img
       :alt="radio.o"
       class="bg-proto_blue hover:bg-proto_blue/80 overflow-hidden truncate rounded-lg text-white"
