@@ -8,7 +8,7 @@
   </transition>
 
   <div class="gap-2 md:grid md:grid-cols-6">
-    <div class="col-span-4">
+    <div class="col-span-3 lg:col-span-4">
       <transition name="results" mode="out-in" appear>
         <MasterControls v-if="user.admin" />
       </transition>
@@ -24,7 +24,7 @@
           :skeletonLoading="resultsWrapperSkeletons" />
       </transition>
     </div>
-    <div class="col-span-2">
+    <div class="col-span-3 lg:col-span-2">
       <transition name="results" mode="out-in" appear>
         <CurrentQueue />
       </transition>
