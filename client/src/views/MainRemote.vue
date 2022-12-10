@@ -1,30 +1,46 @@
 <template>
-  <div>
-    <transition name="search" mode="out-in" appear>
-      <SearchWrapper
-        :user="user"
-        v-on:query-videos="fetchVideos"
-        v-on:query-single-video="fetchThenAddVideo"
-        v-on:query-playlist="fetchThenAddPlaylist" />
-    </transition>
-    <transition name="results" mode="out-in" appear>
-      <ResultsWrapper
-        v-on:display-toast="displayToast"
-        :videos="foundVideos"
-        :skeletonLoading="resultsWrapperSkeletons" />
-    </transition>
-    <ToastsModal :latestToast="latestToast" />
-    <transition name="modal" appear>
-      <PincodeModal v-if="loginModalVisible" />
-    </transition>
-    <transition name="modal" appear>
-      <LoadModal
-        :message="loadModalMessage"
-        v-if="loadModalVisible && !loginModalVisible" />
-    </transition>
-    <transition name="results" mode="out-in" appear>
-      <CurrentQueue />
-    </transition>
+  <transition name="search" mode="out-in" appear>
+    <SearchWrapper
+      :user="user"
+      v-on:query-videos="fetchVideos"
+      v-on:query-single-video="fetchThenAddVideo"
+      v-on:query-playlist="fetchThenAddPlaylist" />
+  </transition>
+
+  <div class="gap-2 md:grid md:grid-cols-6">
+    <div class="col-span-3 lg:col-span-4">
+      <transition name="results" mode="out-in" appear>
+        <MasterControls v-if="user.admin" />
+      </transition>
+
+      <transition name="results" mode="out-in" appear>
+        <RadioStations v-if="user.admin" v-on:display-toast="displayToast" />
+      </transition>
+
+      <transition name="results" mode="out-in" appear>
+        <ResultsWrapper
+          v-on:display-toast="displayToast"
+          :videos="foundVideos"
+          :skeletonLoading="resultsWrapperSkeletons" />
+      </transition>
+    </div>
+    <div class="col-span-3 lg:col-span-2">
+      <transition name="results" mode="out-in" appear>
+        <CurrentQueue />
+      </transition>
+
+      <ToastsModal :latestToast="latestToast" />
+
+      <transition name="modal" appear>
+        <PincodeModal v-if="loginModalVisible" />
+      </transition>
+
+      <transition name="modal" appear>
+        <LoadModal
+          :message="loadModalMessage"
+          v-if="loadModalVisible && !loginModalVisible" />
+      </transition>
+    </div>
   </div>
 </template>
 
@@ -35,6 +51,8 @@ import PincodeModal from "@/components/modals/PincodeModal.vue";
 import LoadModal from "@/components/modals/LoadModal.vue";
 import CurrentQueue from "@/components/CurrentQueue.vue";
 import ToastsModal from "@/components/modals/ToastsModal.vue";
+import MasterControls from "@/components/MasterControls.vue";
+import RadioStations from "@/components/RadioStations.vue";
 import socket, { connectSocket } from "@/js/RemoteSocket";
 import { onMounted, ref, onBeforeMount, onBeforeUnmount } from "vue";
 import enums from "@/js/Enums";

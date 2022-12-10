@@ -6,41 +6,35 @@
     <div
       class="grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-2 xl:grid-cols-4">
       <router-link
-        to="/remote/admin"
-        v-if="adminRemote"
-        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
-        >Admin remote</router-link
-      >
-      <router-link
         to="/screen/admin"
         v-if="adminScreen"
-        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
-        >Admin screen</router-link
-      >
+        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+        Admin screen
+      </router-link>
       <router-link
         to="/screen"
         v-if="screen"
-        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
-        >Screen</router-link
-      >
+        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+        Screen
+      </router-link>
       <router-link
         to="/statistics"
         v-if="statistics"
-        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
-        >Statistics</router-link
-      >
+        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+        Statistics
+      </router-link>
       <router-link
         to="/remote"
         v-if="remote"
-        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
-        >Remote</router-link
-      >
+        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+        Remote
+      </router-link>
       <router-link
         to="/soundboard"
         v-if="soundboard"
-        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
-        >Soundboard</router-link
-      >
+        class="bg-proto_blue rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+        Soundboard
+      </router-link>
     </div>
   </div>
   <div class="my-auto mr-6 hidden shrink-0 lg:block">
@@ -62,10 +56,6 @@ defineProps({
     default: false,
   },
   statistics: {
-    type: Boolean,
-    default: false,
-  },
-  adminRemote: {
     type: Boolean,
     default: false,
   },

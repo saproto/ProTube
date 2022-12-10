@@ -37,7 +37,6 @@
     </div>
     <HeaderFieldButtons
       :classes="openMenu ? '' : 'md:block hidden'"
-      :admin-remote="user.admin"
       :admin-screen="user.admin"
       screen
       :name="user.name" />
