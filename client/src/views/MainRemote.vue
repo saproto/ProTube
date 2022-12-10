@@ -1,13 +1,14 @@
 <template>
-  <div>
     <transition name="search" mode="out-in" appear>
       <SearchWrapper
-        :user="user"
-        v-on:query-videos="fetchVideos"
-        v-on:query-single-video="fetchThenAddVideo"
-        v-on:query-playlist="fetchThenAddPlaylist" />
+          :user="user"
+          v-on:query-videos="fetchVideos"
+          v-on:query-single-video="fetchThenAddVideo"
+          v-on:query-playlist="fetchThenAddPlaylist" />
     </transition>
 
+    <div class="md:grid md:grid-cols-6 gap-2 ">
+      <div class="col-span-4">
     <transition name="results" mode="out-in" appear>
       <MasterControls v-if="user.admin" />
     </transition>
@@ -16,15 +17,17 @@
       <RadioStations v-if="user.admin" v-on:display-toast="displayToast" />
     </transition>
 
+        <transition name="results" mode="out-in" appear>
+          <ResultsWrapper
+              v-on:display-toast="displayToast"
+              :videos="foundVideos"
+              :skeletonLoading="resultsWrapperSkeletons" />
+        </transition>
+
+      </div>
+    <div class="col-span-2">
     <transition name="results" mode="out-in" appear>
       <CurrentQueue />
-    </transition>
-
-    <transition name="results" mode="out-in" appear>
-      <ResultsWrapper
-        v-on:display-toast="displayToast"
-        :videos="foundVideos"
-        :skeletonLoading="resultsWrapperSkeletons" />
     </transition>
 
     <ToastsModal :latestToast="latestToast" />
@@ -38,7 +41,8 @@
         :message="loadModalMessage"
         v-if="loadModalVisible && !loginModalVisible" />
     </transition>
-  </div>
+    </div>
+    </div>
 </template>
 
 <script setup>
