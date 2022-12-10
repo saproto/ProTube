@@ -4,7 +4,7 @@
       Master controls
     </h3>
     <div class="md:flex">
-      <div class="mx-auto w-full text-center md:w-2/3">
+      <div class="mx-auto w-full text-center lg:w-2/3">
         <span
           class="w-full text-right text-lg text-gray-500 dark:text-white md:text-center">
           Volume - {{ playerSettings.volume }}
@@ -18,7 +18,7 @@
           :value="playerSettings.volume" />
         <div class="flex">
           <!--     Video/Radio toggle     -->
-          <div class="mt-2 flex md:absolute">
+          <div class="relative mt-2 flex sm:absolute md:relative lg:absolute">
             <span class="mr-3">
               <span class="text-sm font-medium text-gray-900 dark:text-white">
                 ProTube
