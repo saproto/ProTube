@@ -5,7 +5,7 @@
     </label>
     <input
       v-model="radiofilter"
-      class="ml-4 w-1/3 md:w- rounded-md border border-gray-400 bg-white pl-2 text-gray-700 placeholder-gray-500 outline-none focus:placeholder-gray-600"
+      class="ml-4 rounded-md border border-gray-400 bg-white pl-2 text-gray-700 placeholder-gray-500 outline-none focus:placeholder-gray-600"
       placeholder="Filter" />
     <div
       class="scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 flex overflow-x-scroll py-5">
