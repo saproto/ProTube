@@ -86,6 +86,12 @@ exports.removeVideo = (videoID) => {
   return enums.FAIL;
 };
 
+exports.clearQueue = () => {
+  queue = [];
+  eventBus.emit("queue-update");
+  return enums.SUCCESS;
+};
+
 exports.setCurrentVideo = (video) => {
   currentVideo = video;
 };
