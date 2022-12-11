@@ -1,0 +1,20 @@
+{
+  "__comment": "Global Enum values, both present in the client as the server",
+  "STATUS": {
+    "SUCCESS": 0,
+    "WARNING": 1,
+    "ERROR": 2,
+    "NOTHING": -1
+  },
+  "FAIL": false,
+  "SUCCESS": true,
+  "MODES": {
+    "PLAYING": 0,
+    "IDLE": 1,
+    "PAUSED": 2
+  },
+  "TYPES": {
+    "RADIO": 0,
+    "VIDEO": 1
+  }
+}
