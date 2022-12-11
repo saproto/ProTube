@@ -26,7 +26,7 @@
     </div>
     <div class="col-span-3 lg:col-span-2">
       <transition name="results" mode="out-in" appear>
-        <CurrentQueue />
+        <CurrentQueue :admin="user.admin" />
       </transition>
 
       <ToastsModal :latestToast="latestToast" />

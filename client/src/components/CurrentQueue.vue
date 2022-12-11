@@ -1,9 +1,15 @@
 <template>
   <ContentField id="nav" class="sticky top-0">
-    <div class="h-10">
+    <div class="items-top flex flex-col justify-between pb-2 md:flex-row">
       <label class="text-2xl text-gray-600 dark:text-white">
-        Queue - {{ queueDuration }}</label
-      >
+        Queue - {{ queueDuration }}
+      </label>
+      <button
+        @click="clearQueue()"
+        v-if="queue.length >= 1 && admin"
+        class="bg-proto_blue mt-4 flex-none rounded-md px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg md:mt-0">
+        Clear queue
+      </button>
     </div>
     <div
       class="scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 flex max-h-[84vh] justify-center overflow-y-scroll overscroll-contain px-0">
@@ -127,7 +133,6 @@ const props = defineProps({
 
 async function removeFromQueue(video) {
   if (!props.admin) return;
-  //remove video from queue
   const data = await new Promise((resolve) => {
     socket.emit("remove-video", video, (callback) => {
       resolve(callback);
@@ -136,6 +141,19 @@ async function removeFromQueue(video) {
   emit("display-toast", {
     status: data.status ?? enums.STATUS.SUCCESS,
     message: data.message ?? `Successfully skipped video!`,
+  });
+}
+
+async function clearQueue() {
+  if (!props.admin) return;
+  const data = await new Promise((resolve) => {
+    socket.emit("clear-queue", null, (callback) => {
+      resolve(callback);
+    });
+  });
+  emit("display-toast", {
+    status: data.status ?? enums.STATUS.SUCCESS,
+    message: data.message ?? `Succesfully removed all videos from the queue!`,
   });
 }
 
