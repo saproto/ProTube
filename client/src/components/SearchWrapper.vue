@@ -1,6 +1,6 @@
 <template>
   <HeaderField>
-    <div class="flex-1">
+    <div class="flex flex-1 flex-col items-stretch">
       <h3
         class="flex w-full text-2xl font-medium leading-6 text-white md:block">
         <span class="w-full"> ProTube playlist panel</span>
