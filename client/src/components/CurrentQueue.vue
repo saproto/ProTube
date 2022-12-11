@@ -120,7 +120,7 @@ const queue = ref([]);
 const socket = computed(() => {
   if (props.admin) return adminSocket;
   return normalSocket;
-}).value;
+});
 
 const queueDuration = ref("--:--:--");
 
@@ -134,7 +134,7 @@ const props = defineProps({
 async function removeFromQueue(video) {
   if (!props.admin) return;
   const data = await new Promise((resolve) => {
-    socket.emit("remove-video", video, (callback) => {
+    socket.value.emit("remove-video", video, (callback) => {
       resolve(callback);
     });
   });
@@ -147,7 +147,7 @@ async function removeFromQueue(video) {
 async function clearQueue() {
   if (!props.admin) return;
   const data = await new Promise((resolve) => {
-    socket.emit("clear-queue", null, (callback) => {
+    socket.value.emit("clear-queue", (callback) => {
       resolve(callback);
     });
   });
@@ -158,9 +158,9 @@ async function clearQueue() {
 }
 
 // retrieving the queue and stop skeletonloading
-socket.on("connect", async () => {
+socket.value.on("connect", async () => {
   const data = await new Promise((resolve) => {
-    socket.emit("get-queue", (queue) => {
+    socket.value.emit("get-queue", (queue) => {
       resolve(queue);
     });
   });
@@ -169,7 +169,7 @@ socket.on("connect", async () => {
   skeletonLoading.value = false;
 });
 
-socket.on("queue-update", (newQueue) => {
+socket.value.on("queue-update", (newQueue) => {
   queueDuration.value = newQueue.duration;
   queue.value = newQueue.queue;
 });
