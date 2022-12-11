@@ -1,6 +1,6 @@
 <template>
   <HeaderField>
-    <div class="flex-1">
+    <div class="flex flex-1 flex-col items-stretch">
       <h3
         class="flex w-full text-2xl font-medium leading-6 text-white md:block">
         <span class="w-full"> ProTube playlist panel</span>
@@ -13,7 +13,9 @@
       <div class="mt-2 max-w-xl text-sm text-gray-200">
         <p>Search for any song on YouTube and add it to the ProTube playlist</p>
       </div>
-      <form @submit.prevent="processQuery" class="mt-5 flex sm:items-center">
+      <form
+        @submit.prevent="processQuery"
+        class="mt-auto flex pt-4 sm:items-center">
         <div class="group flex h-10 w-full md:max-w-md">
           <input
             minlength="1"
