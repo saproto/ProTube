@@ -16,14 +16,14 @@
           min="0"
           max="100"
           :value="playerSettings.volume" />
-        <div class="flex">
+        <div class="flex mt-2 container">
           <!--     Video/Radio toggle     -->
-          <div class="relative mt-2 flex sm:absolute md:relative lg:absolute">
-            <span class="mr-3">
+          <div class="flex">
+            <div class="mr-3">
               <span class="text-sm font-medium text-gray-900 dark:text-white">
                 ProTube
               </span>
-            </span>
+            </div>
             <button
               @click="toggleRadioProtube"
               type="button"
@@ -43,14 +43,14 @@
                 class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out">
               </span>
             </button>
-            <span class="ml-3">
+            <div class="ml-3">
               <span class="text-sm font-medium text-gray-900 dark:text-white">
                 Radio
               </span>
-            </span>
+            </div>
           </div>
           <!--   Video controls   -->
-          <div class="mx-auto mt-2">
+          <div class="mx-auto">
             <!-- TODO: Add back button in admin controls -->
             <!--<font-awesome-icon class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" icon="backward" />-->
             <font-awesome-icon
@@ -68,13 +68,16 @@
               icon="forward">
             </font-awesome-icon>
           </div>
+          <!--     New code button     -->
+          <div class="ml-auto relative">
+            <div class="absolute -right-full min-w-max">
+              <button @click="resetScreenCode" class=" text-sm shadow-md bg-proto_blue hover:bg-proto_blue/80 duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 text-white py-1 px-2 rounded-md">
+                New code
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-      <!--      <div class="mt-4 flex md:mt-12 md:w-1/3">-->
-      <!--        &lt;!&ndash; <button @click="resetScreenCode" class="shadow-md bg-proto_blue hover:bg-proto_blue/80 text-white py-1 px-2 md:ml-5 rounded-md my-auto flex">-->
-      <!--            New code-->
-      <!--        </button> &ndash;&gt;-->
-      <!--      </div>-->
     </div>
   </ContentField>
 </template>
@@ -174,18 +177,17 @@ async function skipVideo() {
   });
 }
 
-// TODO: Fix new screencode button
-// async function resetScreenCode() {
-//     const data = await new Promise( resolve => {
-//         socket.emit('reset-screen-code', callback => {
-//             resolve(callback);
-//         });
-//     });
-//     displayToast({
-//         status: data.status ?? STATUS.SUCCESS,
-//         message: data.message ?? `Successfully reset the screencode!`
-//     });
-// }
+async function resetScreenCode() {
+    const data = await new Promise( resolve => {
+        socket.emit('reset-screen-code', callback => {
+            resolve(callback);
+        });
+    });
+    displayToast({
+        status: data.status ?? enums.STATUS.SUCCESS,
+        message: data.message ?? `Successfully reset the screencode!`
+    });
+}
 
 async function playPause() {
   const data = await new Promise((resolve) => {

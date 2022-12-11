@@ -1,8 +1,8 @@
 // const { updateCodeAdminScreen } = require('./socket_endpoints/AdminScreen');
 const { getCurrentUnix } = require("../utils/time-formatter");
-const { Session } = require("./DataBase");
+const { User } = require("./DataBase");
+const { Op } = require("sequelize");
 
-let sessionStore;
 let recreateScreencodeInterval = setInterval(
   regenerateAuthToken,
   parseInt(process.env.CODE_REFRESH_INTERVAL) * 1000
@@ -23,29 +23,24 @@ function regenerateAuthToken() {
 }
 
 exports.getScreenCode = () => screenCode;
-exports.setSessionStore = (store) => (sessionStore = store);
 
-exports.adminResetScreenCode = () => {
+exports.adminResetScreenCode = async () => {
   logger.serverInfo(`Admin requested new auth token`);
+  
+  // Screencode token interval reset + regeneration
   clearInterval(recreateScreencodeInterval);
   recreateScreencodeInterval = setInterval(
     regenerateAuthToken,
     parseInt(process.env.CODE_REFRESH_INTERVAL) * 1000
   );
   regenerateAuthToken();
-  // revoking all correct screencodes on this session
-  sessionStore.all((err, sessions) => {
-    const currentTime = getCurrentUnix();
-    for (const [sessId, session] of Object.entries(sessions)) {
-      if (!("screencode" in session)) continue;
-      session.screencode = {
-        expires: currentTime + parseInt(process.env.CODE_VALID_DURATION),
-        correct: false,
-      };
-      sessionStore.set(sessId, session);
-    }
+
+  // Revoking all correct screencodes on this session
+  await User.update({ valid_remote_until: 0 }, {
+    where: { valid_remote_until: { [Op.not]: 0 } }
   });
-  io.of("/socket/remote").disconnectSockets(true);
+  await revokeExpiredRemotes();
+
   return enums.SUCCESS;
 };
 
@@ -53,52 +48,16 @@ exports.checkScreenCode = (code) => {
   return parseInt(code) === screenCode;
 };
 
-// flushing all expired remotes and disconnecting currently connected sockets
+// Disconnecting currently connected but expired sockets
 async function revokeExpiredRemotes() {
   const sockets = await io.of("/socket/remote").fetchSockets();
-  const currentTime = getCurrentUnix();
   let flushCount = 0;
-  // finding all connected remotes and flushing+disconnecting
+
+  // finding all connected but expired remotes and disconnecting them
   for (const sock of sockets) {
-    if (
-      sock.request.session.screencode.expires < currentTime &&
-      sock.request.session.screencode.correct
-    ) {
-      sock.request.session.screencode = {
-        expires: currentTime + parseInt(process.env.CODE_VALID_DURATION),
-        correct: false,
-      };
-      await new Promise((resolve) => {
-        sock.request.session.save(resolve);
-      });
+    await sock.request.user.reload();
+    if(!sock.request.user.hasValidRemote()) {
       sock.disconnect(true);
-      flushCount++;
-    }
-  }
-
-  const sessionIDs = await Session.findAll({ attributes: ["sid"] });
-
-  // flushing all currently disconnected sockets
-  for (const session of sessionIDs) {
-    const sid = session.sid;
-    const sessData = await new Promise((resolve) => {
-      const cb = (rej, res) => resolve(res);
-      sessionStore.get(sid, cb);
-    });
-    if (!("screencode" in sessData)) continue;
-    // valid screencode has expired
-    if (
-      sessData.screencode.expires < currentTime &&
-      sessData.screencode.correct
-    ) {
-      sessData.screencode = {
-        expires: currentTime + parseInt(process.env.CODE_VALID_DURATION),
-        correct: false,
-      };
-      await new Promise((resolve) => {
-        const cb = (rej, res) => resolve(res);
-        sessionStore.set(sid, sessData, cb);
-      });
       flushCount++;
     }
   }

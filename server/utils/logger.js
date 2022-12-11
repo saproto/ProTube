@@ -109,10 +109,6 @@ exports.localClientInfo = (message) => {
   log(prefix.localClient + message);
 };
 
-exports.sessionStoreInfo = (message) => {
-  log(prefix.session + message);
-};
-
 exports.dbLog = (message) => {
   dbLogger.info(message);
 };

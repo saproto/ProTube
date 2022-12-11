@@ -1,7 +1,7 @@
 const passport = require("passport");
 const fetch = require("node-fetch");
 const OAuth2Strategy = require("passport-oauth2").Strategy;
-const { User, ScreenCode } = require("./DataBase");
+const { User } = require("./DataBase");
 const { getCurrentUnix } = require("../utils/time-formatter");
 
 const authURL = `${process.env.LARAVEL_ENDPOINT}/oauth/authorize`;
@@ -30,12 +30,10 @@ passport.use(
       if (userData.authenticated) {
         await User.upsert({
           id: userData.user_id,
+          name: userData.name,
           admin: +userData.is_admin,
           refresh_token: refreshToken,
           access_token: accessToken,
-        });
-        await ScreenCode.upsert({
-          user_id: userData.user_id,
         });
         return done(null, {
           id: userData.user_id,
@@ -56,14 +54,7 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(async function (user, done) {
-  const userData = await User.findOne({
-    include: ScreenCode,
-    where: {
-      id: user.id,
-    },
-  });
+  const userData = await User.findByPk(user.id);
   if (!userData) return done(true, null);
-  userData.screencode.banned =
-    userData.screencode.banned_until > getCurrentUnix();
   done(null, userData);
 });
