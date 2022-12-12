@@ -61,7 +61,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, onMounted, onActivated } from "vue";
+import { computed, reactive, ref, onMounted } from "vue";
 import socket, { setPinCode, connectSocket } from "@/js/RemoteSocket";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -95,10 +95,6 @@ const passkey = computed(() => {
 });
 
 onMounted(() => {
-  focusOnFirstInput();
-});
-
-onActivated(() => {
   focusOnFirstInput();
 });
 
