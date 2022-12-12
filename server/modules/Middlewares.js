@@ -1,5 +1,5 @@
 const session = require("express-session");
-const { sequelize, ScreenCode, User } = require("./DataBase");
+const { sequelize } = require("./DataBase");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const { getCurrentUnix } = require("../utils/time-formatter");
 const { checkScreenCode } = require("./ScreenCode");

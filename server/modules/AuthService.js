@@ -2,7 +2,6 @@ const passport = require("passport");
 const fetch = require("node-fetch");
 const OAuth2Strategy = require("passport-oauth2").Strategy;
 const { User } = require("./DataBase");
-const { getCurrentUnix } = require("../utils/time-formatter");
 
 const authURL = `${process.env.LARAVEL_ENDPOINT}/oauth/authorize`;
 const tokenURL = `${process.env.LARAVEL_ENDPOINT}/oauth/token`;
