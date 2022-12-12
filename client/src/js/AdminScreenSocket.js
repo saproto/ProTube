@@ -8,12 +8,9 @@ const socket = new io(serverUrl, {
   forceNew: false,
   withCredentials: true,
   reconnection: false,
-  autoConnect: false,
 });
 
-export const connectSocket = () => {
-  socket.connect();
-};
+socket.connect();
 
 socket.on("connect_error", async (err) => {
   if (err.message == "unauthorized")

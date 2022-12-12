@@ -9,8 +9,6 @@ const socket = new io(serverUrl, {
   autoConnect: false,
 });
 
-export const connectSocket = () => {
-  socket.connect();
-};
+socket.connect();
 
 export default socket;

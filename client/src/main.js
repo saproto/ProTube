@@ -1,4 +1,6 @@
 import { createApp } from "vue";
+import adminSocket from "@/js/AdminRemoteSocket";
+import normalSocket from "@/js/RemoteSocket";
 
 // snowflake (after use delete import)
 import "@/assets/snowfall.scss";
@@ -56,3 +58,5 @@ const app = createApp(App);
 app.component("font-awesome-icon", FontAwesomeIcon);
 app.use(router);
 app.mount("#app");
+app.provide("adminSocket", adminSocket);
+app.provide("normalSocket", normalSocket);

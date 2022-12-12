@@ -56,8 +56,8 @@
 <script setup>
 import RadioScreen from "@/components/RadioScreen";
 import ReconnectionHandler from "@/components/ReconnectionHandler";
-import { onMounted, onBeforeUnmount, onBeforeMount, ref, watch } from "vue";
-import socket, { connectSocket } from "@/js/ScreenSocket";
+import { onMounted, ref, watch } from "vue";
+import socket from "@/js/ScreenSocket";
 import YoutubePlayer from "youtube-player";
 import enums from "@/js/Enums";
 
@@ -85,10 +85,6 @@ const props = defineProps({
   },
 });
 
-onBeforeMount(() => {
-  connectSocket();
-});
-
 onMounted(() => {
   player = YoutubePlayer(playerID, {
     host: "https://www.youtube.com",
@@ -114,10 +110,6 @@ watch(
     player.setVolume(props.volume);
   }
 );
-
-onBeforeUnmount(() => {
-  socket.disconnect();
-});
 
 socket.on("player-update", (newState) => {
   if (newState.playerType === enums.TYPES.VIDEO) {

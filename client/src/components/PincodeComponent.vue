@@ -61,9 +61,10 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, onMounted } from "vue";
-import socket, { setPinCode, connectSocket } from "@/js/RemoteSocket";
+import { computed, reactive, ref, onMounted, inject } from "vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+
+const socket = inject("normalSocket");
 
 const digitsFromInput = reactive({
   0: null,
@@ -239,8 +240,7 @@ function allInputsFilled() {
 
 function makeServerConnection() {
   loading.value = true;
-  setPinCode(constructPasskey());
-  connectSocket();
+  socket.auth.token = constructPasskey();
 }
 
 function processPinEntered(success, reason = "") {

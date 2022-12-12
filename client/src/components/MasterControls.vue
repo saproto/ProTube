@@ -80,44 +80,27 @@
 </template>
 
 <script setup>
-import socket, { connectSocket } from "@/js/AdminRemoteSocket";
-import { ref, onBeforeMount, onBeforeUnmount } from "vue";
-import { useRouter } from "vue-router";
+import { ref, inject } from "vue";
 import enums from "@/js/Enums";
 import ContentField from "../layout/ContentField.vue";
 
+const adminSocket = inject("adminSocket");
+
 const latestToast = ref(null);
 
-const user = ref({});
 const playerSettings = ref({
   volume: 75,
   playerMode: enums.MODES.IDLE,
   playerType: enums.TYPES.VIDEO,
 });
 
-const router = useRouter();
-
-onBeforeMount(async () => {
-  const response = await fetch("/api/user");
-  if (response.redirected) return (window.location.href = response.url);
-  const data = await response.json();
-  user.value.name = data.name;
-  user.value.admin = data.admin;
-  if (data.admin) connectSocket();
-  else await router.push({ name: "Error", params: { errorcode: 401 } });
-});
-
-onBeforeUnmount(() => {
-  socket.disconnect();
-});
-
-socket.on("connect", () => {
-  socket.emit("get-player-settings", (result) => {
+adminSocket.on("connect", () => {
+  adminSocket.emit("get-player-settings", (result) => {
     playerSettings.value = result;
   });
 });
 
-socket.on("update-admin-panel", (newSettings) => {
+adminSocket.on("update-admin-panel", (newSettings) => {
   playerSettings.value = newSettings;
 });
 
@@ -134,7 +117,7 @@ async function volumeChange(event) {
     });
   }
   const data = await new Promise((resolve) => {
-    socket.emit("set-new-volume", volume, (callback) => {
+    adminSocket.emit("set-new-volume", volume, (callback) => {
       resolve(callback);
     });
   });
@@ -146,7 +129,7 @@ async function volumeChange(event) {
 
 async function toggleRadioProtube() {
   const data = await new Promise((resolve) => {
-    socket.emit("toggle-radio-protube", (callback) => {
+    adminSocket.emit("toggle-radio-protube", (callback) => {
       resolve(callback);
     });
   });
@@ -164,7 +147,7 @@ async function toggleRadioProtube() {
 
 async function skipVideo() {
   const data = await new Promise((resolve) => {
-    socket.emit("skip-video", (callback) => {
+    adminSocket.emit("skip-video", (callback) => {
       resolve(callback);
     });
   });
@@ -189,7 +172,7 @@ async function skipVideo() {
 
 async function playPause() {
   const data = await new Promise((resolve) => {
-    socket.emit("play-pause", (callback) => {
+    adminSocket.emit("play-pause", (callback) => {
       resolve(callback);
     });
   });

@@ -108,21 +108,23 @@
 <script setup>
 import ContentField from "@/layout/ContentField.vue";
 import SkeletonResult from "@/components/skeletons/SkeletonResult.vue";
-import { ref, computed } from "vue";
-import adminSocket from "@/js/AdminRemoteSocket";
-import normalSocket from "@/js/RemoteSocket";
+import { ref, computed, inject } from "vue";
 import enums from "@/js/Enums";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-const emit = defineEmits(["display-toast"]);
+const queueDuration = ref("--:--:--");
 const skeletonLoading = ref(true);
 const queue = ref([]);
+
+const adminSocket = inject("adminSocket");
+const normalSocket = inject("normalSocket");
+
 const socket = computed(() => {
   if (props.admin) return adminSocket;
   return normalSocket;
 });
 
-const queueDuration = ref("--:--:--");
+const emit = defineEmits(["display-toast"]);
 
 const props = defineProps({
   admin: {

@@ -80,11 +80,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import socket from "@/js/RemoteSocket";
+import { ref, inject } from "vue";
 import gsap from "gsap";
 import enums from "@/js/Enums";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+
+const socket = inject("normalSocket");
 
 const emit = defineEmits(["display-toast"]);
 

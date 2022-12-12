@@ -9,19 +9,11 @@
 <script setup>
 import ProtubeScreen from "@/views/ProtubeScreen.vue";
 import ReconnectionHandler from "@/components/ReconnectionHandler";
-import socket, { connectSocket } from "@/js/AdminScreenSocket";
-import { onBeforeUnmount, onBeforeMount, ref } from "vue";
+import socket from "@/js/AdminScreenSocket";
+import { ref } from "vue";
 
 const screenCode = ref("0000");
 const volume = ref(50);
-
-onBeforeMount(async () => {
-  connectSocket();
-});
-
-onBeforeUnmount(() => {
-  socket.disconnect();
-});
 
 socket.on("volume-update", (newVolume) => {
   volume.value = newVolume;

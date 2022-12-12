@@ -56,9 +56,10 @@ import CurrentQueue from "@/components/CurrentQueue.vue";
 import ToastsModal from "@/components/modals/ToastsModal.vue";
 import MasterControls from "@/components/MasterControls.vue";
 import RadioStations from "@/components/RadioStations.vue";
-import socket, { connectSocket } from "@/js/RemoteSocket";
-import { onMounted, ref, onBeforeMount, onBeforeUnmount } from "vue";
+import { onMounted, ref, onBeforeMount, inject } from "vue";
 import enums from "@/js/Enums";
+
+const socket = inject("normalSocket");
 
 const loginModalVisible = ref(true);
 const loadModalVisible = ref(false);
@@ -81,21 +82,14 @@ onBeforeMount(async () => {
   user.value.name = data.name;
   user.value.admin = data.admin;
   user.value.validRemote = data.hasValidRemote;
-  if (user.value.validRemote) connectSocket();
+  if (user.value.validRemote) {
+    setTimeout(() => {
+      loginModalVisible.value = false;
+    }, 200);
+  }
 });
 
 onMounted(() => {});
-
-onBeforeUnmount(() => {
-  socket.disconnect();
-});
-
-// does not get retriggered?
-socket.on("connect", () => {
-  setTimeout(() => {
-    loginModalVisible.value = false;
-  }, 200);
-});
 
 socket.on("disconnect", () => {
   loginModalVisible.value = true;

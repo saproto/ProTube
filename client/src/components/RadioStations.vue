@@ -43,24 +43,24 @@
 
 <script setup>
 import ContentField from "@/layout/ContentField.vue";
-import { ref, computed } from "vue";
-import socket from "@/js/AdminRemoteSocket";
+import { computed, inject, ref } from "vue";
 import enums from "@/js/Enums";
 
 const radioStations = ref([]);
 const skeletonLoading = ref(true);
 const radiofilter = ref("");
 
+const socket = inject("adminSocket");
+
 const emit = defineEmits(["display-toast"]);
 
 // retrieving the radiostations and stop skeletonloading
 socket.on("connect", async () => {
-  const data = await new Promise((resolve) => {
+  radioStations.value = await new Promise((resolve) => {
     socket.emit("get-radiostations", (stations) => {
       resolve(stations);
     });
   });
-  radioStations.value = data;
   skeletonLoading.value = false;
 });
 
