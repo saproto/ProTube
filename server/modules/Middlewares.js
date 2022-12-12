@@ -37,10 +37,10 @@ exports.socketCheckAdminAuthenticated = (socket, next) => {
     else return next(new Error("forbidden"));
   }
   // accept localhost connections also to be admin (local client)
-  else if (socket.handshake.address === process.env.LOCAL_CLIENT_IP) return next();
+  else if (socket.handshake.address === process.env.LOCAL_CLIENT_IP)
+    return next();
   next(new Error("unauthorized"));
 };
-
 
 exports.screenCodeCheck = async (socket, next) => {
   const user = socket.request.user;
@@ -50,17 +50,14 @@ exports.screenCodeCheck = async (socket, next) => {
     return next(
       new Error(
         `Your ban is lifted ${moment
-          .duration(
-            user.banned_until - getCurrentUnix(),
-            "seconds"
-          )
+          .duration(user.banned_until - getCurrentUnix(), "seconds")
           .humanize(true)}`
       )
     );
   }
 
   // Always accept admins and previously validated remotes
-  if(user.hasValidRemote()) return next()
+  if (user.hasValidRemote()) return next();
 
   // Correct screencode, accept socket
   if (checkScreenCode(socket.handshake.auth.token)) {
@@ -86,7 +83,7 @@ exports.screenCodeCheck = async (socket, next) => {
       )
     );
   }
-  
+
   // User not bannable or valid = wrong entered screencode
   user.connectionAttemptsPlusOne();
   user.save();

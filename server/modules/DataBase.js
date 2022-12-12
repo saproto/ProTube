@@ -42,12 +42,13 @@ class User extends Model {
   }
 
   hasValidRemote() {
-    return this.admin || this.valid_remote_until > getCurrentUnix()
+    return this.admin || this.valid_remote_until > getCurrentUnix();
   }
 
   setValidRemote() {
-    this.valid_remote_until = getCurrentUnix() + parseInt(process.env.CODE_VALID_DURATION)
-    this.connection_attempts = 0
+    this.valid_remote_until =
+      getCurrentUnix() + parseInt(process.env.CODE_VALID_DURATION);
+    this.connection_attempts = 0;
   }
 
   isBanned() {
@@ -55,42 +56,46 @@ class User extends Model {
   }
 
   setBanned() {
-    this.banned_until = getCurrentUnix() + parseInt(process.env.FAIL_2_BAN_DURATION)
-    this.connection_attempts = 0
+    this.banned_until =
+      getCurrentUnix() + parseInt(process.env.FAIL_2_BAN_DURATION);
+    this.connection_attempts = 0;
   }
 
   connectionAttemptsPlusOne() {
-    this.connection_attempts += 1
+    this.connection_attempts += 1;
   }
 }
 
-User.init({
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
+User.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+    },
+    name: DataTypes.TEXT,
+    admin: DataTypes.BOOLEAN,
+    valid_remote_until: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    banned_until: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    connection_attempts: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    refresh_token: DataTypes.TEXT,
+    access_token: DataTypes.TEXT,
   },
-  name: DataTypes.TEXT,
-  admin: DataTypes.BOOLEAN,
-  valid_remote_until: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-  },
-  banned_until: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-  },
-  connection_attempts: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-  },
-  refresh_token: DataTypes.TEXT,
-  access_token: DataTypes.TEXT
-}, {
-  sequelize: this.sequelize,
-  modelName: 'user'
-});
+  {
+    sequelize: this.sequelize,
+    modelName: "user",
+  }
+);
 
-exports.User = this.sequelize.models["user"]
+exports.User = this.sequelize.models["user"];
 
 exports.Session = this.sequelize.define("sessions", {
   sid: {

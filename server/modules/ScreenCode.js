@@ -25,7 +25,7 @@ exports.getScreenCode = () => screenCode;
 
 exports.adminResetScreenCode = async () => {
   logger.serverInfo(`Admin requested new auth token`);
-  
+
   // Screencode token interval reset + regeneration
   clearInterval(recreateScreencodeInterval);
   recreateScreencodeInterval = setInterval(
@@ -35,9 +35,12 @@ exports.adminResetScreenCode = async () => {
   regenerateAuthToken();
 
   // Revoking all correct screencodes on this session
-  await User.update({ valid_remote_until: 0 }, {
-    where: { valid_remote_until: { [Op.not]: 0 } }
-  });
+  await User.update(
+    { valid_remote_until: 0 },
+    {
+      where: { valid_remote_until: { [Op.not]: 0 } },
+    }
+  );
   await revokeExpiredRemotes();
 
   return enums.SUCCESS;
@@ -55,7 +58,7 @@ async function revokeExpiredRemotes() {
   // finding all connected but expired remotes and disconnecting them
   for (const sock of sockets) {
     await sock.request.user.reload();
-    if(!sock.request.user.hasValidRemote()) {
+    if (!sock.request.user.hasValidRemote()) {
       sock.disconnect(true);
       flushCount++;
     }

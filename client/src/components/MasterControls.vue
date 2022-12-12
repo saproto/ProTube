@@ -16,7 +16,7 @@
           min="0"
           max="100"
           :value="playerSettings.volume" />
-        <div class="flex mt-2 container">
+        <div class="container mt-2 flex">
           <!--     Video/Radio toggle     -->
           <div class="flex">
             <div class="mr-3">
@@ -69,9 +69,11 @@
             </font-awesome-icon>
           </div>
           <!--     New code button     -->
-          <div class="ml-auto relative">
+          <div class="relative ml-auto">
             <div class="absolute -right-full min-w-max">
-              <button @click="resetScreenCode" class=" text-sm shadow-md bg-proto_blue hover:bg-proto_blue/80 duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 text-white py-1 px-2 rounded-md">
+              <button
+                @click="resetScreenCode"
+                class="bg-proto_blue hover:bg-proto_blue/80 rounded-md py-1 px-2 text-sm text-white shadow-md duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80">
                 New code
               </button>
             </div>
@@ -178,15 +180,15 @@ async function skipVideo() {
 }
 
 async function resetScreenCode() {
-    const data = await new Promise( resolve => {
-        socket.emit('reset-screen-code', callback => {
-            resolve(callback);
-        });
+  const data = await new Promise((resolve) => {
+    socket.emit("reset-screen-code", (callback) => {
+      resolve(callback);
     });
-    displayToast({
-        status: data.status ?? enums.STATUS.SUCCESS,
-        message: data.message ?? `Successfully reset the screencode!`
-    });
+  });
+  displayToast({
+    status: data.status ?? enums.STATUS.SUCCESS,
+    message: data.message ?? `Successfully reset the screencode!`,
+  });
 }
 
 async function playPause() {
