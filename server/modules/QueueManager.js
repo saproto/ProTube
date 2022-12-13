@@ -6,7 +6,7 @@ const self = this;
 
 exports.getQueue = () => queue;
 exports.isQueueEmpty = () => queue.length <= 0;
-exports.getCurrentVideo = () => currentVideo;
+exports.getCurrentVideo = () => queue[0] ?? {};
 
 //Calculate the total duration of the playlist and return it
 exports.getTotalDuration = () => {
@@ -60,7 +60,7 @@ exports.addToTop = (video) => {
 //Update the current video with the video in queue position 0, and remove it from the queue
 exports.moveToNext = () => {
   // Queue has an item, can be shifted
-  if (queue.length > 0) currentVideo = queue.shift();
+  if (queue.length > 0) queue.shift();
   else throw new softError("Unable to move to the next item in the queue!");
 
   eventBus.emit("queue-update");

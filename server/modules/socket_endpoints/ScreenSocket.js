@@ -3,6 +3,10 @@ const queueManager = require("../QueueManager");
 const playbackManager = require("../PlaybackManager");
 
 endpoint.on("connection", (socket) => {
+  socket.emit("queue-update", {
+    queue: queueManager.getQueue(),
+    duration: queueManager.getTotalDuration(),
+  });
   logger.screenInfo(
     `Screen connected from ${socket.handshake.address} with socket id ${socket.id}`
   );
