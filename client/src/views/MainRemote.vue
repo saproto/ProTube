@@ -163,12 +163,14 @@ async function fetchVideos(query) {
   resultsWrapperSkeletons.value = false;
 
   // scroll to the top of the results
-  document.getElementById('resultsWrapper').scrollIntoView({behavior: 'smooth'});
+  document
+    .getElementById("resultsWrapper")
+    .scrollIntoView({ behavior: "smooth" });
 }
 </script>
 
 <style>
-#resultsWrapper{
+#resultsWrapper {
   scroll-margin-top: 5px;
 }
 .search-enter-from {
