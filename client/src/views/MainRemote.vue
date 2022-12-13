@@ -17,7 +17,7 @@
         <RadioStations v-if="user.admin" v-on:display-toast="displayToast" />
       </transition>
 
-      <transition name="results" mode="out-in" appear>
+      <transition name="results" mode="out-in" id="resultsWrapper" appear>
         <ResultsWrapper
           v-on:next-page="fetchVideos"
           v-on:display-toast="displayToast"
@@ -138,9 +138,8 @@ async function fetchThenAddPlaylist(playlistId) {
 async function fetchVideos(query) {
   if (query) {
     continuationToken.value = null;
-  } else {
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
+
   loadModalVisible.value = true;
   resultsWrapperSkeletons.value = true;
   loadModalMessage.value = query
@@ -162,10 +161,16 @@ async function fetchVideos(query) {
   continuationToken.value = result.continuationToken;
   loadModalVisible.value = false;
   resultsWrapperSkeletons.value = false;
+
+  // scroll to the top of the results
+  document.getElementById('resultsWrapper').scrollIntoView({behavior: 'smooth'});
 }
 </script>
 
 <style>
+#resultsWrapper{
+  scroll-margin-top: 5px;
+}
 .search-enter-from {
   opacity: 0;
   transform: translateY(-100px);
