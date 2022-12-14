@@ -218,7 +218,6 @@ function updateCurrentlyPlaying() {
         if (duration > 0) percentage = (time / duration) * 100;
         if (Number(percentage)) {
           const bar = document.getElementById("progress-bar");
-          console.log(percentage);
           bar.style.width = `${percentage}%`;
         }
         requestAnimationFrame(updateCurrentlyPlaying);
