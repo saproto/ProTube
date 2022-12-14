@@ -12,7 +12,7 @@
       </button>
     </div>
     <div
-      class="scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 flex max-h-[84vh] justify-center overflow-y-scroll overscroll-contain px-0">
+      class="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark flex max-h-[84vh] justify-center overflow-y-scroll overscroll-contain px-0">
       <div v-if="skeletonLoading" class="flex-nowrap">
         <ul
           v-for="index in 10"
