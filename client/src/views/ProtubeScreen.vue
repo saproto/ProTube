@@ -35,11 +35,11 @@
   <div class="absolute bottom-0 mb-1 w-screen rounded-lg">
     <div class="flex justify-between">
       <div
-        class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 max-w-[10%] rounded-sm rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+        class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 max-w-[12%] rounded-sm rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
         Queue: {{ queueDuration }}
       </div>
       <div
-        class="border-proto_blue dark:bg-proto_secondary_gray-dark mr-4 mb-1 max-w-[10%] rounded-sm rounded-lg border-r-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+        class="border-proto_blue dark:bg-proto_secondary_gray-dark mr-4 mb-1 max-w-[12%] rounded-sm rounded-lg border-r-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
         Visit www.protu.be!
       </div>
     </div>
@@ -126,7 +126,6 @@ import enums from "@/js/Enums";
 
 const playerID = "player-" + Math.random();
 const queueDuration = ref("--:--:--");
-const skeletonLoading = ref(true);
 const queue = ref([]);
 let player;
 const playerState = ref({
@@ -203,18 +202,6 @@ socket.on("new-video-timestamp", async (newStamp) => {
     player.seekTo(newStamp, true);
     if ((await player.getPlayerState()) === 2) player.playVideo();
   }
-});
-
-// retrieving the queue and stop skeletonloading
-socket.on("connect", async () => {
-  const data = await new Promise((resolve) => {
-    socket.emit("get-queue", (queue) => {
-      resolve(queue);
-    });
-  });
-  queue.value = data.queue;
-  queueDuration.value = data.duration;
-  skeletonLoading.value = false;
 });
 
 socket.on("queue-update", (newQueue) => {
