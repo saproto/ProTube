@@ -98,4 +98,5 @@ This should start the development server on `localhost:3000` or whatever port wa
 
 For debugging purposes it is highly recommended to install the [Vue Devtools](https://devtools.vuejs.org/guide/installation.html).
 You can start the Vue Devtools by inspecting the page and moving to the Vue tab, here you can see out of which components the site is built, which props are passed, view and modify variables e.g.
-_Note: Vue Devtools only work on in dev mode_
+
+_Note: Vue Devtools only work in dev mode_
