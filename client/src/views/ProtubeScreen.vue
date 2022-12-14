@@ -35,11 +35,11 @@
   <div class="absolute bottom-0 mb-1 w-screen rounded-lg">
     <div class="flex justify-between">
       <div
-        class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 max-w-[12%] rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+        class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
         Queue: {{ queueDuration }}
       </div>
       <div
-        class="border-proto_blue dark:bg-proto_secondary_gray-dark mr-4 mb-1 max-w-[12%] rounded-lg border-r-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+        class="border-proto_blue dark:bg-proto_secondary_gray-dark mr-4 mb-1 rounded-lg border-r-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
         Visit www.protu.be!
       </div>
     </div>
@@ -58,7 +58,7 @@
             background-size: cover;
             background-position: center center;
           "
-          class="border-proto_blue group relative col-span-1 inline-block flex h-full w-full flex-1 overflow-hidden rounded-sm rounded-lg border-l-4 text-center shadow">
+          class="border-proto_blue group relative col-span-1 inline-block flex h-full w-full flex-1 overflow-hidden rounded-lg border-l-4 text-center shadow">
           <div
             :style="index === 0 ? `width:${queueProgress}%;` : 'width:0%'"
             class="absolute h-full bg-white opacity-70" />
