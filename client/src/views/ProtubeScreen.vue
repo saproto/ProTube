@@ -60,7 +60,7 @@
           "
           class="border-proto_blue group relative col-span-1 inline-block flex h-full w-full flex-1 overflow-hidden rounded-sm rounded-lg border-l-4 text-center shadow">
           <div
-            :id="index === 0 ? 'progress-bar' : ''"
+            :style="index === 0 ? `width:${queueProgress}%;` : 'width:0%'"
             class="absolute h-full bg-white opacity-70" />
           <div
             class="rounded-m relative flex w-full flex-col rounded-lg rounded-sm border-t border-b border-r border-gray-400 bg-white/70 px-8 py-4 duration-200 dark:border-gray-800/80 dark:bg-stone-800/80">
@@ -126,6 +126,7 @@ import enums from "@/js/Enums";
 
 const playerID = "player-" + Math.random();
 const queueDuration = ref("--:--:--");
+const queueProgress = ref(0);
 const queue = ref([]);
 let player;
 const playerState = ref({
@@ -170,9 +171,6 @@ onMounted(() => {
   player.on("error", (event) => {
     emit("youtube-media-error", event.data);
   });
-  player.on("ready", function () {
-    requestAnimationFrame(updateCurrentlyPlaying);
-  });
 });
 
 watch(
@@ -198,6 +196,7 @@ socket.on("player-update", (newState) => {
 });
 
 socket.on("new-video-timestamp", async (newStamp) => {
+  queueProgress.value = (newStamp / queue.value[0].duration) * 100;
   if (Math.abs((await player.getCurrentTime()) - newStamp) > 5) {
     player.seekTo(newStamp, true);
     if ((await player.getPlayerState()) === 2) player.playVideo();
@@ -208,21 +207,4 @@ socket.on("queue-update", (newQueue) => {
   queueDuration.value = newQueue.duration;
   queue.value = newQueue.queue;
 });
-
-function updateCurrentlyPlaying() {
-  if (player) {
-    // let percentage = (player.getCurrentTime() / player.getDuration()) * 100;
-    player.getCurrentTime().then((time) => {
-      player.getDuration().then((duration) => {
-        let percentage;
-        if (duration > 0) percentage = (time / duration) * 100;
-        if (Number(percentage)) {
-          const bar = document.getElementById("progress-bar");
-          bar.style.width = `${percentage}%`;
-        }
-        requestAnimationFrame(updateCurrentlyPlaying);
-      });
-    });
-  }
-}
 </script>

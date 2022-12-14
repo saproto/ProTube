@@ -92,7 +92,7 @@ exports.clearQueue = () => {
 };
 
 exports.setCurrentVideo = (video) => {
-  queue.unshift(video);
+  queue[0] = video;
 };
 
 function performFairAdd(video) {
