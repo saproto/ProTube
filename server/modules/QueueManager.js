@@ -1,7 +1,6 @@
 const { format_hh_mm_ss } = require("../utils/time-formatter");
 
 let queue = [];
-let currentVideo = {};
 const self = this;
 
 exports.getQueue = () => queue;
@@ -93,7 +92,7 @@ exports.clearQueue = () => {
 };
 
 exports.setCurrentVideo = (video) => {
-  currentVideo = video;
+  queue.unshift(video);
 };
 
 function performFairAdd(video) {
