@@ -91,7 +91,7 @@ onBeforeMount(() => {
 
 onMounted(() => {
   player = YoutubePlayer(playerID, {
-    host: "https://www.youtube.com",
+    host: "https://www.youtube-nocookie.com",
     videoId: "",
     playerVars: {
       autoplay: 1,
