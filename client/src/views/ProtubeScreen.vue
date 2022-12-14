@@ -35,11 +35,11 @@
   <div class="absolute bottom-0 mb-1 w-screen rounded-lg">
     <div class="flex justify-between">
       <div
-        class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 max-w-[12%] rounded-sm rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+        class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 max-w-[12%] rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
         Queue: {{ queueDuration }}
       </div>
       <div
-        class="border-proto_blue dark:bg-proto_secondary_gray-dark mr-4 mb-1 max-w-[12%] rounded-sm rounded-lg border-r-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+        class="border-proto_blue dark:bg-proto_secondary_gray-dark mr-4 mb-1 max-w-[12%] rounded-lg border-r-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
         Visit www.protu.be!
       </div>
     </div>
@@ -50,7 +50,7 @@
         :index="index"
         :key="video.id"
         :id="index === 0 ? 'current-video' : ''"
-        class="mb-1 inline-block w-1/5 rounded-lg rounded-sm p-1">
+        class="mb-1 inline-block w-1/5 rounded-lg p-1">
         <div
           :style="{ background: `url(${video.thumbnail.url})` }"
           style="
@@ -63,7 +63,7 @@
             :style="index === 0 ? `width:${queueProgress}%;` : 'width:0%'"
             class="absolute h-full bg-white opacity-70" />
           <div
-            class="rounded-m relative flex w-full flex-col rounded-lg rounded-sm border-t border-b border-r border-gray-400 bg-white/70 px-8 py-4 duration-200 dark:border-gray-800/80 dark:bg-stone-800/80">
+            class="rounded-m relative flex w-full flex-col rounded-r-lg border-t border-b border-r border-gray-400 bg-white/70 px-8 py-4 duration-200 dark:border-gray-800/80 dark:bg-stone-800/80">
             <h3
               class="text-md z-1 h-[2rem] truncate text-left font-bold text-gray-800 dark:text-stone-300">
               {{ video.title }}
