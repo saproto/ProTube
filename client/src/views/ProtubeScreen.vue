@@ -59,12 +59,7 @@
           "
           class="border-proto_blue group relative col-span-1 inline-block flex h-full w-full flex-1 overflow-hidden rounded-lg border-l-4 text-center shadow">
           <div
-            :style="[
-              index === 0
-                ? `animation: progress-bar ${video.duration}s linear;`
-                : 'width:0%',
-              `animation-play-state:${animationPlayState}`,
-            ]"
+            :style="index === 0 ? `width:${queueProgress}%;` : 'width:0%'"
             class="absolute h-full bg-white opacity-70" />
           <div
             class="rounded-m relative flex w-full flex-col rounded-r-lg border-t border-b border-r border-gray-400 bg-white/70 px-8 py-4 duration-200 dark:border-gray-800/80 dark:bg-stone-800/80">
@@ -158,15 +153,7 @@ const queueWithCurrent = computed(() => {
   if (Object.keys(currentVideo).length === 0) return [];
   return [currentVideo].concat(queue.value);
 });
-const animationPlayState = computed(() => {
-  if (
-    playerState.value.playerType === enums.TYPES.VIDEO &&
-    playerState.value.playerMode !== enums.MODES.IDLE
-  ) {
-    return "playing";
-  }
-  return "paused";
-});
+
 const emit = defineEmits(["youtube-media-error"]);
 const props = defineProps({
   volume: {
@@ -238,13 +225,3 @@ socket.on("queue-update", (newQueue) => {
   queue.value = newQueue.queue;
 });
 </script>
-<style>
-@keyframes progress-bar {
-  from {
-    width: 0%;
-  }
-  to {
-    width: 100%;
-  }
-}
-</style>
