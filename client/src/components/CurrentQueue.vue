@@ -26,7 +26,7 @@
       </div>
       <div v-if="!skeletonLoading" class="flex-nowrap">
         <ul
-          v-for="(video, index) in queue.slice(1)"
+          v-for="(video, index) in queue"
           :video="video"
           :index="index"
           :key="video.id"
