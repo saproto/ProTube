@@ -131,7 +131,6 @@ import YoutubePlayer from "youtube-player";
 import enums from "@/js/Enums";
 
 const playerID = "player-" + Math.random();
-const queueDuration = ref("--:--:--");
 const totalDuration = ref();
 const queueProgress = ref(0);
 const queue = ref([]);
@@ -221,7 +220,6 @@ socket.on("new-video-timestamp", async (newStamp) => {
 });
 
 socket.on("queue-update", (newQueue) => {
-  queueDuration.value = newQueue.duration;
   queue.value = newQueue.queue;
 });
 </script>
