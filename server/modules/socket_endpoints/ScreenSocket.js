@@ -7,6 +7,11 @@ endpoint.on("connection", (socket) => {
     `Screen connected from ${socket.handshake.address} with socket id ${socket.id}`
   );
 
+  socket.emit("queue-update", {
+    queue: queueManager.getQueue(),
+    duration: queueManager.getTotalDurationFormatted(),
+  });
+
   socket.on("disconnect", () => {
     logger.screenInfo(`Disconnected socket: ${socket.id}`);
   });
@@ -25,7 +30,7 @@ endpoint.on("connection", (socket) => {
 eventBus.on("queue-update", () => {
   endpoint.emit("queue-update", {
     queue: queueManager.getQueue(),
-    duration: queueManager.getTotalDuration(),
+    duration: queueManager.getTotalDurationFormatted(),
   });
 });
 
