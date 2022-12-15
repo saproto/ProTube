@@ -49,7 +49,9 @@ props.socket.on("connect_error", async (err) => {
   }
 });
 
-props.socket.on("disconnect", () => {
+props.socket.on("disconnect", (reason) => {
+  // Don't try to reconnect on manual disconnects (called on OnBeforeUnmounts)
+  if (reason === "io client disconnect") return;
   message.value = "Lost connection, attempting to reconnect..";
   props.socket.connect();
 });
