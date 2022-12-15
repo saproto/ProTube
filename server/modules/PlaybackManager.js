@@ -2,6 +2,7 @@ const queueManager = require("./QueueManager");
 const radio = require("./RadioStations");
 const fetch = require("node-fetch");
 const { isEmpty } = require("lodash");
+const { format_hh_mm_ss } = require("../utils/time-formatter");
 
 let playerMode = enums.MODES.IDLE;
 let playerType = enums.TYPES.VIDEO;
@@ -31,7 +32,12 @@ exports.playVideo = (video) => {
   playbackInterval = setInterval(() => {
     if (timestamp < video.duration) {
       timestamp++;
-      eventBus.emit("new-video-timestamp", timestamp);
+      eventBus.emit("new-video-timestamp", {
+        timestamp: timestamp,
+        totalDuration: format_hh_mm_ss(
+          queueManager.getTotalDuration() + (video.duration - timestamp)
+        ),
+      });
     } else {
       // video ended, add video to played videos
       fetch(

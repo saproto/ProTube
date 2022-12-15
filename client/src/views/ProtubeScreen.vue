@@ -36,7 +36,7 @@
     <div class="flex justify-between">
       <div
         class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
-        Queue: {{ queueDuration }}
+        Queue: {{ totalDuration }}
       </div>
       <div
         class="border-proto_blue dark:bg-proto_secondary_gray-dark mb-1 mr-4 rounded-lg border-r-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
@@ -59,7 +59,12 @@
           "
           class="border-proto_blue group relative col-span-1 inline-block flex h-full w-full flex-1 overflow-hidden rounded-lg border-l-4 text-center shadow">
           <div
-            :style="index === 0 ? `width:${queueProgress}%;` : 'width:0%'"
+            :style="[
+              index === 0
+                ? `animation: progress-bar ${video.duration}s linear;`
+                : 'width:0%',
+              `animation-play-state:${animationPlayState}`,
+            ]"
             class="absolute h-full bg-white opacity-70" />
           <div
             class="rounded-m relative flex w-full flex-col rounded-r-lg border-t border-b border-r border-gray-400 bg-white/70 px-8 py-4 duration-200 dark:border-gray-800/80 dark:bg-stone-800/80">
@@ -132,6 +137,7 @@ import enums from "@/js/Enums";
 
 const playerID = "player-" + Math.random();
 const queueDuration = ref("--:--:--");
+const totalDuration = ref();
 const queueProgress = ref(0);
 const queue = ref([]);
 let player;
@@ -152,7 +158,15 @@ const queueWithCurrent = computed(() => {
   if (Object.keys(currentVideo).length === 0) return [];
   return [currentVideo].concat(queue.value);
 });
-
+const animationPlayState = computed(() => {
+  if (
+    playerState.value.playerType === enums.TYPES.VIDEO &&
+    playerState.value.playerMode !== enums.MODES.IDLE
+  ) {
+    return "playing";
+  }
+  return "paused";
+});
 const emit = defineEmits(["youtube-media-error"]);
 const props = defineProps({
   volume: {
@@ -210,9 +224,11 @@ socket.on("player-update", (newState) => {
 });
 
 socket.on("new-video-timestamp", async (newStamp) => {
-  queueProgress.value = (newStamp / queue.value[0].duration) * 100;
-  if (Math.abs((await player.getCurrentTime()) - newStamp) > 5) {
-    player.seekTo(newStamp, true);
+  totalDuration.value = newStamp.totalDuration;
+  queueProgress.value =
+    (newStamp.timestamp / playerState.value.video.duration) * 100;
+  if (Math.abs((await player.getCurrentTime()) - newStamp.timestamp) > 5) {
+    player.seekTo(newStamp.timestamp, true);
     if ((await player.getPlayerState()) === 2) player.playVideo();
   }
 });
@@ -222,3 +238,13 @@ socket.on("queue-update", (newQueue) => {
   queue.value = newQueue.queue;
 });
 </script>
+<style>
+@keyframes progress-bar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+</style>

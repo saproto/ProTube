@@ -9,7 +9,7 @@ endpoint.on("connection", (socket) => {
 
   socket.emit("queue-update", {
     queue: queueManager.getQueue(),
-    duration: queueManager.getTotalDuration(),
+    duration: queueManager.getTotalDurationFormatted(),
   });
 
   socket.on("disconnect", () => {
@@ -30,7 +30,7 @@ endpoint.on("connection", (socket) => {
 eventBus.on("queue-update", () => {
   endpoint.emit("queue-update", {
     queue: queueManager.getQueue(),
-    duration: queueManager.getTotalDuration(),
+    duration: queueManager.getTotalDurationFormatted(),
   });
 });
 
