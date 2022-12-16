@@ -66,7 +66,8 @@
             class="rounded-m relative flex w-full flex-col rounded-r-lg border-t border-b border-r border-gray-400 bg-white/70 px-8 py-4 duration-200 dark:border-gray-800/80 dark:bg-stone-800/80">
             <div class="video-title-container overflow-hidden">
               <h3
-                :class="titleIsOverflowing(index) ? 'scroll-title' : ''" class="video-title text-md z-1 h-[2rem] w-fit whitespace-nowrap text-left font-bold text-gray-800 dark:text-stone-300">
+                :class="titleIsOverflowing(index) ? 'scroll-title' : ''"
+                class="video-title text-md z-1 h-[2rem] w-fit whitespace-nowrap text-left font-bold text-gray-800 dark:text-stone-300">
                 {{ video.title }}
               </h3>
             </div>
@@ -157,11 +158,17 @@ const queueWithCurrent = computed(() => {
   return [currentVideo].concat(queue.value);
 });
 
-const isPlayingVideo = computed(() => playerState.value.playerType === enums.TYPES.VIDEO && playerState.value.playerMode !== enums.MODES.IDLE);
+const isPlayingVideo = computed(
+  () =>
+    playerState.value.playerType === enums.TYPES.VIDEO &&
+    playerState.value.playerMode !== enums.MODES.IDLE
+);
 
-const titleIsOverflowing = index => {
-  if(!queuecontainer.value) return false;
-  let titleContainer = queuecontainer.value[index].querySelector(`.video-title-container`);
+const titleIsOverflowing = (index) => {
+  if (!queuecontainer.value) return false;
+  let titleContainer = queuecontainer.value[index].querySelector(
+    `.video-title-container`
+  );
   let title = queuecontainer.value[index].querySelector(`.video-title`);
   return title.clientWidth > titleContainer.clientWidth;
 };
@@ -245,23 +252,23 @@ socket.on("queue-update", (newQueue) => {
 @keyframes slide-left {
   0% {
     -webkit-transform: translateX(0);
-            transform: translateX(0);
+    transform: translateX(0);
   }
   20% {
     -webkit-transform: translateX(0);
-            transform: translateX(0);
+    transform: translateX(0);
   }
   85% {
     -webkit-transform: translateX(-60%);
-            transform: translateX(-60%);
+    transform: translateX(-60%);
   }
   98% {
     -webkit-transform: translateX(-60%);
-            transform: translateX(-60%);
+    transform: translateX(-60%);
   }
   100% {
     -webkit-transform: translateX(0%);
-            transform: translateX(0%);
+    transform: translateX(0%);
   }
 }
 </style>
