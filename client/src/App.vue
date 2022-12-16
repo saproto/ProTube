@@ -36,8 +36,11 @@
 <script setup>
 import { useRoute } from "vue-router";
 import { computed } from "vue";
+
 // snowflake (after use delete import statement)
 import SnowFall from "@/components/SnowFall";
+
+document.title = process.env.NODE_ENV === 'development' ? '[LOCAL] ProTube' : 'ProTube';
 
 const currentRoute = computed(() => {
   return useRoute().name;
