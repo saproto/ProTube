@@ -11,10 +11,7 @@
 
     <div class="absolute top-0 right-0 mt-2">
       <div
-        v-show="
-          playerState.playerMode === enums.MODES.PLAYING &&
-          playerState.playerType === enums.TYPES.VIDEO
-        "
+        v-if="isPlayingVideo"
         class="border-proto_blue dark:bg-proto_secondary_gray-dark mb-1 mr-4 mt-1 w-max rounded-lg border-r-4 bg-white px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
         Want to add your own music? Visit www.protu.be!
       </div>
@@ -33,10 +30,7 @@
       </div>
     </div>
     <div
-      v-show="
-        playerState.playerType === enums.TYPES.VIDEO &&
-        playerState.playerMode !== enums.MODES.IDLE
-      ">
+      v-show="isPlayingVideo">
       <div :id="playerID" class="min-h-screen w-full" />
     </div>
   </div>
