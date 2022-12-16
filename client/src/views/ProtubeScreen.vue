@@ -29,8 +29,7 @@
         Visit protu.be to add some tunes!
       </div>
     </div>
-    <div
-      v-show="isPlayingVideo">
+    <div v-show="isPlayingVideo">
       <div :id="playerID" class="min-h-screen w-full" />
     </div>
   </div>
@@ -167,9 +166,9 @@ const isPlayingVideo = computed(
 
 const titleIsOverflowing = (index) => {
   if (!queuecontainer.value) return false;
-  let titleContainer = queuecontainer.value[index].querySelector(
-    `.video-title-container`
-  );
+  let el = queuecontainer.value[index];
+  if (!el) return false;
+  let titleContainer = el.querySelector(`.video-title-container`);
   let title = queuecontainer.value[index].querySelector(`.video-title`);
   return title.clientWidth > titleContainer.clientWidth;
 };
