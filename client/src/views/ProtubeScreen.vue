@@ -1,18 +1,24 @@
 <template>
   <div class="dark:bg-proto_background_gray-dark">
-    <div class="absolute grid w-full grid-cols-3 gap-4 pt-3">
-      <div class=""></div>
-      <!-- empty filler block for the grid -->
-      <div>
-        <div
-          v-show="screenCode !== -1"
-          class="dark:bg-proto_secondary_gray-dark mx-auto max-w-min rounded-lg bg-white px-4 py-2 text-2xl font-medium text-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
-          {{ screenCode }}
-        </div>
+    <!-- empty filler block for the grid -->
+    <div class="absolute top-0 mt-2 w-full">
+      <div
+        v-show="screenCode !== -1"
+        class="dark:bg-proto_secondary_gray-dark mx-auto max-w-min rounded-lg bg-white px-4 py-2 text-2xl font-medium text-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+        {{ screenCode }}
       </div>
     </div>
 
-    
+    <div class="absolute top-0 right-0 mt-2">
+      <div
+        v-show="
+          playerState.playerMode === enums.MODES.PLAYING &&
+          playerState.playerType === enums.TYPES.VIDEO
+        "
+        class="border-proto_blue dark:bg-proto_secondary_gray-dark mb-1 mr-4 mt-1 w-max rounded-lg border-r-4 bg-white px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+        Want to add your own music? Visit www.protu.be!
+      </div>
+    </div>
 
     <div
       v-if="playerState.playerMode === enums.MODES.IDLE"
