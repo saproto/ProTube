@@ -12,6 +12,8 @@
       </div>
     </div>
 
+    
+
     <div
       v-if="playerState.playerMode === enums.MODES.IDLE"
       class="grid min-h-screen place-items-center">
@@ -37,10 +39,6 @@
       <div
         class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
         Queue: {{ totalDuration }}
-      </div>
-      <div
-        class="border-proto_blue dark:bg-proto_secondary_gray-dark mb-1 mr-4 rounded-lg border-r-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
-        Want to add your own music? Visit www.protu.be!
       </div>
     </div>
     <div class="flex flex-1 gap-1 overflow-hidden pl-3">
@@ -68,7 +66,10 @@
               <h3
                 :class="titleIsOverflowing(index) ? 'scroll-title' : ''"
                 class="video-title text-md z-1 h-[2rem] w-fit whitespace-nowrap text-left font-bold text-gray-800 dark:text-stone-300">
-                {{ video.title }}
+                <span class="mr-5">{{ video.title }}</span>
+                <span class="mr-5" v-show="titleIsOverflowing(index)">{{
+                  video.title
+                }}</span>
               </h3>
             </div>
             <ul
@@ -246,7 +247,7 @@ socket.on("queue-update", (newQueue) => {
 
 <style scoped>
 .scroll-title {
-  animation: slide-left 10s linear infinite;
+  animation: slide-left 15s linear infinite;
 }
 
 @keyframes slide-left {
@@ -254,21 +255,9 @@ socket.on("queue-update", (newQueue) => {
     -webkit-transform: translateX(0);
     transform: translateX(0);
   }
-  20% {
-    -webkit-transform: translateX(0);
-    transform: translateX(0);
-  }
-  85% {
-    -webkit-transform: translateX(-60%);
-    transform: translateX(-60%);
-  }
-  98% {
-    -webkit-transform: translateX(-60%);
-    transform: translateX(-60%);
-  }
   100% {
-    -webkit-transform: translateX(0%);
-    transform: translateX(0%);
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
   }
 }
 </style>
