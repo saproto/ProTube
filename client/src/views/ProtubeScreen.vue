@@ -24,9 +24,31 @@
         v-if="playerState.playerType === enums.TYPES.RADIO"
         :radio="playerState.radio"
         :volume="volume" />
-      <div v-else class="text-4xl dark:text-white">
-        Nothing currently in the queue...<br />
-        Visit protu.be to add some tunes!
+      <div v-else class="dark:text-white">
+        <div v-if="!photo.error">
+        <div class="w-full h-screen">
+          <img
+              :src=photo.url
+              class="object-cover w-full h-full rounded-lg border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 rounded-lg border-l-8 bg-white"
+              alt="Loading..."
+          />
+        </div>
+        <div class="absolute top-0 left-0 mt-1 rounded-lg text-zinc-400 text-xl">
+          <div class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+            Album: {{ photo.album_name }}<br>
+            Taken on: {{photo.date_taken}}
+          </div>
+        </div>
+          <div class="absolute bottom-0 left-0 mb-1 rounded-lg text-4xl font-bold">
+            <div class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+              The queue is empty! Visit ProTu.be to play some epic tunes!
+            </div>
+          </div>
+        </div>
+        <div v-else class="text-4xl dark:text-white">
+          Nothing currently in the queue...<br />
+          Visit protu.be to add some tunes!
+        </div>
       </div>
     </div>
     <div v-show="isPlayingVideo">
@@ -150,6 +172,12 @@ const playerState = ref({
   volume: 0,
 });
 
+const photo=ref({
+  url:'',
+  album_name:'',
+  date_taken:0
+});
+
 // Compute the queue with the currently playing video at the front
 const queueWithCurrent = computed(() => {
   let currentVideo = playerState.value.video;
@@ -241,6 +269,8 @@ socket.on("new-video-timestamp", async (newStamp) => {
 
 socket.on("queue-update", (newQueue) => {
   queue.value = newQueue.queue;
+  console.log(newQueue.photo);
+  photo.value=newQueue.photo;
 });
 </script>
 
