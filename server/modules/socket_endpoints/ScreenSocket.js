@@ -10,8 +10,8 @@ endpoint.on("connection", (socket) => {
 
   if (!photo) emitNewPhoto();
   endpoint.emit("queue-update", {
-    queue: [],
-    duration: "00:00:00",
+    queue: queueManager.getQueue(),
+    duration: queueManager.getTotalDurationFormatted(),
     photo: photo,
   });
 
