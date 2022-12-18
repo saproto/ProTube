@@ -1,16 +1,16 @@
 const endpoint = io.of("/socket/screen");
 const queueManager = require("../QueueManager");
 const playbackManager = require("../PlaybackManager");
-let newPhotoInterval=null;
-let photo=null;
+let newPhotoInterval = null;
+let photo = null;
 endpoint.on("connection", (socket) => {
   logger.screenInfo(
     `Screen connected from ${socket.handshake.address} with socket id ${socket.id}`
   );
 
-  if(!photo)emitNewPhoto()
+  if (!photo) emitNewPhoto();
   endpoint.emit("queue-update", {
-    queue:[],
+    queue: [],
     duration: "00:00:00",
     photo: photo,
   });
@@ -31,17 +31,17 @@ endpoint.on("connection", (socket) => {
 });
 
 eventBus.on("queue-update", () => {
-  let queue=queueManager.getQueue();
-  if(queue.length<=0) {
+  let queue = queueManager.getQueue();
+  if (queue.length <= 0) {
     emitNewPhoto();
-  }else {
+  } else {
     endpoint.emit("queue-update", {
       queue: queueManager.getQueue(),
       duration: queueManager.getTotalDurationFormatted(),
       photo: {},
     });
     clearInterval(newPhotoInterval);
-    newPhotoInterval=null;
+    newPhotoInterval = null;
   }
 });
 
@@ -62,15 +62,17 @@ eventBus.on("new-video-timestamp", (timestamp) => {
 });
 
 function emitNewPhoto() {
-  if(newPhotoInterval===null){
-    newPhotoInterval=setInterval(emitNewPhoto, 10000)
+  if (newPhotoInterval === null) {
+    newPhotoInterval = setInterval(emitNewPhoto, 10000);
   }
-  fetch(`${process.env.LARAVEL_ENDPOINT}/api/photos/random_photo`).then(res => res.json()).then((newPhoto) => {
-    photo=newPhoto;
-    endpoint.emit("queue-update", {
-      queue:[],
-      duration: "00:00:00",
-      photo: photo,
+  fetch(`${process.env.LARAVEL_ENDPOINT}/api/photos/random_photo`)
+    .then((res) => res.json())
+    .then((newPhoto) => {
+      photo = newPhoto;
+      endpoint.emit("queue-update", {
+        queue: [],
+        duration: "00:00:00",
+        photo: photo,
+      });
     });
-  })
 }
