@@ -8,7 +8,7 @@
       class="ml-4 rounded-md border border-gray-400 bg-white pl-2 text-gray-700 placeholder-gray-500 outline-none focus:placeholder-gray-600"
       placeholder="Filter" />
     <div
-      class="scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 flex overflow-x-scroll py-5">
+      class="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark flex overflow-x-scroll py-5">
       <div class="flex flex-nowrap">
         <template v-if="!skeletonLoading">
           <div

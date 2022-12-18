@@ -1,32 +1,22 @@
 <template>
   <div class="dark:bg-proto_background_gray-dark">
-    <div class="absolute grid w-full grid-cols-3 gap-4 pt-3">
-      <div class=""></div>
-      <!-- empty filler block for the grid -->
-      <div>
-        <div
-          v-show="screenCode !== -1"
-          class="dark:bg-proto_secondary_gray-dark mx-auto max-w-min rounded-lg bg-white px-4 py-2 text-2xl font-medium text-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
-          {{ screenCode }}
-        </div>
-      </div>
+    <!-- empty filler block for the grid -->
+    <div class="absolute top-0 mt-2 w-full">
       <div
-        v-show="playerState.playerMode !== enums.MODES.IDLE"
-        class="dark:bg-proto_secondary_gray-dark ml-auto mr-4 rounded-lg bg-white px-4 py-2 font-medium text-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
-        <div class="mr-1 text-sm text-gray-600 dark:text-gray-300">
-          Now playing:
-        </div>
-        <span class="">
-          {{ playerState.video.title }}
-        </span>
-        <div class="mt-1">
-          <span class="text-sm text-gray-600 dark:text-gray-300">
-            Added by:
-          </span>
-          {{ playerState.video?.user?.name }}
-        </div>
+        v-show="screenCode !== -1"
+        class="dark:bg-proto_secondary_gray-dark mx-auto max-w-min rounded-lg bg-white px-4 py-2 text-2xl font-medium text-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+        {{ screenCode }}
       </div>
     </div>
+
+    <div class="absolute top-0 right-0 mt-2">
+      <div
+        v-if="isPlayingVideo"
+        class="border-proto_blue dark:bg-proto_secondary_gray-dark mb-1 mr-4 mt-1 w-max rounded-lg border-r-4 bg-white px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+        Want to add your own music? Visit www.protu.be!
+      </div>
+    </div>
+
     <div
       v-if="playerState.playerMode === enums.MODES.IDLE"
       class="grid min-h-screen place-items-center">
@@ -34,17 +24,118 @@
         v-if="playerState.playerType === enums.TYPES.RADIO"
         :radio="playerState.radio"
         :volume="volume" />
-      <div v-else class="text-4xl dark:text-white">
-        Nothing currently in the queue...<br />
-        Visit protu.be to add some tunes!
+      <div v-else class="dark:text-white">
+        <div v-if="!photo.error">
+          <div class="h-screen w-full">
+            <img
+              :src="photo.url"
+              class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 h-full w-full rounded-lg rounded-lg border-l-8 bg-white object-cover"
+              alt="Loading..." />
+          </div>
+          <div
+            class="absolute top-0 left-0 mt-1 rounded-lg text-xl text-zinc-400">
+            <div
+              class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+              Album: {{ photo.album_name }}<br />
+              Taken on: {{ photo.date_taken }}
+            </div>
+          </div>
+          <div
+            class="absolute bottom-0 left-0 mb-1 rounded-lg text-4xl font-bold">
+            <div
+              class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+              The queue is empty! Visit ProTu.be to play some epic tunes!
+            </div>
+          </div>
+        </div>
+        <div v-else class="text-4xl dark:text-white">
+          Nothing currently in the queue...<br />
+          Visit protu.be to add some tunes!
+        </div>
       </div>
     </div>
-    <div
-      v-show="
-        playerState.playerType === enums.TYPES.VIDEO &&
-        playerState.playerMode !== enums.MODES.IDLE
-      ">
+    <div v-show="isPlayingVideo">
       <div :id="playerID" class="min-h-screen w-full" />
+    </div>
+  </div>
+  <div class="absolute bottom-0 mb-1 w-screen rounded-lg">
+    <div v-if="isPlayingVideo" class="flex justify-between">
+      <div
+        class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+        Queue: {{ totalDuration }}
+      </div>
+    </div>
+    <div class="flex flex-1 gap-1 overflow-hidden pl-3">
+      <div
+        v-for="(video, index) in queueWithCurrent.slice(0, 5)"
+        :video="video"
+        :index="index"
+        :key="video.id"
+        ref="queuecontainer"
+        class="mb-1 inline-block w-1/5 rounded-lg p-1">
+        <div
+          :style="{ background: `url(${video.thumbnail.url})` }"
+          style="
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center center;
+          "
+          class="border-proto_blue group relative col-span-1 inline-block flex h-full w-full flex-1 overflow-hidden rounded-lg border-l-4 text-center shadow">
+          <div
+            :style="index === 0 ? `width:${queueProgress}%;` : 'width:0%'"
+            class="absolute h-full bg-white opacity-70" />
+          <div
+            class="rounded-m relative flex w-full flex-col rounded-r-lg border-t border-b border-r border-gray-400 bg-white/70 px-8 py-4 duration-200 dark:border-gray-800/80 dark:bg-stone-800/80">
+            <div class="video-title-container overflow-hidden">
+              <h3
+                :class="titleIsOverflowing(index) ? 'scroll-title' : ''"
+                class="video-title text-md z-1 h-[2rem] w-fit whitespace-nowrap text-left font-bold text-gray-800 dark:text-stone-300">
+                <span class="mr-5">{{ video.title }}</span>
+                <span class="mr-5" v-show="titleIsOverflowing(index)">{{
+                  video.title
+                }}</span>
+              </h3>
+            </div>
+            <ul
+              class="fa-ul mt-auto ml-5 w-full text-sm font-medium text-gray-900 dark:text-stone-300">
+              <li
+                class="justify-bottom mt-auto flex flex-1 text-right align-bottom">
+                <span class="fa-li">
+                  <font-awesome-icon icon="fa-solid fa-user" fixed-width>
+                  </font-awesome-icon>
+                </span>
+                <span class="truncate">
+                  {{ video.user.name }}
+                </span>
+              </li>
+              <li class="flex flex-1 text-right">
+                <span class="fa-li">
+                  <font-awesome-icon icon="fa-solid fa-microphone" fixed-width>
+                  </font-awesome-icon>
+                </span>
+                <span class="truncate">
+                  {{ video.channel }}
+                </span>
+              </li>
+              <li class="flex flex-1 text-right">
+                <span class="fa-li">
+                  <font-awesome-icon icon="fa-solid fa-microphone" fixed-width>
+                  </font-awesome-icon>
+                </span>
+              </li>
+              <li class="flex flex-1 text-right">
+                <span class="fa-li">
+                  <font-awesome-icon icon="fa-solid fa-clock fa-li" fixed-width>
+                  </font-awesome-icon>
+                </span>
+                <span class="truncate">
+                  {{ video.durationFormatted }}
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <ReconnectionHandler
@@ -56,12 +147,23 @@
 <script setup>
 import RadioScreen from "@/components/RadioScreen";
 import ReconnectionHandler from "@/components/ReconnectionHandler";
-import { onMounted, onBeforeUnmount, onBeforeMount, ref, watch } from "vue";
+import {
+  onMounted,
+  onBeforeUnmount,
+  onBeforeMount,
+  ref,
+  watch,
+  computed,
+} from "vue";
 import socket, { connectSocket } from "@/js/ScreenSocket";
 import YoutubePlayer from "youtube-player";
 import enums from "@/js/Enums";
 
 const playerID = "player-" + Math.random();
+const totalDuration = ref();
+const queueProgress = ref(0);
+const queue = ref([]);
+const queuecontainer = ref(null);
 let player;
 const playerState = ref({
   playerMode: enums.MODES.IDLE,
@@ -72,6 +174,35 @@ const playerState = ref({
   video: {},
   volume: 0,
 });
+
+const photo = ref({
+  url: "",
+  album_name: "",
+  date_taken: 0,
+});
+
+// Compute the queue with the currently playing video at the front
+const queueWithCurrent = computed(() => {
+  let currentVideo = playerState.value.video;
+  // if currentvideo = empty -> queue is empty
+  if (Object.keys(currentVideo).length === 0) return [];
+  return [currentVideo].concat(queue.value);
+});
+
+const isPlayingVideo = computed(
+  () =>
+    playerState.value.playerType === enums.TYPES.VIDEO &&
+    playerState.value.playerMode !== enums.MODES.IDLE
+);
+
+const titleIsOverflowing = (index) => {
+  if (!queuecontainer.value) return false;
+  let el = queuecontainer.value[index];
+  if (!el) return false;
+  let titleContainer = el.querySelector(`.video-title-container`);
+  let title = queuecontainer.value[index].querySelector(`.video-title`);
+  return title.clientWidth > titleContainer.clientWidth;
+};
 
 const emit = defineEmits(["youtube-media-error"]);
 const props = defineProps({
@@ -91,7 +222,7 @@ onBeforeMount(() => {
 
 onMounted(() => {
   player = YoutubePlayer(playerID, {
-    host: "https://www.youtube.com",
+    host: "https://www.youtube-nocookie.com",
     videoId: "",
     playerVars: {
       autoplay: 1,
@@ -121,18 +252,43 @@ onBeforeUnmount(() => {
 
 socket.on("player-update", (newState) => {
   if (newState.playerType === enums.TYPES.VIDEO) {
-    if (newState.playerMode === enums.MODES.PLAYING)
+    if (newState.playerMode === enums.MODES.PLAYING) {
       player.loadVideoById(newState.video.id, newState.timestamp);
-    else player.pauseVideo();
+    } else player.pauseVideo();
   } else if (playerState.value.playerType === enums.TYPES.VIDEO)
     player.stopVideo();
   playerState.value = newState;
 });
 
 socket.on("new-video-timestamp", async (newStamp) => {
-  if (Math.abs((await player.getCurrentTime()) - newStamp) > 5) {
-    player.seekTo(newStamp, true);
+  totalDuration.value = newStamp.totalDuration;
+  queueProgress.value =
+    (newStamp.timestamp / playerState.value.video.duration) * 100;
+  if (Math.abs((await player.getCurrentTime()) - newStamp.timestamp) > 5) {
+    player.seekTo(newStamp.timestamp, true);
     if ((await player.getPlayerState()) === 2) player.playVideo();
   }
 });
+
+socket.on("queue-update", (newQueue) => {
+  queue.value = newQueue.queue;
+  photo.value = newQueue.photo;
+});
 </script>
+
+<style scoped>
+.scroll-title {
+  animation: slide-left 15s linear infinite;
+}
+
+@keyframes slide-left {
+  0% {
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+  100% {
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+  }
+}
+</style>

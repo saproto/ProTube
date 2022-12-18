@@ -55,7 +55,7 @@ endpoint.on("connection", (socket) => {
   socket.on("get-queue", (callback) => {
     callback({
       queue: queueManager.getQueue(),
-      duration: queueManager.getTotalDuration(),
+      duration: queueManager.getTotalDurationFormatted(),
     });
   });
 });
@@ -71,6 +71,6 @@ function formatUser(socket) {
 eventBus.on("queue-update", () => {
   endpoint.emit("queue-update", {
     queue: queueManager.getQueue(),
-    duration: queueManager.getTotalDuration(),
+    duration: queueManager.getTotalDurationFormatted(),
   });
 });

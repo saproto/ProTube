@@ -9,10 +9,14 @@ exports.isQueueEmpty = () => queue.length <= 0;
 exports.getCurrentVideo = () => currentVideo;
 
 //Calculate the total duration of the playlist and return it
+exports.getTotalDurationFormatted = () => {
+  return format_hh_mm_ss(self.getTotalDuration());
+};
+
 exports.getTotalDuration = () => {
   let sum = 0;
   queue.forEach((video) => (sum += video.duration));
-  return format_hh_mm_ss(sum);
+  return sum;
 };
 
 //Add a video to the queue
