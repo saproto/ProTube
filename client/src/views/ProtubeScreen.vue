@@ -78,6 +78,7 @@
             :thumbnail="video.thumbnail.url"
             :videoID="video.id"
             :textScrolling="true"
+            :progressBar="index === 0 ? queueProgress : 0"
           />
     </div>
   </div>

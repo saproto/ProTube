@@ -4,6 +4,9 @@
       :style="`background: url(${thumbnail})`"
       style="background-repeat: no-repeat; background-size: cover;background-position: center center;"
       class="border-proto_blue group col-span-1 flex flex-col w-full rounded-sm border-l-4 text-center shadow">
+      <div
+        :style="`width:${progressBar}%;`"
+        class="absolute h-full bg-white opacity-70 duration-200 w-0"></div>
       <button
         :class="clickable && statusIcon === enums.STATUS.NOTHING? 'group-hover:bg-white/60 group-hover:dark:bg-stone-800/60' : 'cursor-default'"
         :disabled="!clickable"
@@ -144,6 +147,10 @@ const props = defineProps({
   textScrolling: {
       type: Boolean,
       default: false
+  },
+  progressBar: {
+      type: Number,
+      default: 0
   },
 });
   
