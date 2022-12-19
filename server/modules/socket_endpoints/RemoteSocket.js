@@ -19,7 +19,8 @@ endpoint.on("connection", (socket) => {
       const result = await youtube.search(
         request.query,
         request.continuationToken,
-        socket.request.user.admin
+        socket.request.user.admin,
+        queueManager.getQueue()
       );
       callback(result);
       logger.youtubeInfo("Returned list of music to client (remote)");

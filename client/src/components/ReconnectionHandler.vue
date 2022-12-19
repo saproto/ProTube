@@ -1,5 +1,5 @@
 <template>
-  <LoadModal v-show="message" :message="message" :opacity="0.5" />
+  <LoadModal v-show="message" :message="message" />
 </template>
 <script setup>
 import LoadModal from "@/components/modals/LoadModal";
