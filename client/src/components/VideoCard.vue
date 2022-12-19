@@ -155,7 +155,6 @@ const props = defineProps({
 });
   
 onMounted(() => {
-  console.log("mounted");
   if (!props.textScrolling) return false;
   const textWidth = document.getElementById(cardId).clientWidth;
   const parentWidth = document.getElementById(cardId).parentElement.clientWidth;
