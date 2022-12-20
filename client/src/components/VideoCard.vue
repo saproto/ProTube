@@ -13,8 +13,7 @@
         @click="$emit('video-clicked', videoID)"
         class="rounded-m flex flex-1 flex-col border-t border-b border-r border-gray-400 bg-white/80 px-8 py-4 duration-200 dark:border-gray-800 dark:bg-stone-800/80">
         <div
-          :class="textOverflowing ? 'overflow-hidden': ''"
-          class="text-md text-lg font-bold text-gray-800 dark:text-stone-300">
+          class="overflow-x-hidden w-full text-md text-lg font-bold text-gray-800 dark:text-stone-300">
           <h3
                 :id="cardId"
                 :class="{ 'scroll-title': textOverflowing, 'w-fit whitespace-nowrap text-left': textScrolling }"
