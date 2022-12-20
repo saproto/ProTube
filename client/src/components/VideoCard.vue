@@ -7,7 +7,7 @@
         background-size: cover;
         background-position: center center;
       "
-      class="border-proto_blue group col-span-1 flex w-full flex-col rounded-sm border-l-4 text-center shadow">
+      class="border-proto_blue group col-span-1 flex w-full flex-col rounded-lg border-l-4 text-center shadow">
       <div
         :style="`width:${progressBar}%;`"
         class="bg-proto_blue absolute bottom-0 h-full h-2 w-0 opacity-60 duration-200"></div>
@@ -19,7 +19,7 @@
         "
         :disabled="!clickable"
         @click="$emit('video-clicked', videoID)"
-        class="rounded-m flex flex-1 flex-col border-t border-b border-r border-gray-400 bg-white/80 px-8 py-4 duration-200 dark:border-gray-800 dark:bg-stone-800/80">
+        class="rounded-m flex flex-1 flex-col rounded-r-lg bg-white/80 px-8 py-4 duration-200 dark:border-gray-800 dark:bg-stone-800/80">
         <div
           class="text-md w-full overflow-x-hidden text-lg font-bold text-gray-800 dark:text-stone-300">
           <h3
