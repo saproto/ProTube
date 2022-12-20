@@ -67,19 +67,20 @@
     </div>
       <div
         class="grid grid-cols-5 overflow-hidden gap-2 mx-4 mb-1">
-        <VideoCard 
-            v-for="(video, index) in queueWithCurrent.slice(0, 5)"
-            :key="video.id"
-            :index="index"
-            :title="video.title"
-            :name="video.user.name"
-            :channel="video.channel"
-            :duration="video.durationFormatted"
-            :thumbnail="video.thumbnail.url"
-            :videoID="video.id"
-            :textScrolling="true"
-            :progressBar="index === 0 ? queueProgress : 0"
-          />
+        <VideoCard
+          class="opacity-90"
+          v-for="(video, index) in queueWithCurrent.slice(0, 5)"
+          :key="video.id"
+          :index="index"
+          :title="video.title"
+          :name="video.user.name"
+          :channel="video.channel"
+          :duration="video.durationFormatted"
+          :thumbnail="video.thumbnail.url"
+          :videoID="video.id"
+          :textScrolling="true"
+          :progressBar="index === 0 ? queueProgress : 0"
+        />
     </div>
   </div>
   <ReconnectionHandler
