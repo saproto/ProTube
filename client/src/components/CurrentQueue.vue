@@ -22,7 +22,7 @@
         </ul>
       </div>
       <div v-if="!skeletonLoading" class="w-full">
-        <ul class="grid gap-2 px-4">
+        <ul class="grid gap-2 pr-4">
           <VideoCard
             v-for="(video, index) in queue"
             :key="video.id"
