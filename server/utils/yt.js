@@ -5,7 +5,12 @@ const { Client, SearchResult } = require("youtubei");
 const youtube = new Client();
 
 //search for a YouTube video
-exports.search = async (query, continuationToken, isAdmin = false, queue = []) => {
+exports.search = async (
+  query,
+  continuationToken,
+  isAdmin = false,
+  queue = []
+) => {
   let result;
   let videos;
 
@@ -28,11 +33,11 @@ exports.search = async (query, continuationToken, isAdmin = false, queue = []) =
   videos.map((video) => sanitizeVideo(video));
   // Checking if video already in queue
   videos.forEach((video) => {
-    if(queue.some(queueVid => queueVid.id === video.id)) {
+    if (queue.some((queueVid) => queueVid.id === video.id)) {
       // If video is in queue set status to SUCCESS
-      video.status = enums.STATUS.SUCCESS
+      video.status = enums.STATUS.SUCCESS;
     }
-  })
+  });
 
   return {
     videos: isAdmin

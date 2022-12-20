@@ -8,7 +8,7 @@
     <ul
       v-else
       class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-      <VideoCard 
+      <VideoCard
         v-for="(video, index) in videos"
         :key="video.id"
         :index="index"
@@ -20,8 +20,7 @@
         :clickable="video?.status === undefined ? 'show' : ''"
         :videoID="video.id"
         :statusIcon="video.status"
-        @video-clicked="addVideoToQueue"
-      />
+        @video-clicked="addVideoToQueue" />
     </ul>
     <button
       v-if="videos.length > 17"
@@ -57,7 +56,7 @@ async function addVideoToQueue(videoID) {
       resolve(callback);
     });
   });
-  // Set the satus icon of the video accordingly
+  // Set the status icon of the video accordingly
   props.videos.forEach((video) => {
     if (video.id === videoID) {
       video.status = data.success === true ? enums.STATUS.SUCCESS : data.status;
@@ -68,5 +67,4 @@ async function addVideoToQueue(videoID) {
     message: data.message ?? "Successfully added to the queue!",
   });
 }
-
 </script>

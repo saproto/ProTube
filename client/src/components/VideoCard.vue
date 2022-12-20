@@ -2,32 +2,42 @@
   <transition @before-enter="beforeEnter" @enter="enter" appear>
     <li
       :style="`background: url(${thumbnail})`"
-      style="background-repeat: no-repeat; background-size: cover; background-position: center center;"
-      class="border-proto_blue group col-span-1 flex flex-col w-full rounded-sm border-l-4 text-center shadow">
+      style="
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+      "
+      class="border-proto_blue group col-span-1 flex w-full flex-col rounded-sm border-l-4 text-center shadow">
       <div
         :style="`width:${progressBar}%;`"
-        class="absolute h-full bg-proto_blue duration-200 w-0 bottom-0 opacity-60 h-2">
-      </div>
+        class="bg-proto_blue absolute bottom-0 h-full h-2 w-0 opacity-60 duration-200"></div>
       <button
-        :class="clickable && statusIcon === enums.STATUS.NOTHING? 'group-hover:bg-white/60 group-hover:dark:bg-stone-800/60' : 'cursor-default'"
+        :class="
+          clickable && statusIcon === enums.STATUS.NOTHING
+            ? 'group-hover:bg-white/60 group-hover:dark:bg-stone-800/60'
+            : 'cursor-default'
+        "
         :disabled="!clickable"
         @click="$emit('video-clicked', videoID)"
         class="rounded-m flex flex-1 flex-col border-t border-b border-r border-gray-400 bg-white/80 px-8 py-4 duration-200 dark:border-gray-800 dark:bg-stone-800/80">
         <div
-          class="overflow-x-hidden w-full text-md text-lg font-bold text-gray-800 dark:text-stone-300">
+          class="text-md w-full overflow-x-hidden text-lg font-bold text-gray-800 dark:text-stone-300">
           <h3
-                :id="cardId"
-                :class="{ 'scroll-title': textOverflowing, 'w-fit whitespace-nowrap text-left': textScrolling }"
-                class="text-md text-left font-bold text-gray-800 dark:text-stone-300">
-                <span class="mr-5">{{ title }}</span>
-                <span v-show="textOverflowing" class="mr-5" >{{
-                  title
-                }}</span>
+            :id="cardId"
+            :class="{
+              'scroll-title': textOverflowing,
+              'w-fit whitespace-nowrap text-left': textScrolling,
+            }"
+            class="text-md text-left font-bold text-gray-800 dark:text-stone-300">
+            <span class="mr-5">{{ title }}</span>
+            <span v-show="textOverflowing" class="mr-5">{{ title }}</span>
           </h3>
         </div>
         <ul
-          class="relative fa-ul mt-auto ml-5 w-full text-right text-sm font-medium text-gray-900 dark:text-stone-300">
-          <li v-if="name" class="justify-bottom mt-auto flex flex-1 align-bottom">
+          class="fa-ul relative mt-auto ml-5 w-full text-right text-sm font-medium text-gray-900 dark:text-stone-300">
+          <li
+            v-if="name"
+            class="justify-bottom mt-auto flex flex-1 align-bottom">
             <span class="fa-li">
               <font-awesome-icon icon="fa-solid fa-user" fixed-width>
               </font-awesome-icon>
@@ -37,15 +47,13 @@
             </span>
           </li>
           <li v-if="channel" class="flex flex-1 text-right">
-              <span class="fa-li">
-              <font-awesome-icon
-                  icon="fa-solid fa-microphone"
-                  fixed-width>
+            <span class="fa-li">
+              <font-awesome-icon icon="fa-solid fa-microphone" fixed-width>
               </font-awesome-icon>
-              </span>
-              <span class="truncate">
+            </span>
+            <span class="truncate">
               {{ channel }}
-              </span>
+            </span>
           </li>
           <li class="flex flex-1">
             <span class="fa-li">
@@ -68,92 +76,91 @@
             </span>
           </li>
 
-            <font-awesome-icon
-              v-show="statusIcon === enums.STATUS.SUCCESS"
-              icon="fa-solid fa-check-circle"
-              size="lg"
-              class="ml-auto mr-2 text-green-500 absolute -right-0 -bottom-0">
-            </font-awesome-icon>
+          <font-awesome-icon
+            v-show="statusIcon === enums.STATUS.SUCCESS"
+            icon="fa-solid fa-check-circle"
+            size="lg"
+            class="absolute -right-0 -bottom-0 ml-auto mr-2 text-green-500">
+          </font-awesome-icon>
 
-            <font-awesome-icon
-              v-show="statusIcon === enums.STATUS.WARNING"
-              icon="fa-solid fa-warning"
-              size="lg"
-              class="ml-auto mr-2 text-yellow-400 absolute -right-0 -bottom-0">
-            </font-awesome-icon>
+          <font-awesome-icon
+            v-show="statusIcon === enums.STATUS.WARNING"
+            icon="fa-solid fa-warning"
+            size="lg"
+            class="absolute -right-0 -bottom-0 ml-auto mr-2 text-yellow-400">
+          </font-awesome-icon>
 
-            <font-awesome-icon
-              v-show="statusIcon === enums.STATUS.ERROR"
-              icon="fa-solid fa-xmark-circle"
-              size="lg"
-              class="ml-auto mr-2 text-red-500 absolute -right-0 -bottom-0">
-            </font-awesome-icon>
+          <font-awesome-icon
+            v-show="statusIcon === enums.STATUS.ERROR"
+            icon="fa-solid fa-xmark-circle"
+            size="lg"
+            class="absolute -right-0 -bottom-0 ml-auto mr-2 text-red-500">
+          </font-awesome-icon>
 
-            <button
-              v-if="removeButton"
-              @click="$emit('remove-clicked', videoID)"
-              class="absolute -right-0 -bottom-0 rounded-sm bg-red-600 p-1 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
-              Remove
-            </button>
-
+          <button
+            v-if="removeButton"
+            @click="$emit('remove-clicked', videoID)"
+            class="absolute -right-0 -bottom-0 rounded-sm bg-red-600 p-1 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+            Remove
+          </button>
         </ul>
       </button>
     </li>
   </transition>
 </template>
-  
+
 <script setup>
 import gsap from "gsap";
 import enums from "@/js/Enums";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { ref, onMounted } from 'vue'
-  
+import { ref, onMounted } from "vue";
+
 const cardId = `card_${Math.random()}`;
 const textOverflowing = ref(false);
 
 const props = defineProps({
   name: {
-      type: String,
-      default: null
+    type: String,
+    default: null,
   },
   channel: {
-      type: String,
-      default: null
+    type: String,
+    default: null,
   },
   views: {
-      type: String,
-      default: null
+    type: String,
+    default: null,
   },
   duration: String,
   thumbnail: String,
   title: String,
   videoID: String,
   index: {
-      type: Number,
-      default: 0
+    type: Number,
+    default: 0,
   },
   statusIcon: {
-      type: Number,
-      default: enums.STATUS.NOTHING
+    type: Number,
+    default: enums.STATUS.NOTHING,
   },
   clickable: {
-      type: String,
-      default: null
+    type: String,
+    default: null,
   },
   removeButton: {
-      type: Boolean,
-      default: false
+    type: Boolean,
+    default: false,
   },
   textScrolling: {
-      type: Boolean,
-      default: false
+    type: Boolean,
+    default: false,
   },
   progressBar: {
-      type: Number,
-      default: 0
+    type: Number,
+    default: 0,
   },
 });
-  
+
 onMounted(() => {
   if (!props.textScrolling) return false;
   const textWidth = document.getElementById(cardId).clientWidth;
@@ -166,7 +173,7 @@ const beforeEnter = (el) => {
   el.style.opacity = 0;
   el.style.transform = "translateY(-50px)";
 };
-  
+
 const enter = (el, done) => {
   gsap.to(el, {
     opacity: 1,
@@ -178,7 +185,7 @@ const enter = (el, done) => {
   });
 };
 </script>
-  
+
 <style scoped>
 .scroll-title {
   animation: slide-left 15s linear infinite;

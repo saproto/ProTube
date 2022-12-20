@@ -1,5 +1,8 @@
 <template>
-  <ContentField id="nav" style="transition: all 0.5s ease 0.5s" class="sticky top-0">
+  <ContentField
+    id="nav"
+    style="transition: all 0.5s ease 0.5s"
+    class="sticky top-0">
     <div class="items-top flex flex-col justify-between pb-2 md:flex-row">
       <label class="text-2xl text-gray-600 dark:text-white">
         Queue - {{ queueDuration }}
@@ -15,15 +18,12 @@
       class="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark flex max-h-[84vh] justify-center overflow-y-scroll overscroll-contain px-0">
       <div v-if="skeletonLoading" class="w-full">
         <ul class="grid gap-2">
-          <SkeletonResult 
-            v-for="index in 10"
-            :key="index"
-          />
+          <SkeletonResult v-for="index in 10" :key="index" />
         </ul>
       </div>
       <div v-if="!skeletonLoading" class="w-full">
-        <ul class="gap-2 grid">
-          <VideoCard 
+        <ul class="grid gap-2">
+          <VideoCard
             v-for="(video, index) in queue"
             :key="video.id"
             :index="index"
@@ -34,8 +34,7 @@
             :thumbnail="video.thumbnail.url"
             :removeButton="true"
             :videoID="video.id"
-            @remove-clicked="removeFromQueue"
-          />
+            @remove-clicked="removeFromQueue" />
         </ul>
         <div
           v-if="!skeletonLoading && queue.length < 1"
