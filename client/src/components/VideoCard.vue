@@ -10,7 +10,7 @@
       class="border-proto_blue group col-span-1 flex w-full flex-col rounded-lg border-l-4 text-center shadow">
       <div
         :style="`width:${progressBar}%;`"
-        class="bg-proto_blue absolute bottom-0 h-full h-2 w-0 opacity-60 duration-200"></div>
+        class="bg-proto_blue absolute bottom-0 h-full h-2 w-0 opacity-60 duration-200 rounded-sm"></div>
       <button
         :class="
           clickable && statusIcon === enums.STATUS.NOTHING
