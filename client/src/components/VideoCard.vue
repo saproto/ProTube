@@ -100,8 +100,11 @@
           <button
             v-if="removeButton"
             @click="$emit('remove-clicked', videoID)"
-            class="absolute -right-0 -bottom-0 rounded-sm bg-red-600 p-1 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
-            Remove
+            class="absolute -right-0 -bottom-0 rounded-lg bg-red-600 py-2 px-3 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+            <font-awesome-icon
+              icon="fa-solid fa-trash"
+              size="lg">
+            </font-awesome-icon>
           </button>
         </ul>
       </button>
