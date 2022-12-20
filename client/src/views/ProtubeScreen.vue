@@ -26,11 +26,11 @@
     </div>
 
     <div v-show="!isPlayingVideo" class="dark:text-white">
-      <div v-if="photo && !photo.error">
-        <div class="h-screen overflow-x-hidden flex justify-center">
+      <div v-if="photo && !photo.error && photo.url !== ''">
+        <div class="h-screen overflow-x-hidden flex justify-center p-5">
           <img
             :src="photo.url"
-            class="dark:bg-proto_secondary_gray-dark h-full bg-white max-w-none"
+            class="dark:bg-proto_secondary_gray-dark h-full bg-white max-w-none rounded-lg"
             alt="Loading..." />
         </div>
         <div
