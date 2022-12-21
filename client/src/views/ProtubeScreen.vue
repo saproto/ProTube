@@ -67,7 +67,6 @@
     </div>
     <div class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
       <VideoCard
-        class="opacity-90"
         v-for="(video, index) in queueWithCurrent.slice(0, 5)"
         :key="video.id"
         :index="index"
@@ -78,7 +77,8 @@
         :thumbnail="video.thumbnail.url"
         :videoID="video.id"
         :textScrolling="true"
-        :progressBar="index === 0 ? queueProgress : 0" />
+        :progressBar="index === 0 ? queueProgress : 0"
+        :opacity="0.9" />
     </div>
   </div>
   <ReconnectionHandler

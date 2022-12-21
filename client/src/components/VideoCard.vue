@@ -160,6 +160,10 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  opacity: {
+    type: Number,
+    default: 1,
+  },
 });
 
 onMounted(() => {
@@ -177,7 +181,7 @@ const beforeEnter = (el) => {
 
 const enter = (el, done) => {
   gsap.to(el, {
-    opacity: 1,
+    opacity: props.opacity,
     ease: "back.out(1.4)",
     y: 0,
     duration: 0.5,
