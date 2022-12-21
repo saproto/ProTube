@@ -10,7 +10,7 @@
       class="border-proto_blue group col-span-1 flex w-full flex-col rounded-lg border-l-4 text-center shadow">
       <div
         :style="`width:${progressBar}%;`"
-        class="bg-proto_blue absolute bottom-0 h-full h-2 w-0 opacity-60 duration-200 rounded-sm"></div>
+        class="bg-proto_blue absolute bottom-0 h-full h-2 w-0 rounded-sm opacity-60 duration-200"></div>
       <button
         :class="
           clickable && statusIcon === enums.STATUS.NOTHING
@@ -101,9 +101,7 @@
             v-if="removeButton"
             @click="$emit('remove-clicked', videoID)"
             class="absolute -right-0 -bottom-0 rounded-lg bg-red-600 py-2 px-3 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
-            <font-awesome-icon
-              icon="fa-solid fa-trash"
-              size="lg">
+            <font-awesome-icon icon="fa-solid fa-trash" size="lg">
             </font-awesome-icon>
           </button>
         </ul>
