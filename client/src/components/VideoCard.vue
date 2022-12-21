@@ -19,7 +19,7 @@
         "
         :disabled="!clickable"
         @click="$emit('video-clicked', videoID)"
-        class="rounded-m flex flex-1 flex-col rounded-r-lg bg-white/80 px-8 py-4 duration-200 dark:border-gray-800 dark:bg-stone-800/80">
+        class="rounded-m flex flex-1 flex-col rounded-lg bg-white/80 px-8 py-4 duration-200 dark:border-gray-800 dark:bg-stone-800/80">
         <div
           class="text-md w-full overflow-x-hidden text-lg font-bold text-gray-800 dark:text-stone-300">
           <h3
