@@ -30,9 +30,8 @@
                 : 'cursor-default opacity-80'
             "
             class="bg-search_button_background-light focus:border-search_button_border focus:bg-search_button_background dark:border-search_button_background-dark dark:bg-search_button_background-dark mx-auto inline-flex items-center justify-center rounded-r-md border p-2 font-medium shadow-sm duration-200 focus:text-white focus:outline-none dark:text-white">
-            <font-awesome-icon
-              icon="fa-solid fa-search"
-              class="mx-1"></font-awesome-icon>
+            <font-awesome-icon icon="fa-solid fa-search" class="mx-1">
+            </font-awesome-icon>
           </button>
         </div>
       </form>
@@ -42,6 +41,30 @@
       :admin-screen="user.admin"
       screen
       :name="user.name" />
+
+    <div class="group absolute top-0 right-0 m-3 hidden md:block">
+      <font-awesome-icon
+        icon="fa-solid fa-question-circle"
+        size="lg"
+        class="transition-500 text-white opacity-70 transition-opacity group-hover:opacity-100">
+      </font-awesome-icon>
+      <div
+        class="dark:bg-proto_secondary_gray-dark transition-300 float-left mr-3 text-justify max-w-[250px] rounded-md bg-white py-2 px-5 opacity-0 transition-opacity group-hover:opacity-95 dark:text-white">
+        If you are experiencing any problems with ProTube or have a feature request
+        please let the
+        <a
+          href="https://haveyoutriedturningitoffandonagain.nl"
+          class="text-proto_blue"
+          >HYTTIOAOAc</a
+        >
+        know by creating an issue on
+        <a
+          class="text-proto_blue"
+          href="https://github.com/saproto/ProTube/issues/new"
+          >GitHub</a
+        >!
+      </div>
+    </div>
   </HeaderField>
 </template>
 
