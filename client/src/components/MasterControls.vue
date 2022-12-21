@@ -1,13 +1,13 @@
 <template>
   <ContentField>
-    <div class="flex mb-1">
+    <div class="mb-1 flex">
       <h3 class="h-full text-2xl text-gray-600 dark:text-white">
         Master controls
       </h3>
       <button
         @click="switchTheme"
         v-if="!inProduction"
-        class="ml-auto dark:bg-gray-100 dark:text-gray-800 bg-gray-800 flex-none rounded-md px-4 py-1 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg md:mt-0">
+        class="ml-auto flex-none rounded-md bg-gray-800 px-4 py-1 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg dark:bg-gray-100 dark:text-gray-800 md:mt-0">
         Switch Theme
       </button>
     </div>
@@ -105,7 +105,7 @@ const playerSettings = ref({
 
 const router = useRouter();
 
-const inProduction = process.env.NODE_ENV === 'production'
+const inProduction = process.env.NODE_ENV === "production";
 
 onBeforeMount(async () => {
   const response = await fetch("/api/user");
@@ -136,14 +136,12 @@ function displayToast(toast) {
 }
 
 async function switchTheme() {
-  if (
-    localStorage.theme !== "dark" || !("theme" in localStorage)
-  ) {
+  if (localStorage.theme !== "dark" || !("theme" in localStorage)) {
     document.documentElement.classList.add("dark");
-    localStorage.theme = "dark"
+    localStorage.theme = "dark";
   } else {
     document.documentElement.classList.remove("dark");
-    localStorage.theme = "light"
+    localStorage.theme = "light";
   }
 }
 
