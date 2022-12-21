@@ -49,9 +49,9 @@
         class="transition-500 text-white opacity-70 transition-opacity group-hover:opacity-100">
       </font-awesome-icon>
       <div
-        class="dark:bg-proto_secondary_gray-dark transition-300 float-left mr-3 text-justify max-w-[250px] rounded-md bg-white py-2 px-5 opacity-0 transition-opacity group-hover:opacity-95 dark:text-white">
-        If you are experiencing any problems with ProTube or have a feature request
-        please let the
+        class="dark:bg-proto_secondary_gray-dark transition-300 float-left mr-3 max-w-[250px] rounded-md bg-white py-2 px-5 text-justify opacity-0 transition-opacity group-hover:opacity-95 dark:text-white">
+        If you are experiencing any problems with ProTube or have a feature
+        request please let the
         <a
           href="https://haveyoutriedturningitoffandonagain.nl"
           class="text-proto_blue"
