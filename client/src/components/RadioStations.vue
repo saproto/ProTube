@@ -26,7 +26,7 @@
           </div>
           <div
             v-if="filteredRadioStations.length < 1"
-            class="ml-8 -mt-6 text-gray-400">
+            class="ml-8 h-[3.75rem] text-gray-400">
             No radio stations found..
           </div>
         </template>
