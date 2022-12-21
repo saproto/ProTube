@@ -43,6 +43,17 @@ import SnowFall from "@/components/SnowFall";
 document.title =
   process.env.NODE_ENV === "development" ? "[LOCAL] ProTube" : "ProTube";
 
+// Set theme based on cookie
+if (
+  localStorage.theme === "dark" ||
+  (!("theme" in localStorage) &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches)
+) {
+  document.documentElement.classList.add("dark");
+} else {
+  document.documentElement.classList.remove("dark");
+}
+
 const currentRoute = computed(() => {
   return useRoute().name;
 });
