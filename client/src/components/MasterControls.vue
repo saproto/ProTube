@@ -1,8 +1,16 @@
 <template>
   <ContentField>
-    <h3 class="h-full text-2xl text-gray-600 dark:text-white">
-      Master controls
-    </h3>
+    <div class="flex mb-1">
+      <h3 class="h-full text-2xl text-gray-600 dark:text-white">
+        Master controls
+      </h3>
+      <button
+        @click="switchTheme"
+        v-if="!inProduction"
+        class="ml-auto dark:bg-gray-100 dark:text-gray-800 bg-gray-800 flex-none rounded-md px-4 py-1 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg md:mt-0">
+        Switch Theme
+      </button>
+    </div>
     <div class="md:flex">
       <div class="mx-auto w-full text-center lg:w-2/3">
         <span
@@ -97,6 +105,8 @@ const playerSettings = ref({
 
 const router = useRouter();
 
+const inProduction = process.env.NODE_ENV === 'production'
+
 onBeforeMount(async () => {
   const response = await fetch("/api/user");
   if (response.redirected) return (window.location.href = response.url);
@@ -123,6 +133,18 @@ socket.on("update-admin-panel", (newSettings) => {
 
 function displayToast(toast) {
   latestToast.value = toast;
+}
+
+async function switchTheme() {
+  if (
+    localStorage.theme !== "dark" || !("theme" in localStorage)
+  ) {
+    document.documentElement.classList.add("dark");
+    localStorage.theme = "dark"
+  } else {
+    document.documentElement.classList.remove("dark");
+    localStorage.theme = "light"
+  }
 }
 
 async function volumeChange(event) {
