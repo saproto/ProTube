@@ -65,77 +65,21 @@
         Queue: {{ totalDuration }}
       </div>
     </div>
-    <div class="flex flex-1 gap-1 overflow-hidden pl-3">
-      <div
+    <div class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
+      <VideoCard
         v-for="(video, index) in queueWithCurrent.slice(0, 5)"
-        :video="video"
-        :index="index"
         :key="video.id"
-        ref="queuecontainer"
-        class="mb-1 inline-block w-1/5 rounded-lg p-1">
-        <div
-          :style="{ background: `url(${video.thumbnail.url})` }"
-          style="
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center center;
-          "
-          class="border-proto_blue group relative col-span-1 inline-block flex h-full w-full flex-1 overflow-hidden rounded-lg border-l-4 text-center shadow">
-          <div
-            :style="index === 0 ? `width:${queueProgress}%;` : 'width:0%'"
-            class="absolute h-full bg-white opacity-70" />
-          <div
-            class="rounded-m relative flex w-full flex-col rounded-r-lg border-t border-b border-r border-gray-400 bg-white/70 px-8 py-4 duration-200 dark:border-gray-800/80 dark:bg-stone-800/80">
-            <div class="video-title-container overflow-hidden">
-              <h3
-                :class="titleIsOverflowing(index) ? 'scroll-title' : ''"
-                class="video-title text-md z-1 h-[2rem] w-fit whitespace-nowrap text-left font-bold text-gray-800 dark:text-stone-300">
-                <span class="mr-5">{{ video.title }}</span>
-                <span class="mr-5" v-show="titleIsOverflowing(index)">{{
-                  video.title
-                }}</span>
-              </h3>
-            </div>
-            <ul
-              class="fa-ul mt-auto ml-5 w-full text-sm font-medium text-gray-900 dark:text-stone-300">
-              <li
-                class="justify-bottom mt-auto flex flex-1 text-right align-bottom">
-                <span class="fa-li">
-                  <font-awesome-icon icon="fa-solid fa-user" fixed-width>
-                  </font-awesome-icon>
-                </span>
-                <span class="truncate">
-                  {{ video.user.name }}
-                </span>
-              </li>
-              <li class="flex flex-1 text-right">
-                <span class="fa-li">
-                  <font-awesome-icon icon="fa-solid fa-microphone" fixed-width>
-                  </font-awesome-icon>
-                </span>
-                <span class="truncate">
-                  {{ video.channel }}
-                </span>
-              </li>
-              <li class="flex flex-1 text-right">
-                <span class="fa-li">
-                  <font-awesome-icon icon="fa-solid fa-microphone" fixed-width>
-                  </font-awesome-icon>
-                </span>
-              </li>
-              <li class="flex flex-1 text-right">
-                <span class="fa-li">
-                  <font-awesome-icon icon="fa-solid fa-clock fa-li" fixed-width>
-                  </font-awesome-icon>
-                </span>
-                <span class="truncate">
-                  {{ video.durationFormatted }}
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+        :index="index"
+        :title="video.title"
+        :name="video.user.name"
+        :channel="video.channel"
+        :duration="video.durationFormatted"
+        :thumbnail="video.thumbnail.url"
+        :videoID="video.id"
+        :textScrolling="true"
+        :roundedCorners="true"
+        :progressBar="index === 0 ? queueProgress : 0"
+        :opacity="0.9" />
     </div>
   </div>
   <ReconnectionHandler
@@ -147,6 +91,7 @@
 <script setup>
 import RadioScreen from "@/components/RadioScreen";
 import ReconnectionHandler from "@/components/ReconnectionHandler";
+import VideoCard from "@/components/VideoCard.vue";
 import {
   onMounted,
   onBeforeUnmount,
@@ -163,7 +108,6 @@ const playerID = "player-" + Math.random();
 const totalDuration = ref();
 const queueProgress = ref(0);
 const queue = ref([]);
-const queuecontainer = ref(null);
 let player;
 const playerState = ref({
   playerMode: enums.MODES.IDLE,
@@ -194,15 +138,6 @@ const isPlayingVideo = computed(
     playerState.value.playerType === enums.TYPES.VIDEO &&
     playerState.value.playerMode !== enums.MODES.IDLE
 );
-
-const titleIsOverflowing = (index) => {
-  if (!queuecontainer.value) return false;
-  let el = queuecontainer.value[index];
-  if (!el) return false;
-  let titleContainer = el.querySelector(`.video-title-container`);
-  let title = queuecontainer.value[index].querySelector(`.video-title`);
-  return title.clientWidth > titleContainer.clientWidth;
-};
 
 const emit = defineEmits(["youtube-media-error"]);
 const props = defineProps({
@@ -275,20 +210,3 @@ socket.on("queue-update", (newQueue) => {
   photo.value = newQueue.photo;
 });
 </script>
-
-<style scoped>
-.scroll-title {
-  animation: slide-left 15s linear infinite;
-}
-
-@keyframes slide-left {
-  0% {
-    -webkit-transform: translateX(0);
-    transform: translateX(0);
-  }
-  100% {
-    -webkit-transform: translateX(-50%);
-    transform: translateX(-50%);
-  }
-}
-</style>

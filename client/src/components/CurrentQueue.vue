@@ -1,5 +1,8 @@
 <template>
-  <ContentField id="nav" class="sticky top-0">
+  <ContentField
+    id="nav"
+    style="transition: all 0.5s ease 0.5s"
+    class="sticky top-0">
     <div class="items-top flex flex-col justify-between pb-2 md:flex-row">
       <label class="text-2xl text-gray-600 dark:text-white">
         Queue - {{ queueDuration }}
@@ -13,87 +16,25 @@
     </div>
     <div
       class="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark flex max-h-[84vh] justify-center overflow-y-scroll overscroll-contain px-0">
-      <div v-if="skeletonLoading" class="flex-nowrap">
-        <ul
-          v-for="index in 10"
-          :key="index"
-          class="mx-2 mt-2 inline-block grid md:w-96">
-          <li
-            class="border-proto_blue group group col-span-1 flex grow cursor-pointer flex-col rounded-sm border-l-4 text-center shadow">
-            <SkeletonResult />
-          </li>
+      <div v-if="skeletonLoading" class="w-full">
+        <ul class="grid gap-2">
+          <SkeletonResult v-for="index in 10" :key="index" />
         </ul>
       </div>
-      <div v-if="!skeletonLoading" class="flex-nowrap">
-        <ul
-          v-for="(video, index) in queue"
-          :video="video"
-          :index="index"
-          :key="video.id"
-          class="mt-2 inline-block grid w-full">
-          <li
-            :style="{ background: `url(${video.thumbnail.url})` }"
-            style="
-              background-repeat: no-repeat;
-              background-size: cover;
-              background-position: center center;
-            "
-            :class="admin ? 'group cursor-pointer ' : ''"
-            class="border-proto_blue group col-span-1 mr-4 flex w-full flex-col rounded-sm border-l-4 text-center shadow">
-            <div
-              @click="removeFromQueue(video)"
-              :class="
-                admin
-                  ? 'group-hover:bg-white/60 group-hover:dark:bg-stone-800/60'
-                  : ''
-              "
-              class="rounded-m flex w-full flex-col border-t border-b border-r border-gray-400 bg-white/80 px-8 py-4 duration-200 dark:border-gray-800/80 dark:bg-stone-800/80">
-              <h3
-                class="text-md text-left font-bold text-gray-800 dark:text-stone-300">
-                {{ video.title }}
-              </h3>
-              <ul
-                class="fa-ul mt-auto ml-5 w-full text-sm font-medium text-gray-900 dark:text-stone-300">
-                <li
-                  class="justify-bottom mt-auto flex flex-1 text-right align-bottom">
-                  <span class="fa-li">
-                    <font-awesome-icon icon="fa-solid fa-user" fixed-width>
-                    </font-awesome-icon>
-                  </span>
-                  <span class="truncate">
-                    {{ video.user.name }}
-                  </span>
-                </li>
-                <li class="flex flex-1 text-right">
-                  <span class="fa-li">
-                    <font-awesome-icon
-                      icon="fa-solid fa-microphone"
-                      fixed-width>
-                    </font-awesome-icon>
-                  </span>
-                  <span class="truncate">
-                    {{ video.channel }}
-                  </span>
-                </li>
-                <li class="flex flex-1 text-right">
-                  <span class="fa-li">
-                    <font-awesome-icon
-                      icon="fa-solid fa-clock fa-li"
-                      fixed-width>
-                    </font-awesome-icon>
-                  </span>
-                  <span class="truncate">
-                    {{ video.durationFormatted }}
-                  </span>
-                  <span
-                    v-if="admin"
-                    class="ml-auto truncate rounded-sm bg-red-600 p-1 text-xs font-medium text-white opacity-0 shadow-lg duration-300 group-hover:opacity-100">
-                    Remove
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </li>
+      <div v-if="!skeletonLoading" class="w-full">
+        <ul class="grid gap-2 pr-4">
+          <VideoCard
+            v-for="(video, index) in queue"
+            :key="video.id"
+            :index="index"
+            :title="video.title"
+            :name="video.user.name"
+            :channel="video.channel"
+            :duration="video.durationFormatted"
+            :thumbnail="video.thumbnail.url"
+            :removeButton="true"
+            :videoID="video.id"
+            @remove-clicked="removeFromQueue" />
         </ul>
         <div
           v-if="!skeletonLoading && queue.length < 1"
@@ -108,11 +49,11 @@
 <script setup>
 import ContentField from "@/layout/ContentField.vue";
 import SkeletonResult from "@/components/skeletons/SkeletonResult.vue";
+import VideoCard from "@/components/VideoCard.vue";
 import { ref, computed } from "vue";
 import adminSocket from "@/js/AdminRemoteSocket";
 import normalSocket from "@/js/RemoteSocket";
 import enums from "@/js/Enums";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const emit = defineEmits(["display-toast"]);
 const skeletonLoading = ref(true);
@@ -131,10 +72,10 @@ const props = defineProps({
   },
 });
 
-async function removeFromQueue(video) {
+async function removeFromQueue(videoID) {
   if (!props.admin) return;
   const data = await new Promise((resolve) => {
-    socket.value.emit("remove-video", video, (callback) => {
+    socket.value.emit("remove-video", videoID, (callback) => {
       resolve(callback);
     });
   });
