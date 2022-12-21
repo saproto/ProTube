@@ -17,43 +17,34 @@
       </div>
     </div>
 
-    <div
-      v-if="playerState.playerMode === enums.MODES.IDLE"
-      class="grid min-h-screen place-items-center">
-      <RadioScreen
-        v-if="playerState.playerType === enums.TYPES.RADIO"
-        :radio="playerState.radio"
-        :volume="volume" />
-      <div v-else class="dark:text-white">
-        <div v-if="!photo.error">
-          <div class="h-screen w-full">
-            <img
-              :src="photo.url"
-              class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 h-full w-full rounded-lg rounded-lg border-l-8 bg-white object-cover"
-              alt="Loading..." />
-          </div>
+    <div v-if="isPlayingRadio" class="grid min-h-screen place-items-center">
+      <RadioScreen :radio="playerState.radio" :volume="volume" />
+    </div>
+
+    <div v-show="!isPlayingVideo" class="dark:text-white">
+      <div v-if="photo && !photo.error && photo.url !== ''">
+        <div class="flex h-screen justify-center overflow-x-hidden p-5">
+          <img
+            :src="photo.url"
+            class="dark:bg-proto_secondary_gray-dark h-full max-w-none rounded-lg bg-white"
+            alt="Loading..." />
+        </div>
+        <div class="absolute top-0 left-0 mt-2 ml-4 rounded-lg text-lg">
           <div
-            class="absolute top-0 left-0 mt-1 rounded-lg text-xl text-zinc-400">
-            <div
-              class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
-              Album: {{ photo.album_name }}<br />
-              Taken on: {{ photo.date_taken }}
-            </div>
-          </div>
-          <div
-            class="absolute bottom-0 left-0 mb-1 rounded-lg text-4xl font-bold">
-            <div
-              class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
-              The queue is empty! Visit ProTu.be to play some epic tunes!
-            </div>
+            class="border-proto_blue dark:bg-proto_secondary_gray-dark rounded-lg border-l-4 bg-white p-1 px-4 py-2 text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+            Album: {{ photo.album_name }}<br />
+            Taken on: {{ photo.date_taken }}
           </div>
         </div>
-        <div v-else class="text-4xl dark:text-white">
+      </div>
+      <div v-else class="grid h-screen place-items-center">
+        <div class="text-4xl dark:text-white">
           Nothing currently in the queue...<br />
           Visit protu.be to add some tunes!
         </div>
       </div>
     </div>
+
     <div v-show="isPlayingVideo">
       <div :id="playerID" class="min-h-screen w-full" />
     </div>
@@ -136,6 +127,12 @@ const queueWithCurrent = computed(() => {
 const isPlayingVideo = computed(
   () =>
     playerState.value.playerType === enums.TYPES.VIDEO &&
+    playerState.value.playerMode !== enums.MODES.IDLE
+);
+
+const isPlayingRadio = computed(
+  () =>
+    playerState.value.playerType === enums.TYPES.RADIO &&
     playerState.value.playerMode !== enums.MODES.IDLE
 );
 
