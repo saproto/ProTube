@@ -77,6 +77,7 @@
         :thumbnail="video.thumbnail.url"
         :videoID="video.id"
         :textScrolling="true"
+        :roundedCorners="true"
         :progressBar="index === 0 ? queueProgress : 0"
         :opacity="0.9" />
     </div>
