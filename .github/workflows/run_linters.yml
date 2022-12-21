@@ -33,4 +33,4 @@ jobs:
         with:
           eslint: true
           prettier: true
-          auto-fix: true
+          auto_fix: true
