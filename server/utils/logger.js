@@ -121,7 +121,9 @@ function log(message, error = false) {
   else logger.info(message);
 }
 
-this.serverInfo(`----------------------- Starting ProTube server -----------------------`);
+this.serverInfo(
+  `----------------------- Starting ProTube server -----------------------`
+);
 
 // Catch all and log system crashes
 process.on("uncaughtException", (err) => {
@@ -130,23 +132,25 @@ process.on("uncaughtException", (err) => {
   process.exitCode = 1;
   // wait for logger flush
   setTimeout(() => {
-    console.log(`Program crashed of uncaught exception, see the logs at ${new Date().toLocaleString()}!`);
+    console.log(
+      `Program crashed of uncaught exception, see the logs at ${new Date().toLocaleString()}!`
+    );
     process.exit(1);
   }, 500);
 });
 
 // Log all exits of the program
-process.on('exit', (code) => {
-  this.serverInfo(`----------------------- ProTube server exited with exit code ${code} -----------------------`);
+process.on("exit", (code) => {
+  this.serverInfo(
+    `----------------------- ProTube server exited with exit code ${code} -----------------------`
+  );
   dbLogger.end();
   logger.end();
 });
 
 // Add signal listeners
-['SIGINT', 'SIGTERM', 'SIGQUIT'].forEach(
-  (signal) => {
-    process.on(signal, (code) => {
-      process.exit(code);
-    })
-  }
-);
+["SIGINT", "SIGTERM", "SIGQUIT"].forEach((signal) => {
+  process.on(signal, (code) => {
+    process.exit(code);
+  });
+});
