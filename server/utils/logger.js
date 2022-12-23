@@ -67,7 +67,7 @@ let prefix = {
   client: "[REMOTECLIENT] ".blue,
   admin: "[ADMIN]        ".gray,
   user: "[USER]         ".green,
-  queue: "[QUEUE]        ".brightYellow,
+  queue: "[QUEUE]        ".yellow,
   localClient: "[LOCALCLIENT]  ".cyan,
   session: "[SESSIONSTORE] ".blue,
 };
