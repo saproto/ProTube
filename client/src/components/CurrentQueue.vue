@@ -32,7 +32,7 @@
             :channel="video.channel"
             :duration="video.durationFormatted"
             :thumbnail="video.thumbnail.url"
-            :removeButton="true"
+            :removeButton="admin"
             :videoID="video.id"
             @remove-clicked="removeFromQueue" />
         </ul>
