@@ -16,7 +16,7 @@
       <button
         :class="[
           clickable && statusIcon === enums.STATUS.NOTHING
-            ? 'group-hover:bg-white/60 group-hover:dark:bg-stone-800/60'
+            ? 'group-hover:bg-white/40 dark:group-hover:bg-stone-800/40'
             : 'cursor-default',
           props.roundedCorners ? 'rounded-lg' : '',
         ]"
