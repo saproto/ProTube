@@ -21,7 +21,7 @@
       <RadioScreen :radio="playerState.radio" :volume="volume" />
     </div>
 
-    <div v-show="!isPlayingVideo" class="dark:text-white">
+    <div v-else-if="!isPlayingVideo" class="dark:text-white">
       <div v-if="photo && !photo.error && photo.url !== ''">
         <div class="flex h-screen justify-center overflow-x-hidden p-5">
           <img
@@ -133,7 +133,7 @@ const isPlayingVideo = computed(
 const isPlayingRadio = computed(
   () =>
     playerState.value.playerType === enums.TYPES.RADIO &&
-    playerState.value.playerMode !== enums.MODES.IDLE
+    playerState.value.playerMode === enums.MODES.IDLE
 );
 
 const emit = defineEmits(["youtube-media-error"]);
