@@ -42,16 +42,17 @@
       screen
       :name="user.name" />
 
-    <div class="absolute top-0 right-0 m-3 hidden md:block">
+    <div
+      @mouseleave="infoTooltipVisible = false"
+      class="absolute top-0 right-0 m-3 hidden md:block">
       <font-awesome-icon
-        @mouseenter="infoButtonVisible = true"
-        @mouseleave="infoButtonVisible = false"
+        @mouseenter="infoTooltipVisible = true"
         icon="fa-solid fa-question-circle"
         size="lg"
         class="transition-500 text-white opacity-70 transition-opacity hover:opacity-100">
       </font-awesome-icon>
       <div
-        v-show="infoButtonVisible"
+        v-show="infoTooltipVisible"
         class="dark:bg-proto_secondary_gray-dark transition-300 float-left mr-3 max-w-[250px] rounded-md bg-white py-2 px-5 text-justify dark:text-white">
         If you are experiencing any problems with ProTube or have a feature
         request please let the
@@ -88,7 +89,7 @@ const emit = defineEmits([
   "query-playlist",
 ]);
 const openMenu = ref(false);
-const infoButtonVisible = ref(false);
+const infoTooltipVisible = ref(false);
 
 async function processQuery() {
   const query = searchString.value;
