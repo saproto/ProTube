@@ -3,44 +3,54 @@
     id="nav"
     style="transition: all 0.5s ease 0.5s"
     class="sticky top-0">
-      <div class="items-top flex flex-col justify-between pb-2 md:flex-row">
-        <label class="text-2xl text-gray-600 dark:text-white">
-          Queue - {{ queueDuration }}
-        </label>
-        <div class="relative" v-if="queue.length >= 1 && admin">
-          <div class="flex rounded-md md:mt-0 mt-4 duration-200 text-center text-white">
-            <button
-              @click="clearQueue()"
-              class="px-4 py-0.5 rounded-l-md hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg bg-proto_blue ">
-              Clear queue
-            </button>
-            <button
-              @click="removeVideoDropDown = true"
-              @focusout="hideRemoveVideoDropDown" 
-              class="px-4 py-0.5 rounded-r-md border-l border-l-white hover:-translate-x-1 hover:opacity-80 hover:-translate-y-0.5 hover:shadow-lg bg-proto_blue ">
-              <font-awesome-icon :class="removeVideoDropDown ? 'rotate-180' : ''" class="duration-300" icon="fa-solid fa-caret-down" fixed-width/>
-            </button>
-          </div>
-          <div v-show="removeVideoDropDown" class="relative mt-1">
-            <div class="absolute top-0 z-10 w-full">
-              <div class="bg-proto_green rounded-t-md px-2 py-0.5 text-white">
-                Remove user
-              </div>
-              <ul class="w-full max-h-60 overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark rounded-b-md dark:bg-proto_background_gray-dark bg-white py-1 focus:outline-none divide-y divide-stone-300 border border-stone-300">
-                <li v-for="video in usersInQueue" :key="video.user.id" @click="removeVideosForUser(video.user.user_id)" class="text-gray-600 dark:text-white py-1 pl-3 pr-9 hover:cursor-pointer w-full duration-300 text-left hover:text-white hover:bg-proto_blue">
-                  {{ video.user.name }}
-                </li>                
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div v-else-if="!admin && userHasItemsInQueue">
+    <div class="items-top flex flex-col justify-between pb-2 md:flex-row">
+      <label class="text-2xl text-gray-600 dark:text-white">
+        Queue - {{ queueDuration }}
+      </label>
+      <div class="relative" v-if="queue.length >= 1 && admin">
+        <div
+          class="mt-4 flex rounded-md text-center text-white duration-200 md:mt-0">
           <button
-              @click="removeVideosForUser(userID)"
-              class="px-4 py-0.5 rounded-md hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg bg-proto_blue text-white">
-              Remove all my videos
-            </button>
+            @click="clearQueue()"
+            class="bg-proto_blue rounded-l-md px-4 py-0.5 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+            Clear queue
+          </button>
+          <button
+            @click="removeVideoDropDown = true"
+            @focusout="hideRemoveVideoDropDown"
+            class="bg-proto_blue rounded-r-md border-l border-l-white px-4 py-0.5 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+            <font-awesome-icon
+              :class="removeVideoDropDown ? 'rotate-180' : ''"
+              class="duration-300"
+              icon="fa-solid fa-caret-down"
+              fixed-width />
+          </button>
         </div>
+        <div v-show="removeVideoDropDown" class="relative mt-1">
+          <div class="absolute top-0 z-10 w-full">
+            <div class="bg-proto_green rounded-t-md px-2 py-0.5 text-white">
+              Remove user
+            </div>
+            <ul
+              class="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark dark:bg-proto_background_gray-dark max-h-60 w-full divide-y divide-stone-300 overflow-auto rounded-b-md border border-stone-300 bg-white py-1 focus:outline-none">
+              <li
+                v-for="video in usersInQueue"
+                :key="video.user.id"
+                @click="removeVideosForUser(video.user.user_id)"
+                class="hover:bg-proto_blue w-full py-1 pl-3 pr-9 text-left text-gray-600 duration-300 hover:cursor-pointer hover:text-white dark:text-white">
+                {{ video.user.name }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div v-else-if="!admin && userHasItemsInQueue">
+        <button
+          @click="removeVideosForUser(userID)"
+          class="bg-proto_blue rounded-md px-4 py-0.5 text-white hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+          Remove all my videos
+        </button>
+      </div>
     </div>
     <div
       class="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark flex max-h-[84vh] justify-center overflow-y-scroll overscroll-contain px-0">
@@ -100,31 +110,35 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  userID: Number
+  userID: Number,
 });
 
 // return array of unique users in queue
 const usersInQueue = computed(() => {
-  return queue.value.filter((video, index, self) =>
-    index === self.findIndex((t) => (
-      t.user.user_id === video.user.user_id && t.user.name === video.user.name
-    )
-  )) 
+  return queue.value.filter(
+    (video, index, self) =>
+      index ===
+      self.findIndex(
+        (t) =>
+          t.user.user_id === video.user.user_id &&
+          t.user.name === video.user.name
+      )
+  );
 });
 
 const userHasItemsInQueue = computed(() => {
   const videosOfUser = queue.value.filter((video) => {
-    return video.user.user_id === props.userID
+    return video.user.user_id === props.userID;
   });
   console.log(videosOfUser);
   return videosOfUser.length > 0;
-})
+});
 
 // Dropdown to select a user for deleting videos
-function hideRemoveVideoDropDown(){
+function hideRemoveVideoDropDown() {
   setTimeout(() => {
     removeVideoDropDown.value = false;
-  }, 100)
+  }, 100);
 }
 
 async function removeFromQueue(videoIDs) {
@@ -153,15 +167,15 @@ async function clearQueue() {
 }
 
 // Remove all videos by user id
-async function removeVideosForUser(userID){
+async function removeVideosForUser(userID) {
   // get all videos for a user id
   const videosToRemove = queue.value.filter((video) => {
-    return video.user.user_id === userID
+    return video.user.user_id === userID;
   });
 
   // create an array of video ids to remove
   let videoIDs = [];
-  for(const video of videosToRemove){
+  for (const video of videosToRemove) {
     videoIDs.push(video.id);
   }
 

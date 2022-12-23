@@ -76,13 +76,13 @@ exports.removeVideos = (videoIDs, userID, isAdmin = false) => {
   let deletedVideos = 0;
   let newQueue = queue.filter((video) => {
     // video is in list of requested removal videos
-    if(videoIDs.indexOf(video.id) !== -1){
+    if (videoIDs.indexOf(video.id) !== -1) {
       // User is no admin or does not own the videoID -> illegal removal
-      if(!isAdmin && userID !== video.user.user_id){
-        throw new hardError('Illegal removal of video!');
+      if (!isAdmin && userID !== video.user.user_id) {
+        throw new hardError("Illegal removal of video!");
       }
       deletedVideos++;
-      return false
+      return false;
     }
     // keep video
     return true;
@@ -91,7 +91,7 @@ exports.removeVideos = (videoIDs, userID, isAdmin = false) => {
 
   logger.queueInfo(`Removed ${deletedVideos} video(s) from the Queue!`);
   if (!self.isQueueEmpty()) organizeQueue();
-  
+
   eventBus.emit("queue-update");
   return enums.SUCCESS;
 };

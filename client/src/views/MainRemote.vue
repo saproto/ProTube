@@ -28,11 +28,10 @@
     </div>
     <div class="col-span-3 lg:col-span-2">
       <transition name="results" mode="out-in" appear>
-        <CurrentQueue 
+        <CurrentQueue
           @display-toast="displayToast"
-          :admin="user.admin" 
-          :userID="user.id"
-        />
+          :admin="user.admin"
+          :userID="user.id" />
       </transition>
 
       <ToastsModal :latestToast="latestToast" />
@@ -75,7 +74,7 @@ const user = ref({
   name: "",
   admin: false,
   hasValidRemote: false,
-  id: -1
+  id: -1,
 });
 
 onBeforeMount(async () => {
