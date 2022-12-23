@@ -10,7 +10,7 @@ let fileRotationTransport = new winston.transports.DailyRotateFile({
   level: "info",
   filename: "%DATE%-protube.log",
   datePattern: "YYYY-MM-DD",
-  zippedArchive: true,
+  zippedArchive: false,
   dirname: process.env.LOGDIR,
   maxSize: "20m",
   maxFiles: process.env.LOG_RETENTION_DAYS + "d",
@@ -20,7 +20,7 @@ let errorFileRotationTransport = new winston.transports.DailyRotateFile({
   level: "error",
   filename: "%DATE%-protube-error.log",
   datePattern: "YYYY-MM-DD",
-  zippedArchive: true,
+  zippedArchive: false,
   dirname: process.env.LOGDIR + "/errors",
   maxSize: "20m",
   maxFiles: process.env.LOG_RETENTION_DAYS + "d",
@@ -40,7 +40,6 @@ let color = winston.format.uncolorize();
 // Dev mode: log with colors into console except for logging to files
 if (process.env.NODE_ENV !== "production") {
   fileRotationTransport = new winston.transports.Console();
-  // errorFileRotationTransport = new winston.transports.Console();
   color = winston.format.colorize();
 }
 
@@ -68,7 +67,7 @@ let prefix = {
   client: "[REMOTECLIENT] ".blue,
   admin: "[ADMIN]        ".gray,
   user: "[USER]         ".green,
-  queue: "[QUEUE]        ".brightYellow,
+  queue: "[QUEUE]        ".yellow,
   localClient: "[LOCALCLIENT]  ".cyan,
   session: "[SESSIONSTORE] ".blue,
 };
@@ -122,13 +121,36 @@ function log(message, error = false) {
   else logger.info(message);
 }
 
-// catch all system crashes etc
-process
-  .on("unhandledRejection", (reason, p) => {
-    logger.error(reason, "Unhandled Rejection at Promise", p);
-  })
-  .on("uncaughtException", (err) => {
-    logger.error(err, "Uncaught Exception thrown");
-    if (process.env.NODE_ENV !== "production") console.log(err);
+this.serverInfo(
+  `----------------------- Starting ProTube server -----------------------`
+);
+
+// Catch all and log system crashes
+process.on("uncaughtException", (err) => {
+  logger.error(`[SEVERE ERROR] ${err}`);
+  logger.error(err.stack);
+  process.exitCode = 1;
+  // wait for logger flush
+  setTimeout(() => {
+    console.log(
+      `Program crashed of uncaught exception, see the logs at ${new Date().toLocaleString()}!`
+    );
     process.exit(1);
+  }, 500);
+});
+
+// Log all exits of the program
+process.on("exit", (code) => {
+  this.serverInfo(
+    `----------------------- ProTube server exited with exit code ${code} -----------------------`
+  );
+  dbLogger.end();
+  logger.end();
+});
+
+// Add signal listeners
+["SIGINT", "SIGTERM", "SIGQUIT"].forEach((signal) => {
+  process.on(signal, (code) => {
+    process.exit(code);
   });
+});
