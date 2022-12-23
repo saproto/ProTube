@@ -42,14 +42,17 @@
       screen
       :name="user.name" />
 
-    <div class="group absolute top-0 right-0 m-3 hidden md:block">
+    <div class="absolute top-0 right-0 m-3 hidden md:block">
       <font-awesome-icon
+        @mouseenter="infoButtonVisible = true"
+        @mouseleave="infoButtonVisible = false"
         icon="fa-solid fa-question-circle"
         size="lg"
-        class="transition-500 text-white opacity-70 transition-opacity group-hover:opacity-100">
+        class="transition-500 text-white opacity-70 transition-opacity hover:opacity-100">
       </font-awesome-icon>
       <div
-        class="dark:bg-proto_secondary_gray-dark transition-300 float-left mr-3 max-w-[250px] rounded-md bg-white py-2 px-5 text-justify opacity-0 transition-opacity group-hover:opacity-95 dark:text-white">
+        v-show="infoButtonVisible"
+        class="dark:bg-proto_secondary_gray-dark transition-300 float-left mr-3 max-w-[250px] rounded-md bg-white py-2 px-5 text-justify dark:text-white">
         If you are experiencing any problems with ProTube or have a feature
         request please let the
         <a
@@ -69,7 +72,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import HeaderField from "@/layout/HeaderField.vue";
 import HeaderFieldButtons from "@/components/HeaderFieldButtons.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -85,8 +88,7 @@ const emit = defineEmits([
   "query-playlist",
 ]);
 const openMenu = ref(false);
-
-onMounted(async () => {});
+const infoButtonVisible = ref(false);
 
 async function processQuery() {
   const query = searchString.value;
