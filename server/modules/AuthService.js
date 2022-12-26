@@ -28,15 +28,15 @@ passport.use(
       const userData = await response.json();
       if (userData.authenticated) {
         await User.upsert({
-          id: userData.user_id,
+          id: userData.id,
           name: userData.name,
-          admin: +userData.is_admin,
+          admin: +userData.admin,
           refresh_token: refreshToken,
           access_token: accessToken,
         });
         return done(null, {
-          id: userData.user_id,
-          admin: userData.is_admin,
+          id: userData.id,
+          admin: userData.admin,
           name: userData.name,
         });
       }

@@ -20,7 +20,7 @@ this.authApi.get(
 // Only accessible for logged in users
 this.authApi.get("/user", checkAuthenticated, (req, res) => {
   res.send({
-    name: req.session.passport.user.name,
+    name: req.user.name,
     admin: req.user.isAdmin(),
     hasValidRemote: req.user.hasValidRemote(),
   });
