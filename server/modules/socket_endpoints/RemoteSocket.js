@@ -53,6 +53,23 @@ endpoint.on("connection", (socket) => {
     }
   });
 
+  socket.on("remove-videos", (videoIDs, callback) => {
+    logger.clientInfo(
+      `${socket.id} Requested video removal of ${videoIDs.length}`
+    );
+    try {
+      callback({
+        success: queueManager.removeVideos(
+          videoIDs,
+          socket.request.session.passport.user.id,
+          socket.request.user.admin
+        ),
+      });
+    } catch (e) {
+      callback(e.getInfo());
+    }
+  });
+
   socket.on("get-queue", (callback) => {
     callback({
       queue: queueManager.getQueue(),
