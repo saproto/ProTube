@@ -7,7 +7,7 @@
         background-size: cover;
         background-position: center center;
       "
-      :class="props.roundedCorners ? 'rounded-lg' : ''"
+      :class="(props.roundedCorners ? 'rounded-lg' : '')"
       class="border-proto_blue group col-span-1 flex w-full flex-col border-l-4 text-center shadow">
       <div
         :style="`width:${progressBar}%;`"
