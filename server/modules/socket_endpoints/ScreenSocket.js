@@ -29,18 +29,18 @@ endpoint.on("connection", (socket) => {
 });
 
 eventBus.on("queue-update", () => {
-    endpoint.emit("queue-update", {
-      queue: queueManager.getQueue(),
-      duration: queueManager.getTotalDurationFormatted(),
-    });
+  endpoint.emit("queue-update", {
+    queue: queueManager.getQueue(),
+    duration: queueManager.getTotalDurationFormatted(),
+  });
 });
 
 eventBus.on("player-update", () => {
   let queue = queueManager.getQueue();
   let playerType = playbackManager.getPlayerType();
-  if (queue.length <= 0 || playerType!==enums.TYPES.VIDEO) {
+  if (queue.length <= 0 || playerType !== enums.TYPES.VIDEO) {
     emitNewPhoto();
-  }else if(playerType===enums.TYPES.VIDEO){
+  } else if (playerType === enums.TYPES.VIDEO) {
     clearInterval(newPhotoInterval);
     newPhotoInterval = null;
   }
@@ -66,17 +66,17 @@ function emitNewPhoto() {
   }
   try {
     fetch(`${process.env.LARAVEL_ENDPOINT}/api/photos/random_photo`)
-        .then((res) => res.json())
-        .then((newPhoto) => {
-          photo = newPhoto;
-          endpoint.emit("photo-update", photo);
-        });
-  }catch(e){
-      endpoint.emit("photo-update", {
-        url: "",
-        album_name: "",
-        date_taken: 0,
-        error: e,
+      .then((res) => res.json())
+      .then((newPhoto) => {
+        photo = newPhoto;
+        endpoint.emit("photo-update", photo);
       });
+  } catch (e) {
+    endpoint.emit("photo-update", {
+      url: "",
+      album_name: "",
+      date_taken: 0,
+      error: e,
+    });
   }
 }

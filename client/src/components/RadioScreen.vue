@@ -1,12 +1,14 @@
 <template>
   <div class="z-50">
-    <div class="overflow-hidden relative w-[150px] h-[96px] rounded-lg text-white p-1">
+    <div
+      class="relative h-[96px] w-[150px] overflow-hidden rounded-lg p-1 text-white">
       <img
-          :alt="radio.o"
-          class="bg-proto_blue hover:bg-proto_blue/80 overflow-hidden rounded-lg truncate"
-          style="width: 150px"
-          :src="`https://www.nederland.fm/i/l/${radio.z}.gif`" />
-      <div class="absolute w-[200px] z-[-1] h-[200px] animate-[spin_3s_linear_infinite] h-full top-[-50%] left-[-25%] bg-gradient-to-r from-proto_blue via-[#ffffff] to-[#ffffff] "/>
+        :alt="radio.o"
+        class="bg-proto_blue hover:bg-proto_blue/80 overflow-hidden truncate rounded-lg"
+        style="width: 150px"
+        :src="`https://www.nederland.fm/i/l/${radio.z}.gif`" />
+      <div
+        class="from-proto_blue absolute top-[-50%] left-[-25%] z-[-1] h-[200px] h-full w-[200px] animate-[spin_3s_linear_infinite] bg-gradient-to-r via-[#ffffff] to-[#ffffff]" />
     </div>
     <br />
     <audio
