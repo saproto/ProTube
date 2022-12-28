@@ -207,6 +207,10 @@ socket.on("new-video-timestamp", async (newStamp) => {
 
 socket.on("queue-update", (newQueue) => {
   queue.value = newQueue.queue;
-  photo.value = newQueue.photo;
+});
+
+socket.on("photo-update", (newPhoto) => {
+  photo.value = newPhoto;
+  console.log(newPhoto.url)
 });
 </script>
