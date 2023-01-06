@@ -9,19 +9,45 @@
       </div>
     </div>
 
-    <div class="absolute top-0 right-0 mt-2">
-      <div
-        v-if="isPlayingVideo"
-        class="border-proto_blue dark:bg-proto_secondary_gray-dark mb-1 mr-4 mt-1 w-max rounded-lg border-r-4 bg-white px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
-        Want to add your own music? Visit www.protu.be!
+    <div v-show="isPlayingVideo">
+      <div :id="playerID" class="min-h-screen w-full" />
+    </div>
+
+    <div v-if="isPlayingVideo">
+      <div class="absolute top-0 right-0 mt-2">
+        <div
+          class="border-proto_blue dark:bg-proto_secondary_gray-dark mb-1 mr-4 mt-1 w-max rounded-lg border-r-4 bg-white px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+          Want to add your own music? Visit www.protu.be!
+        </div>
+      </div>
+
+      <div class="absolute bottom-0 mb-1 w-screen rounded-lg">
+        <div class="flex justify-between">
+          <div
+            class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+            Queue: {{ totalDuration }}
+          </div>
+        </div>
+        <div class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
+          <VideoCard
+            v-for="(video, index) in queueWithCurrent.slice(0, 5)"
+            :key="video.id"
+            :index="index"
+            :title="video.title"
+            :name="video.user.name"
+            :channel="video.channel"
+            :duration="video.durationFormatted"
+            :thumbnail="video.thumbnail.url"
+            :videoID="video.id"
+            :textScrolling="true"
+            :roundedCorners="true"
+            :progressBar="index === 0 ? queueProgress : 0"
+            :opacity="0.9" />
+        </div>
       </div>
     </div>
 
-    <div v-if="isPlayingRadio" class="grid min-h-screen place-items-center">
-      <RadioScreen :radio="playerState.radio" :volume="volume" />
-    </div>
-
-    <div v-else-if="!isPlayingVideo" class="dark:text-white">
+    <div v-else class="dark:text-white">
       <div v-if="photo && !photo.error && photo.url !== ''">
         <div class="flex h-screen justify-center overflow-x-hidden p-5">
           <img
@@ -37,42 +63,26 @@
           </div>
         </div>
       </div>
-      <div v-else class="grid h-screen place-items-center">
+      <div v-else-if="!isPlayingRadio" class="grid h-screen place-items-center">
         <div class="text-4xl dark:text-white">
           Nothing currently in the queue...<br />
           Visit protu.be to add some tunes!
         </div>
       </div>
-    </div>
 
-    <div v-show="isPlayingVideo">
-      <div :id="playerID" class="min-h-screen w-full" />
-    </div>
-  </div>
-  <div class="absolute bottom-0 mb-1 w-screen rounded-lg">
-    <div v-if="isPlayingVideo" class="flex justify-between">
       <div
-        class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
-        Queue: {{ totalDuration }}
+        v-if="isPlayingRadio"
+        class=""
+        :class="
+          photo && !photo.error && photo.url !== ''
+            ? 'absolute right-0 bottom-0 mr-2 place-items-end'
+            : ' grid h-screen place-items-center'
+        ">
+        <RadioScreen :radio="playerState.radio" :volume="volume" />
       </div>
     </div>
-    <div class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
-      <VideoCard
-        v-for="(video, index) in queueWithCurrent.slice(0, 5)"
-        :key="video.id"
-        :index="index"
-        :title="video.title"
-        :name="video.user.name"
-        :channel="video.channel"
-        :duration="video.durationFormatted"
-        :thumbnail="video.thumbnail.url"
-        :videoID="video.id"
-        :textScrolling="true"
-        :roundedCorners="true"
-        :progressBar="index === 0 ? queueProgress : 0"
-        :opacity="0.9" />
-    </div>
   </div>
+
   <ReconnectionHandler
     v-if="screenCode === -1"
     :socket="socket"
@@ -204,6 +214,10 @@ socket.on("new-video-timestamp", async (newStamp) => {
 
 socket.on("queue-update", (newQueue) => {
   queue.value = newQueue.queue;
-  photo.value = newQueue.photo;
+});
+
+socket.on("photo-update", (newPhoto) => {
+  photo.value = newPhoto;
+  console.log(newPhoto.url);
 });
 </script>
