@@ -64,19 +64,18 @@ function emitNewPhoto() {
   if (newPhotoInterval === null) {
     newPhotoInterval = setInterval(emitNewPhoto, 10000);
   }
-  try {
-    fetch(`${process.env.LARAVEL_ENDPOINT}/api/photos/random_photo`)
-      .then((res) => res.json())
-      .then((newPhoto) => {
-        photo = newPhoto;
-        endpoint.emit("photo-update", photo);
+  fetch(`${process.env.LARAVEL_ENDPOINT}/api/photos/random_photo`)
+    .then((res) => res.json())
+    .then((newPhoto) => {
+      photo = newPhoto;
+      endpoint.emit("photo-update", photo);
+    })
+    .catch((e) => {
+      endpoint.emit("photo-update", {
+        url: "",
+        album_name: "",
+        date_taken: 0,
+        error: e,
       });
-  } catch (e) {
-    endpoint.emit("photo-update", {
-      url: "",
-      album_name: "",
-      date_taken: 0,
-      error: e,
     });
-  }
 }

@@ -218,6 +218,5 @@ socket.on("queue-update", (newQueue) => {
 
 socket.on("photo-update", (newPhoto) => {
   photo.value = newPhoto;
-  console.log(newPhoto.url);
 });
 </script>
