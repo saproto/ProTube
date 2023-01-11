@@ -1,7 +1,7 @@
 const express = require("express");
 const passport = require("passport");
 require("passport-oauth2");
-const { checkAuthenticated } = require("./Middlewares");
+const { checkAuthenticated } = require("../Middlewares");
 
 exports.authApi = express.Router();
 

@@ -70,6 +70,7 @@ let prefix = {
   queue: "[QUEUE]        ".yellow,
   localClient: "[LOCALCLIENT]  ".cyan,
   session: "[SESSIONSTORE] ".blue,
+  apiInfo: "[API]          ".yellow,
 };
 
 exports.serverInfo = (message) => {
@@ -102,6 +103,10 @@ exports.userInfo = (message) => {
 
 exports.queueInfo = (message) => {
   log(prefix.queue + message.yellow);
+};
+
+exports.apiInfo = (message) => {
+  log(prefix.apiInfo + message.yellow);
 };
 
 exports.localClientInfo = (message) => {
