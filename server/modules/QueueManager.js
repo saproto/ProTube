@@ -78,7 +78,7 @@ exports.removeVideos = (videoIDs, userID, isAdmin = false) => {
     // video is in list of requested removal videos
     if (videoIDs.indexOf(video.id) !== -1) {
       // User is no admin or does not own the videoID -> illegal removal
-      if (!isAdmin && userID !== video.user.user_id) {
+      if (!isAdmin && userID !== video.user.id) {
         throw new hardError("Illegal removal of video!");
       }
       deletedVideos++;

@@ -36,7 +36,7 @@
               <li
                 v-for="video in usersInQueue"
                 :key="video.user.id"
-                @click="removeVideosForUser(video.user.user_id)"
+                @click="removeVideosForUser(video.user.id)"
                 class="hover:bg-proto_blue w-full py-1 pl-3 pr-9 text-left text-gray-600 duration-300 hover:cursor-pointer hover:text-white dark:text-white">
                 {{ video.user.name }}
               </li>
@@ -70,7 +70,7 @@
             :channel="video.channel"
             :duration="video.durationFormatted"
             :thumbnail="video.thumbnail.url"
-            :removeButton="admin || video.user.user_id === userID"
+            :removeButton="admin || video.user.id === userID"
             :videoID="video.id"
             @remove-clicked="removeFromQueue([video.id])" />
         </ul>
@@ -120,7 +120,7 @@ const usersInQueue = computed(() => {
       index ===
       self.findIndex(
         (t) =>
-          t.user.user_id === video.user.user_id &&
+          t.user.id === video.user.id &&
           t.user.name === video.user.name
       )
   );
@@ -128,7 +128,7 @@ const usersInQueue = computed(() => {
 
 const userHasItemsInQueue = computed(() => {
   const videosOfUser = queue.value.filter((video) => {
-    return video.user.user_id === props.userID;
+    return video.user.id === props.userID;
   });
   console.log(videosOfUser);
   return videosOfUser.length > 0;
@@ -170,7 +170,7 @@ async function clearQueue() {
 async function removeVideosForUser(userID) {
   // get all videos for a user id
   const videosToRemove = queue.value.filter((video) => {
-    return video.user.user_id === userID;
+    return video.user.id === userID;
   });
 
   // create an array of video ids to remove
