@@ -119,9 +119,7 @@ const usersInQueue = computed(() => {
     (video, index, self) =>
       index ===
       self.findIndex(
-        (t) =>
-          t.user.id === video.user.id &&
-          t.user.name === video.user.name
+        (t) => t.user.id === video.user.id && t.user.name === video.user.name
       )
   );
 });
