@@ -4,17 +4,14 @@ const queueManager = require("../QueueManager");
 const playbackManager = require("../PlaybackManager");
 let newPhotoInterval = null;
 let photo = null;
+
 endpoint.on("connection", (socket) => {
   logger.screenInfo(
     `Screen connected from ${socket.handshake.address} with socket id ${socket.id}`
   );
 
   if (!photo) emitNewPhoto();
-  endpoint.emit("queue-update", {
-    queue: queueManager.getQueue(),
-    duration: queueManager.getTotalDurationFormatted(),
-    photo: photo,
-  });
+  socket.emit("photo-update", photo);
 
   socket.on("disconnect", () => {
     logger.screenInfo(`Disconnected socket: ${socket.id}`);
@@ -32,27 +29,28 @@ endpoint.on("connection", (socket) => {
 });
 
 eventBus.on("queue-update", () => {
-  let queue = queueManager.getQueue();
-  if (queue.length <= 0) {
-    emitNewPhoto();
-  } else {
-    endpoint.emit("queue-update", {
-      queue: queueManager.getQueue(),
-      duration: queueManager.getTotalDurationFormatted(),
-      photo: {},
-    });
-    clearInterval(newPhotoInterval);
-    newPhotoInterval = null;
-  }
+  endpoint.emit("queue-update", {
+    queue: queueManager.getQueue(),
+    duration: queueManager.getTotalDurationFormatted(),
+  });
 });
 
 eventBus.on("player-update", () => {
+  let queue = queueManager.getQueue();
+  let playerType = playbackManager.getPlayerType();
+  if (queue.length <= 0 || playerType !== enums.TYPES.VIDEO) {
+    emitNewPhoto();
+  } else if (playerType === enums.TYPES.VIDEO) {
+    clearInterval(newPhotoInterval);
+    newPhotoInterval = null;
+  }
+
   endpoint.emit("player-update", {
-    playerType: playbackManager.getPlayerType(),
+    playerType: playerType,
     playerMode: playbackManager.getPlayerMode(),
     timestamp: playbackManager.getCurrentVideoTimestamp(),
     video: queueManager.getCurrentVideo(),
-    queue: queueManager.getQueue(),
+    queue: queue,
     volume: playbackManager.getVolume(),
     radio: playbackManager.getLastStation(),
   });
@@ -70,10 +68,14 @@ function emitNewPhoto() {
     .then((res) => res.json())
     .then((newPhoto) => {
       photo = newPhoto;
-      endpoint.emit("queue-update", {
-        queue: [],
-        duration: "00:00:00",
-        photo: photo,
+      endpoint.emit("photo-update", photo);
+    })
+    .catch((e) => {
+      endpoint.emit("photo-update", {
+        url: "",
+        album_name: "",
+        date_taken: 0,
+        error: e,
       });
     });
 }

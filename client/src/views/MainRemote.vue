@@ -23,13 +23,15 @@
           v-on:display-toast="displayToast"
           :videos="foundVideos"
           :continuationToken="continuationToken"
-          :skeletonLoading="resultsWrapperSkeletons"
-          :fetchVideos="fetchVideos" />
+          :skeletonLoading="resultsWrapperSkeletons" />
       </transition>
     </div>
     <div class="col-span-3 lg:col-span-2">
       <transition name="results" mode="out-in" appear>
-        <CurrentQueue :admin="user.admin" />
+        <CurrentQueue
+          @display-toast="displayToast"
+          :admin="user.admin"
+          :userID="user.id" />
       </transition>
 
       <ToastsModal :latestToast="latestToast" />
@@ -71,17 +73,16 @@ const latestToast = ref(null);
 const user = ref({
   name: "",
   admin: false,
-  validRemote: false,
+  hasValidRemote: false,
+  id: -1,
 });
 
 onBeforeMount(async () => {
   const response = await fetch("/api/user");
   if (response.redirected) return (window.location.href = response.url);
   const data = await response.json();
-  user.value.name = data.name;
-  user.value.admin = data.admin;
-  user.value.validRemote = data.hasValidRemote;
-  if (user.value.validRemote) connectSocket();
+  user.value = data;
+  if (user.value.hasValidRemote) connectSocket();
 });
 
 onMounted(() => {});

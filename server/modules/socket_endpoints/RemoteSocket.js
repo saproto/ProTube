@@ -19,7 +19,8 @@ endpoint.on("connection", (socket) => {
       const result = await youtube.search(
         request.query,
         request.continuationToken,
-        socket.request.user.admin
+        socket.request.user.admin,
+        queueManager.getQueue()
       );
       callback(result);
       logger.youtubeInfo("Returned list of music to client (remote)");
@@ -47,6 +48,23 @@ endpoint.on("connection", (socket) => {
       video.user = formatUser(socket);
 
       callback({ success: queueManager.addFair(video) });
+    } catch (e) {
+      callback(e.getInfo());
+    }
+  });
+
+  socket.on("remove-videos", (videoIDs, callback) => {
+    logger.clientInfo(
+      `${socket.id} Requested video removal of ${videoIDs.length}`
+    );
+    try {
+      callback({
+        success: queueManager.removeVideos(
+          videoIDs,
+          socket.request.session.passport.user.id,
+          socket.request.user.admin
+        ),
+      });
     } catch (e) {
       callback(e.getInfo());
     }

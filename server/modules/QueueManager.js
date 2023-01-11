@@ -71,27 +71,34 @@ exports.moveToNext = () => {
   return enums.SUCCESS;
 };
 
-// Removing a specific video from the queue
-exports.removeVideo = (videoID) => {
-  // TODO: Use Array.filter instead of weird forEach loop
-  let toDeleteIndex = null;
-  queue.forEach((item, index) => {
-    if (item.id === videoID) {
-      toDeleteIndex = index;
-      return enums.SUCCESS;
+// Removing videos by video id from the queue
+exports.removeVideos = (videoIDs, userID, isAdmin = false) => {
+  let deletedVideos = 0;
+  let newQueue = queue.filter((video) => {
+    // video is in list of requested removal videos
+    if (videoIDs.indexOf(video.id) !== -1) {
+      // User is no admin or does not own the videoID -> illegal removal
+      if (!isAdmin && userID !== video.user.user_id) {
+        throw new hardError("Illegal removal of video!");
+      }
+      deletedVideos++;
+      return false;
     }
-    return enums.FAIL;
+    // keep video
+    return true;
   });
-  if (toDeleteIndex >= 0) {
-    queue.splice(toDeleteIndex, 1);
-    eventBus.emit("queue-update");
-    return enums.SUCCESS;
-  }
-  return enums.FAIL;
+  queue = newQueue;
+
+  logger.queueInfo(`Removed ${deletedVideos} video(s) from the Queue!`);
+  if (!self.isQueueEmpty()) organizeQueue();
+
+  eventBus.emit("queue-update");
+  return enums.SUCCESS;
 };
 
 exports.clearQueue = () => {
   queue = [];
+  logger.queueInfo(`Cleared queue!`);
   eventBus.emit("queue-update");
   return enums.SUCCESS;
 };

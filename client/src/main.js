@@ -24,6 +24,9 @@ import {
   faWarning,
   faEye,
   faSearch,
+  faTrash,
+  faQuestionCircle,
+  faCaretDown,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -42,7 +45,10 @@ library.add(
   faCheckCircle,
   faWarning,
   faEye,
-  faSearch
+  faSearch,
+  faTrash,
+  faCaretDown,
+  faQuestionCircle
 );
 
 import "./assets/tailwind.css";

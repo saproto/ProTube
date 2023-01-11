@@ -1,99 +1,78 @@
 <template>
-  <ContentField id="nav" class="sticky top-0">
+  <ContentField
+    id="nav"
+    style="transition: all 0.5s ease 0.5s"
+    class="sticky top-0">
     <div class="items-top flex flex-col justify-between pb-2 md:flex-row">
       <label class="text-2xl text-gray-600 dark:text-white">
         Queue - {{ queueDuration }}
       </label>
-      <button
-        @click="clearQueue()"
-        v-if="queue.length >= 1 && admin"
-        class="bg-proto_blue mt-4 flex-none rounded-md px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg md:mt-0">
-        Clear queue
-      </button>
+      <div class="relative" v-if="queue.length >= 1 && admin">
+        <div
+          class="mt-4 flex rounded-md text-center text-white duration-200 md:mt-0">
+          <button
+            @click="clearQueue()"
+            class="bg-proto_blue rounded-l-md px-4 py-0.5 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+            Clear queue
+          </button>
+          <button
+            @click="removeVideoDropDown = true"
+            @focusout="hideRemoveVideoDropDown"
+            class="bg-proto_blue rounded-r-md border-l border-l-white px-4 py-0.5 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+            <font-awesome-icon
+              :class="removeVideoDropDown ? 'rotate-180' : ''"
+              class="duration-300"
+              icon="fa-solid fa-caret-down"
+              fixed-width />
+          </button>
+        </div>
+        <div v-show="removeVideoDropDown" class="relative mt-1">
+          <div class="absolute top-0 z-10 w-full">
+            <div class="bg-proto_green rounded-t-md px-2 py-0.5 text-white">
+              Remove user
+            </div>
+            <ul
+              class="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark dark:bg-proto_background_gray-dark max-h-60 w-full divide-y divide-stone-300 overflow-auto rounded-b-md border border-stone-300 bg-white py-1 focus:outline-none">
+              <li
+                v-for="video in usersInQueue"
+                :key="video.user.id"
+                @click="removeVideosForUser(video.user.user_id)"
+                class="hover:bg-proto_blue w-full py-1 pl-3 pr-9 text-left text-gray-600 duration-300 hover:cursor-pointer hover:text-white dark:text-white">
+                {{ video.user.name }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div v-else-if="!admin && userHasItemsInQueue">
+        <button
+          @click="removeVideosForUser(userID)"
+          class="bg-proto_blue rounded-md px-4 py-0.5 text-white hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+          Remove all my videos
+        </button>
+      </div>
     </div>
     <div
       class="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark flex max-h-[84vh] justify-center overflow-y-scroll overscroll-contain px-0">
-      <div v-if="skeletonLoading" class="flex-nowrap">
-        <ul
-          v-for="index in 10"
-          :key="index"
-          class="mx-2 mt-2 inline-block grid md:w-96">
-          <li
-            class="border-proto_blue group group col-span-1 flex grow cursor-pointer flex-col rounded-sm border-l-4 text-center shadow">
-            <SkeletonResult />
-          </li>
+      <div v-if="skeletonLoading" class="w-full">
+        <ul class="grid gap-2">
+          <SkeletonResult v-for="index in 10" :key="index" />
         </ul>
       </div>
-      <div v-if="!skeletonLoading" class="flex-nowrap">
-        <ul
-          v-for="(video, index) in queue"
-          :video="video"
-          :index="index"
-          :key="video.id"
-          class="mt-2 inline-block grid w-full">
-          <li
-            :style="{ background: `url(${video.thumbnail.url})` }"
-            style="
-              background-repeat: no-repeat;
-              background-size: cover;
-              background-position: center center;
-            "
-            :class="admin ? 'group cursor-pointer ' : ''"
-            class="border-proto_blue group col-span-1 mr-4 flex w-full flex-col rounded-sm border-l-4 text-center shadow">
-            <div
-              @click="removeFromQueue(video)"
-              :class="
-                admin
-                  ? 'group-hover:bg-white/60 group-hover:dark:bg-stone-800/60'
-                  : ''
-              "
-              class="rounded-m flex w-full flex-col border-t border-b border-r border-gray-400 bg-white/80 px-8 py-4 duration-200 dark:border-gray-800/80 dark:bg-stone-800/80">
-              <h3
-                class="text-md text-left font-bold text-gray-800 dark:text-stone-300">
-                {{ video.title }}
-              </h3>
-              <ul
-                class="fa-ul mt-auto ml-5 w-full text-sm font-medium text-gray-900 dark:text-stone-300">
-                <li
-                  class="justify-bottom mt-auto flex flex-1 text-right align-bottom">
-                  <span class="fa-li">
-                    <font-awesome-icon icon="fa-solid fa-user" fixed-width>
-                    </font-awesome-icon>
-                  </span>
-                  <span class="truncate">
-                    {{ video.user.name }}
-                  </span>
-                </li>
-                <li class="flex flex-1 text-right">
-                  <span class="fa-li">
-                    <font-awesome-icon
-                      icon="fa-solid fa-microphone"
-                      fixed-width>
-                    </font-awesome-icon>
-                  </span>
-                  <span class="truncate">
-                    {{ video.channel }}
-                  </span>
-                </li>
-                <li class="flex flex-1 text-right">
-                  <span class="fa-li">
-                    <font-awesome-icon
-                      icon="fa-solid fa-clock fa-li"
-                      fixed-width>
-                    </font-awesome-icon>
-                  </span>
-                  <span class="truncate">
-                    {{ video.durationFormatted }}
-                  </span>
-                  <span
-                    v-if="admin"
-                    class="ml-auto truncate rounded-sm bg-red-600 p-1 text-xs font-medium text-white opacity-0 shadow-lg duration-300 group-hover:opacity-100">
-                    Remove
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </li>
+      <div v-if="!skeletonLoading" class="w-full">
+        <ul class="grid gap-2 pr-4">
+          <VideoCard
+            v-for="(video, index) in queue"
+            :key="video.id"
+            :index="index"
+            :title="video.title"
+            :name="video.user.name"
+            :channel="video.channel"
+            :duration="video.durationFormatted"
+            :thumbnail="video.thumbnail.url"
+            :removeButton="admin || video.user.user_id === userID"
+            :videoID="video.id"
+            @remove-clicked="removeFromQueue([video.id])" />
         </ul>
         <div
           v-if="!skeletonLoading && queue.length < 1"
@@ -108,6 +87,7 @@
 <script setup>
 import ContentField from "@/layout/ContentField.vue";
 import SkeletonResult from "@/components/skeletons/SkeletonResult.vue";
+import VideoCard from "@/components/VideoCard.vue";
 import { ref, computed } from "vue";
 import adminSocket from "@/js/AdminRemoteSocket";
 import normalSocket from "@/js/RemoteSocket";
@@ -116,6 +96,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const emit = defineEmits(["display-toast"]);
 const skeletonLoading = ref(true);
+const removeVideoDropDown = ref(false);
 const queue = ref([]);
 const socket = computed(() => {
   if (props.admin) return adminSocket;
@@ -129,18 +110,46 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  userID: Number,
 });
 
-async function removeFromQueue(video) {
-  if (!props.admin) return;
+// return array of unique users in queue
+const usersInQueue = computed(() => {
+  return queue.value.filter(
+    (video, index, self) =>
+      index ===
+      self.findIndex(
+        (t) =>
+          t.user.user_id === video.user.user_id &&
+          t.user.name === video.user.name
+      )
+  );
+});
+
+const userHasItemsInQueue = computed(() => {
+  const videosOfUser = queue.value.filter((video) => {
+    return video.user.user_id === props.userID;
+  });
+  console.log(videosOfUser);
+  return videosOfUser.length > 0;
+});
+
+// Dropdown to select a user for deleting videos
+function hideRemoveVideoDropDown() {
+  setTimeout(() => {
+    removeVideoDropDown.value = false;
+  }, 100);
+}
+
+async function removeFromQueue(videoIDs) {
   const data = await new Promise((resolve) => {
-    socket.value.emit("remove-video", video, (callback) => {
+    normalSocket.emit("remove-videos", videoIDs, (callback) => {
       resolve(callback);
     });
   });
   emit("display-toast", {
     status: data.status ?? enums.STATUS.SUCCESS,
-    message: data.message ?? `Successfully skipped video!`,
+    message: data.message ?? `Successfully removed video(s)!`,
   });
 }
 
@@ -155,6 +164,22 @@ async function clearQueue() {
     status: data.status ?? enums.STATUS.SUCCESS,
     message: data.message ?? `Succesfully removed all videos from the queue!`,
   });
+}
+
+// Remove all videos by user id
+async function removeVideosForUser(userID) {
+  // get all videos for a user id
+  const videosToRemove = queue.value.filter((video) => {
+    return video.user.user_id === userID;
+  });
+
+  // create an array of video ids to remove
+  let videoIDs = [];
+  for (const video of videosToRemove) {
+    videoIDs.push(video.id);
+  }
+
+  await removeFromQueue(videoIDs);
 }
 
 // retrieving the queue and stop skeletonloading

@@ -48,15 +48,6 @@ endpoint.on("connection", (socket) => {
     callback({ success: await adminResetScreenCode() });
   });
 
-  socket.on("remove-video", (video, callback) => {
-    logger.adminInfo(`${socket.id} Requested video removal of ${video.title}`);
-    try {
-      callback({ success: queueManager.removeVideo(video.id) });
-    } catch (e) {
-      callback(e.getInfo());
-    }
-  });
-
   socket.on("clear-queue", (callback) => {
     logger.adminInfo(`${socket.id} Requested to clear the queue`);
     try {
