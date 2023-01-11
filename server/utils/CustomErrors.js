@@ -3,6 +3,7 @@ class softError extends Error {
   constructor(message) {
     super(message);
     this.message = message;
+    logger.serverInfo(this.message);
   }
   getInfo() {
     return {
@@ -18,9 +19,10 @@ class hardError extends Error {
   constructor(message) {
     super(message);
     this.message = message;
+    logger.serverError(this.message);
+    logger.serverError(this.stack);
   }
   getInfo() {
-    logger.serverInfo(this.message);
     return {
       message: this.message,
       success: false,
