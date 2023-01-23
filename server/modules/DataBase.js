@@ -38,7 +38,7 @@ this.sequelize
 
 class User extends Model {
   isAdmin() {
-    return !!this.admin;
+    return this.admin;
   }
 
   hasValidRemote() {
