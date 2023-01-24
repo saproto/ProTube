@@ -1,13 +1,12 @@
 const session = require("express-session");
-const { sequelize, ScreenCode } = require("./DataBase");
+const { sequelize } = require("./DataBase");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const { getCurrentUnix } = require("../utils/time-formatter");
-const { checkScreenCode, setSessionStore } = require("./ScreenCode");
+const { checkScreenCode } = require("./ScreenCode");
 const moment = require("moment");
 require("passport");
 
 const sessionStore = new SequelizeStore({ db: sequelize, table: "sessions" });
-setSessionStore(sessionStore);
 
 exports.sessionMiddleware = session({
   secret: process.env.SESSION_SECRET,
@@ -38,78 +37,43 @@ exports.socketCheckAdminAuthenticated = (socket, next) => {
     else return next(new Error("forbidden"));
   }
   // accept localhost connections also to be admin (local client)
-  else if (socket.handshake.address === `::ffff:127.0.0.1`) return next();
+  else if (socket.handshake.address === process.env.LOCAL_CLIENT_IP)
+    return next();
   next(new Error("unauthorized"));
 };
 
 exports.screenCodeCheck = async (socket, next) => {
+  const user = socket.request.user;
+
   // if ban return immediately
-  if (socket.request.user.screencode.banned)
+  if (user.isBanned()) {
     return next(
       new Error(
         `Your ban is lifted ${moment
-          .duration(
-            socket.request.user.screencode.banned_until - getCurrentUnix(),
-            "seconds"
-          )
+          .duration(user.banned_until - getCurrentUnix(), "seconds")
           .humanize(true)}`
       )
     );
-
-  const ses = socket.request.session;
-  const req = socket.request;
-  let connectionAttempts = req.user.screencode.connection_attempts;
-
-  // check if were recently banned and reset to 0
-  if (req.user.screencode.banned_until !== 0) {
-    await ScreenCode.update(
-      { banned_until: 0, connection_attempts: 0 },
-      { where: { user_id: req.user.id } }
-    );
-    connectionAttempts = 0;
   }
-  // initialize session if empty
-  if (!("screencode" in ses)) {
-    ses.screencode = {
-      expires: getCurrentUnix() + parseInt(process.env.CODE_VALID_DURATION),
-      correct: false,
-    };
-  }
-  // correctly entered screencode previously or user is admin, accept
-  if (ses.screencode.correct === true || socket.request.user.admin === true)
-    return next();
-  // correct screencode, accept
+
+  // Always accept admins and previously validated remotes
+  if (user.hasValidRemote()) return next();
+
+  // Correct screencode, accept socket
   if (checkScreenCode(socket.handshake.auth.token)) {
-    ses.screencode.correct = true;
-    ses.screencode.expires =
-      getCurrentUnix() + parseInt(process.env.CODE_VALID_DURATION);
-
-    if (connectionAttempts > 0)
-      await ScreenCode.update(
-        { connection_attempts: 0 },
-        { where: { user_id: req.user.id } }
-      );
-
-    ses.save();
+    user.setValidRemote();
+    user.save();
     return next();
   }
 
-  // wrong screencode v
-  connectionAttempts++;
-  // above the connection limit, ban
-  if (connectionAttempts >= parseInt(process.env.FAIL_2_BAN_ATTEMPTS)) {
+  // User reached connection attempt limit, ban him!
+  if (user.connection_attempts >= parseInt(process.env.FAIL_2_BAN_ATTEMPTS)) {
+    user.setBanned();
+    user.save();
     logger.clientInfo(
-      `Banned user: ${req.user.id} until ${
+      `Banned user: ${user.id} until ${
         getCurrentUnix() + parseInt(process.env.FAIL_2_BAN_DURATION)
       }`
-    );
-    await ScreenCode.update(
-      {
-        banned_until:
-          getCurrentUnix() + parseInt(process.env.FAIL_2_BAN_DURATION),
-        connection_attempts: connectionAttempts,
-      },
-      { where: { user_id: req.user.id } }
     );
     return next(
       new Error(
@@ -119,11 +83,10 @@ exports.screenCodeCheck = async (socket, next) => {
       )
     );
   }
-  //wrong code
-  await ScreenCode.update(
-    { connection_attempts: connectionAttempts },
-    { where: { user_id: req.user.id } }
-  );
+
+  // User not bannable or valid = wrong entered screencode
+  user.connectionAttemptsPlusOne();
+  user.save();
   return next(new Error("Invalid screencode"));
 };
 

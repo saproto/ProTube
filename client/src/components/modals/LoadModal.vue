@@ -21,7 +21,6 @@
         <div>
           <div class="center">
             <div class="circle2"></div>
-            {{ opacity }}
             <div class="circle2"></div>
           </div>
         </div>

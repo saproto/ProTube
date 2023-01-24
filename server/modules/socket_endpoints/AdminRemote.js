@@ -43,9 +43,9 @@ endpoint.on("connection", (socket) => {
     });
   });
 
-  socket.on("reset-screen-code", (callback) => {
+  socket.on("reset-screen-code", async (callback) => {
     logger.adminInfo(`${socket.id} Requested new screencode`);
-    callback({ success: adminResetScreenCode() });
+    callback({ success: await adminResetScreenCode() });
   });
 
   socket.on("clear-queue", (callback) => {

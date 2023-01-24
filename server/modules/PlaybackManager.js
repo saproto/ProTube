@@ -44,7 +44,7 @@ exports.playVideo = (video) => {
         `${process.env.LARAVEL_ENDPOINT}/api/protube/played?` +
           new URLSearchParams({
             secret: process.env.LARAVEL_API_KEY,
-            user_id: video.user.user_id,
+            user_id: video.user.id,
             video_id: video.id,
             video_title: video.title,
           })

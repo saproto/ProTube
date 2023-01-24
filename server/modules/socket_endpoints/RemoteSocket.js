@@ -80,9 +80,9 @@ endpoint.on("connection", (socket) => {
 
 function formatUser(socket) {
   return {
-    name: socket.request.session.passport.user.name,
-    user_id: socket.request.session.passport.user.id,
-    is_admin: socket.request.user.admin,
+    name: socket.request.user.name,
+    id: socket.request.user.id,
+    admin: socket.request.user.admin,
   };
 }
 

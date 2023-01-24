@@ -72,7 +72,6 @@ const digitsFromInput = reactive({
   3: null,
 });
 
-const code_0 = ref(null);
 let lastPressed;
 let fieldIsEmpty;
 let originalTarget;
@@ -96,7 +95,6 @@ const passkey = computed(() => {
 });
 
 onMounted(() => {
-  code_0.value = document.getElementById("code_0");
   focusOnFirstInput();
 });
 
@@ -214,9 +212,7 @@ function nextInput(event) {
 }
 
 function focusOnFirstInput() {
-  if (code_0.value != null) {
-    code_0.value.focus();
-  }
+  document.getElementById("code_0").focus();
 }
 
 function allInputsFilled() {

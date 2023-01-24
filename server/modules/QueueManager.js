@@ -23,10 +23,10 @@ exports.getTotalDuration = () => {
 exports.addFair = (video) => {
   if (findDoppelganger(video)) throw new softError("Video already in queue!!");
   // check for nr of videos in queue if not an admin
-  if (!video.user.is_admin) {
+  if (!video.user.admin) {
     let videoCount = 0;
     for (const vid of queue) {
-      videoCount += vid.user.user_id === video.user.user_id;
+      videoCount += vid.user.id === video.user.id;
     }
     if (videoCount >= parseInt(process.env.USER_MAX_VIDEOS_IN_QUEUE)) {
       throw new softError("Video limit in the queue reached!");
@@ -78,7 +78,7 @@ exports.removeVideos = (videoIDs, userID, isAdmin = false) => {
     // video is in list of requested removal videos
     if (videoIDs.indexOf(video.id) !== -1) {
       // User is no admin or does not own the videoID -> illegal removal
-      if (!isAdmin && userID !== video.user.user_id) {
+      if (!isAdmin && userID !== video.user.id) {
         throw new hardError("Illegal removal of video!");
       }
       deletedVideos++;
@@ -120,13 +120,13 @@ function findDoppelganger(video) {
 // This orders the queue on a round-robin style considering first come first serve
 function organizeQueue() {
   // get all ids in the queue on which to order
-  const allIds = new Set(queue.map((item) => item.user.user_id));
+  const allIds = new Set(queue.map((item) => item.user.id));
   let videosPerUser = [];
   // create a 2d array for all videos per user [[videos of user a], [videos of user b]]
   allIds.forEach((userId) => {
     videosPerUser.push(
       queue.filter((element) => {
-        return element.user.user_id == userId;
+        return element.user.id == userId;
       })
     );
   });

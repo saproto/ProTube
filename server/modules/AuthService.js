@@ -1,8 +1,7 @@
 const passport = require("passport");
 const fetch = require("node-fetch");
 const OAuth2Strategy = require("passport-oauth2").Strategy;
-const { User, ScreenCode } = require("./DataBase");
-const { getCurrentUnix } = require("../utils/time-formatter");
+const { User } = require("./DataBase");
 
 const authURL = `${process.env.LARAVEL_ENDPOINT}/oauth/authorize`;
 const tokenURL = `${process.env.LARAVEL_ENDPOINT}/oauth/token`;
@@ -29,17 +28,15 @@ passport.use(
       const userData = await response.json();
       if (userData.authenticated) {
         await User.upsert({
-          id: userData.user_id,
-          admin: +userData.is_admin,
+          id: userData.id,
+          name: userData.name,
+          admin: +userData.admin,
           refresh_token: refreshToken,
           access_token: accessToken,
         });
-        await ScreenCode.upsert({
-          user_id: userData.user_id,
-        });
         return done(null, {
-          id: userData.user_id,
-          admin: userData.is_admin,
+          id: userData.id,
+          admin: userData.admin,
           name: userData.name,
         });
       }
@@ -56,14 +53,7 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(async function (user, done) {
-  const userData = await User.findOne({
-    include: ScreenCode,
-    where: {
-      id: user.id,
-    },
-  });
+  const userData = await User.findByPk(user.id);
   if (!userData) return done(true, null);
-  userData.screencode.banned =
-    userData.screencode.banned_until > getCurrentUnix();
   done(null, userData);
 });

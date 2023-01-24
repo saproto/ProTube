@@ -1,5 +1,6 @@
 require("dotenv").config();
-const { Sequelize, DataTypes } = require("sequelize");
+const { Sequelize, DataTypes, Model } = require("sequelize");
+const { getCurrentUnix } = require("../utils/time-formatter");
 
 exports.sequelize = new Sequelize(
   process.env.DATABASE_DB,
@@ -35,36 +36,66 @@ this.sequelize
     process.exit(10);
   });
 
-// user model
-exports.User = this.sequelize.define("users", {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-  },
-  admin: DataTypes.BOOLEAN,
-  refresh_token: DataTypes.TEXT,
-  access_token: DataTypes.TEXT,
-});
+class User extends Model {
+  isAdmin() {
+    return this.admin;
+  }
 
-exports.ScreenCode = this.sequelize.define("screencodes", {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
+  hasValidRemote() {
+    return this.admin || this.valid_remote_until > getCurrentUnix();
+  }
+
+  setValidRemote() {
+    this.valid_remote_until =
+      getCurrentUnix() + parseInt(process.env.CODE_VALID_DURATION);
+    this.connection_attempts = 0;
+  }
+
+  isBanned() {
+    return this.banned_until > getCurrentUnix();
+  }
+
+  setBanned() {
+    this.banned_until =
+      getCurrentUnix() + parseInt(process.env.FAIL_2_BAN_DURATION);
+    this.connection_attempts = 0;
+  }
+
+  connectionAttemptsPlusOne() {
+    this.connection_attempts += 1;
+  }
+}
+
+User.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+    },
+    name: DataTypes.TEXT,
+    admin: DataTypes.BOOLEAN,
+    valid_remote_until: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    banned_until: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    connection_attempts: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    refresh_token: DataTypes.TEXT,
+    access_token: DataTypes.TEXT,
   },
-  user_id: {
-    type: DataTypes.INTEGER,
-    unique: true,
-  },
-  banned_until: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-  },
-  connection_attempts: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-  },
-});
+  {
+    sequelize: this.sequelize,
+    modelName: "user",
+  }
+);
+
+exports.User = this.sequelize.models["user"];
 
 exports.Session = this.sequelize.define("sessions", {
   sid: {
@@ -75,10 +106,7 @@ exports.Session = this.sequelize.define("sessions", {
   data: DataTypes.TEXT,
 });
 
-this.ScreenCode.belongsTo(this.User, { foreignKey: "user_id" });
-this.User.hasOne(this.ScreenCode, { foreignKey: "user_id" });
-
-//syncing user tables
+//syncing tables
 this.sequelize
   .sync()
   .then(() => {

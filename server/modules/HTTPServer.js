@@ -3,8 +3,8 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const { Server } = require("socket.io");
-const { authApi } = require("./AuthApi");
-const { protubeApi } = require("./ProtubeApi");
+const { authApi } = require("./api_endpoints/AuthApi");
+const { protubeApi } = require("./api_endpoints/ProtubeApi");
 const https = require("https");
 const fs = require("fs");
 const http = require("http");
@@ -33,6 +33,8 @@ app.use(
   })
 );
 app.use("/", express.static(path.join(__dirname, "../public")));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use("/api/", authApi);
 app.use("/api/laravel/", protubeApi);
 
