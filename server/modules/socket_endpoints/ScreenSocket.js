@@ -13,6 +13,11 @@ endpoint.on("connection", (socket) => {
   if (!photo) emitNewPhoto();
   socket.emit("photo-update", photo);
 
+  socket.emit("queue-update", {
+    queue: queueManager.getQueue(),
+    duration: queueManager.getTotalDurationFormatted(),
+  });
+
   socket.on("disconnect", () => {
     logger.screenInfo(`Disconnected socket: ${socket.id}`);
   });
