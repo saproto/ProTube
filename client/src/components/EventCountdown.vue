@@ -10,18 +10,33 @@
     ">
     <div
       class="dark:bg-proto_secondary_gray-dark/50 m-2 flex h-full w-full flex-col content-center rounded-lg bg-white/50 px-4">
-      <h1 class="text-center text-3xl" style="text-shadow: #fc0 1px 1px 10px">
+      <h1 class="text-center text-3xl" style="text-shadow: #ffffff 1px 1px 10px">
         ProtoTrip 2023 location reveal & sign up
       </h1>
       <div v-if="!countdownOver" class="m-2 flex justify-center" id="countdown">
         <ul class="flex justify-center px-3">
-          <li class="mx-3 text-4xl" style="text-shadow: #fc0 1px 1px 10px">
+          <li class="mx-3 text-4xl" style="color: white;
+        text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;">
             <span></span>{{ hours }} hours
           </li>
-          <li class="mx-3 text-4xl" style="text-shadow: #fc0 1px 1px 10px">
+          <li class="mx-3 text-4xl" style="color: white;
+        text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;">
             <span></span>{{ minutes }} minutes
           </li>
-          <li class="mx-3 text-4xl" style="text-shadow: #fc0 1px 1px 10px">
+          <li class="mx-3 text-4xl" style="color: white;
+        text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;">
             <span></span>{{ seconds }} seconds
           </li>
         </ul>
@@ -30,7 +45,12 @@
       <h1
         v-else
         class="m-2 animate-bounce text-center text-4xl"
-        style="text-shadow: #fc0 1px 1px 10px">
+        style="color: white;
+        text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;">
         We will venture to Aarhus, Denmark!
       </h1>
     </div>
