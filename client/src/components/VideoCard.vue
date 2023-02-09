@@ -1,28 +1,27 @@
 <template>
   <transition @before-enter="beforeEnter" @enter="enter" appear>
     <li
-      :style="`background: url(${thumbnail})`"
-      style="
+      :style="`
         background-repeat: no-repeat;
-        background-size: cover;
         background-position: center center;
-      "
+        background: linear-gradient(0deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url(${thumbnail});
+        background-size: cover;
+      `"
       :class="props.roundedCorners ? 'rounded-lg' : ''"
       class="border-proto_blue group col-span-1 flex w-full flex-col border-l-4 text-center shadow">
       <div
         :style="`width:${progressBar}%;`"
-        :class="props.roundedCorners ? 'rounded-sm' : ''"
-        class="bg-proto_blue absolute bottom-0 h-full h-2 w-0 opacity-60 duration-200"></div>
+        :class="props.roundedCorners ? 'rounded-r-sm rounded-bl' : ''"
+        class="bg-proto_blue absolute bottom-0 h-2 w-0 opacity-60 duration-200"></div>
       <button
         :class="[
           clickable && statusIcon === enums.STATUS.NOTHING
             ? 'group-hover:bg-white/40 dark:group-hover:bg-stone-800/40'
             : 'cursor-default',
-          props.roundedCorners ? 'rounded-lg' : '',
         ]"
         :disabled="!clickable"
         @click="$emit('video-clicked', videoID)"
-        class="flex flex-1 flex-col bg-white/80 px-8 py-4 duration-200 dark:border-gray-800 dark:bg-stone-800/80">
+        class="flex flex-1 flex-col px-8 py-4 duration-200 dark:border-gray-800 dark:bg-stone-800/80">
         <div
           class="text-md w-full overflow-x-hidden text-lg font-bold text-gray-800 dark:text-stone-300">
           <h3
