@@ -81,7 +81,6 @@
         <RadioScreen :radio="playerState.radio" :volume="volume" />
       </div>
     </div>
-    <EventCountdown></EventCountdown>
   </div>
 
   <ReconnectionHandler
@@ -94,7 +93,6 @@
 import RadioScreen from "@/components/RadioScreen";
 import ReconnectionHandler from "@/components/ReconnectionHandler";
 import VideoCard from "@/components/VideoCard.vue";
-import EventCountdown from "@/components/EventCountdown.vue";
 import {
   onMounted,
   onBeforeUnmount,
