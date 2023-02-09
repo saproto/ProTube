@@ -75,7 +75,7 @@ const calculateNewTimes = () => {
   }
 };
 
-const countdownTo = ref(new Date("February 8, 2023 13:00:00"));
+const countdownTo = ref(new Date("February 5, 2023 13:00:00"));
 const countdownOver = ref(false);
 const hours = ref(0);
 const minutes = ref(0);
