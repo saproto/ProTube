@@ -1,7 +1,7 @@
 <template>
   <transition @before-enter="beforeEnter" @enter="enter" appear>
     <li
-      class="col-span-1 flex w-full flex-col text-center duration-200 shadow overflow-hidden"
+      class="col-span-1 flex w-full flex-col overflow-hidden text-center shadow duration-200"
       :class="roundedCorners ? 'rounded-lg' : 'rounded-sm'"
       :style="`
         background-repeat: no-repeat;
@@ -11,17 +11,17 @@
       `">
       <div
         :style="`width:${progressBar}%;`"
-        class="bg-proto_blue absolute bottom-0 h-2 w-0 opacity-60 rounded-sm"></div>
+        class="bg-proto_blue absolute bottom-0 h-2 w-0 rounded-sm opacity-60"></div>
       <button
         :disabled="!clickable"
         @click="$emit('video-clicked', videoID)"
         :class="[
           clickable && statusIcon === enums.STATUS.NOTHING
-            ? 'dark:hover:bg-stone-800/40 hover:bg-white/40'
+            ? 'hover:bg-white/40 dark:hover:bg-stone-800/40'
             : 'cursor-default',
-            {'rounded-lg' : roundedCorners}
+          { 'rounded-lg': roundedCorners },
         ]"
-        class="border-proto_blue border-l-4 flex flex-1 flex-col px-8 py-4 dark:border-gray-800 dark:bg-stone-800/80 bg-white/80 duration-200">
+        class="border-proto_blue flex flex-1 flex-col border-l-4 bg-white/80 px-8 py-4 duration-200 dark:border-gray-800 dark:bg-stone-800/80">
         <div
           class="text-md w-full overflow-x-hidden text-lg font-bold text-gray-800 dark:text-stone-300">
           <h3
