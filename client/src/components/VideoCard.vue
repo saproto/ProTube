@@ -1,27 +1,27 @@
 <template>
   <transition @before-enter="beforeEnter" @enter="enter" appear>
     <li
+      class="col-span-1 flex w-full flex-col text-center duration-200 shadow overflow-hidden"
+      :class="roundedCorners ? 'rounded-lg' : 'rounded-sm'"
       :style="`
         background-repeat: no-repeat;
         background-position: center center;
-        background: linear-gradient(0deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url(${thumbnail});
+        background-image: url(${thumbnail});
         background-size: cover;
-      `"
-      :class="props.roundedCorners ? 'rounded-lg' : ''"
-      class="border-proto_blue group col-span-1 flex w-full flex-col border-l-4 text-center shadow">
+      `">
       <div
         :style="`width:${progressBar}%;`"
-        :class="props.roundedCorners ? 'rounded-r-sm rounded-bl' : ''"
-        class="bg-proto_blue absolute bottom-0 h-2 w-0 opacity-60 duration-200"></div>
+        class="bg-proto_blue absolute bottom-0 h-2 w-0 opacity-60 rounded-sm"></div>
       <button
-        :class="[
-          clickable && statusIcon === enums.STATUS.NOTHING
-            ? 'group-hover:bg-white/40 dark:group-hover:bg-stone-800/40'
-            : 'cursor-default',
-        ]"
         :disabled="!clickable"
         @click="$emit('video-clicked', videoID)"
-        class="flex flex-1 flex-col px-8 py-4 duration-200 dark:border-gray-800 dark:bg-stone-800/80">
+        :class="[
+          clickable && statusIcon === enums.STATUS.NOTHING
+            ? 'dark:hover:bg-stone-800/40 hover:bg-white/40'
+            : 'cursor-default',
+            {'rounded-lg' : roundedCorners}
+        ]"
+        class="border-proto_blue border-l-4 flex flex-1 flex-col px-8 py-4 dark:border-gray-800 dark:bg-stone-800/80 bg-white/80 duration-200">
         <div
           class="text-md w-full overflow-x-hidden text-lg font-bold text-gray-800 dark:text-stone-300">
           <h3
