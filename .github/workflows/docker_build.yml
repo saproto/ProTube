@@ -27,7 +27,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: ./docker/Dockerfile
+          context: .
+          file: ./docker/Dockerfile
           push: true
           tags: |
             hyttioaoac/protube:latest
