@@ -119,7 +119,7 @@ exports.toggleType = () => {
     playerType = enums.TYPES.VIDEO;
     try {
       this.playNextVideo();
-    } catch { }
+    } catch {}
     eventBus.emit("player-update");
     return enums.SUCCESS;
   }
