@@ -197,7 +197,6 @@ onBeforeUnmount(() => {
 });
 
 socket.on("player-update", (newState) => {
-  console.log(newState);
   if (newState.playerType === enums.TYPES.VIDEO) {
     if (newState.playerMode === enums.MODES.PLAYING) {
       player.loadVideoById(newState.video.id, newState.timestamp);
