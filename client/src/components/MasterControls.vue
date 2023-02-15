@@ -94,12 +94,12 @@
 
 <script setup>
 import socket, { connectSocket } from "@/js/AdminRemoteSocket";
-import { ref, onBeforeMount, onBeforeUnmount } from "vue";
+import { ref, onBeforeMount, onBeforeUnmount, defineEmits } from "vue";
 import { useRouter } from "vue-router";
 import enums from "@/js/Enums";
 import ContentField from "../layout/ContentField.vue";
 
-const latestToast = ref(null);
+const emit = defineEmits(["display-toast"]);
 
 const user = ref({});
 const playerSettings = ref({
@@ -137,7 +137,7 @@ socket.on("update-admin-panel", (newSettings) => {
 });
 
 function displayToast(toast) {
-  latestToast.value = toast;
+  emit('display-toast', toast);
 }
 
 async function switchTheme() {
