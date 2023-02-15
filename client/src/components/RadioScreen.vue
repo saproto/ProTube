@@ -8,7 +8,7 @@
         style="width: 150px"
         :src="`https://www.nederland.fm/i/l/${radio.z}.gif`" />
       <div
-        class="from-proto_blue absolute top-[-50%] left-[-25%] z-[-1] h-[200px] w-[200px] animate-[spin_3s_linear_infinite] bg-gradient-to-r via-white to-white" />
+        class="from-proto_blue absolute -top-1/2 -left-1/4 -z-10 h-52 w-52 animate-[spin_3s_linear_infinite] bg-gradient-to-r via-white to-white" />
     </div>
     <br />
     <audio
