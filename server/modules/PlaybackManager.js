@@ -117,7 +117,10 @@ exports.playPause = () => {
 exports.toggleType = () => {
   if (playerType === enums.TYPES.RADIO) {
     playerType = enums.TYPES.VIDEO;
-    this.playNextVideo();
+    try {
+      this.playNextVideo();
+      // eslint-disable-next-line
+    } catch {}
     eventBus.emit("player-update");
     return enums.SUCCESS;
   }

@@ -13,14 +13,16 @@
       <div :id="playerID" class="min-h-screen w-full" />
     </div>
 
-    <div v-if="isPlayingVideo">
-      <div class="absolute top-0 right-0 mt-2">
-        <div
-          class="border-proto_blue dark:bg-proto_secondary_gray-dark mb-1 mr-4 mt-1 w-max rounded-lg border-r-4 bg-white px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
-          Want to add your own music? Visit www.protu.be!
-        </div>
+    <div
+      v-if="playerState.playerType === enums.TYPES.VIDEO"
+      class="absolute top-0 right-0 mt-2">
+      <div
+        class="border-proto_blue dark:bg-proto_secondary_gray-dark mb-1 mr-4 mt-1 w-max rounded-lg border-r-4 bg-white px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+        Want to add your own music? Visit www.protu.be!
       </div>
+    </div>
 
+    <div v-if="isPlayingVideo">
       <div class="absolute bottom-0 mb-1 w-screen rounded-lg">
         <div class="flex justify-between">
           <div
@@ -47,12 +49,12 @@
       </div>
     </div>
 
-    <div v-else class="dark:text-white">
+    <div v-if="!isPlayingVideo" class="dark:text-white">
       <div v-if="photo && !photo.error && photo.url !== ''">
         <div class="flex h-screen justify-center overflow-x-hidden p-5">
           <img
             :src="photo.url"
-            class="dark:bg-proto_secondary_gray-dark h-full max-w-none rounded-lg bg-white"
+            class="dark:bg-proto_secondary_gray-dark -z-10 h-full max-w-none rounded-lg bg-white"
             alt="Loading..." />
         </div>
         <div class="absolute top-0 left-0 mt-2 ml-4 rounded-lg text-lg">
@@ -63,7 +65,9 @@
           </div>
         </div>
       </div>
-      <div v-else-if="!isPlayingRadio" class="grid h-screen place-items-center">
+      <div
+        v-else-if="playerState.playerType === enums.TYPES.RADIO"
+        class="grid h-screen place-items-center">
         <div class="text-4xl dark:text-white">
           Nothing currently in the queue...<br />
           Visit protu.be to add some tunes!
@@ -126,6 +130,18 @@ const photo = ref({
   date_taken: 0,
 });
 
+const emit = defineEmits(["youtube-media-error"]);
+const props = defineProps({
+  volume: {
+    type: Number,
+    default: -1,
+  },
+  screenCode: {
+    type: Number,
+    default: -1,
+  },
+});
+
 // Compute the queue with the currently playing video at the front
 const queueWithCurrent = computed(() => {
   let currentVideo = playerState.value.video;
@@ -145,18 +161,6 @@ const isPlayingRadio = computed(
     playerState.value.playerType === enums.TYPES.RADIO &&
     playerState.value.playerMode === enums.MODES.IDLE
 );
-
-const emit = defineEmits(["youtube-media-error"]);
-const props = defineProps({
-  volume: {
-    type: Number,
-    default: -1,
-  },
-  screenCode: {
-    type: Number,
-    default: -1,
-  },
-});
 
 onBeforeMount(() => {
   connectSocket();

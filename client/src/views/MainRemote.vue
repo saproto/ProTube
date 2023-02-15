@@ -10,7 +10,7 @@
   <div class="gap-2 md:grid md:grid-cols-6">
     <div class="col-span-3 lg:col-span-4">
       <transition name="results" mode="out-in" appear>
-        <MasterControls v-if="user.admin" />
+        <MasterControls v-if="user.admin" v-on:display-toast="displayToast" />
       </transition>
 
       <transition name="results" mode="out-in" appear>
