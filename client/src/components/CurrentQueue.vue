@@ -12,13 +12,13 @@
           class="mt-4 flex rounded-md text-center text-white duration-200 md:mt-0">
           <button
             @click="clearQueue()"
-            class="bg-proto_blue rounded-l-md px-4 py-0.5 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+            class="bg-proto_blue rounded-l-md px-4 py-0.5 duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
             Clear queue
           </button>
           <button
             @click="removeVideoDropDown = true"
             @focusout="hideRemoveVideoDropDown"
-            class="bg-proto_blue rounded-r-md border-l border-l-white px-4 py-0.5 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+            class="bg-proto_blue rounded-r-md border-l border-l-white px-4 py-0.5 duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
             <font-awesome-icon
               :class="removeVideoDropDown ? 'rotate-180' : ''"
               class="duration-300"
@@ -47,7 +47,7 @@
       <div v-else-if="!admin && userHasItemsInQueue">
         <button
           @click="removeVideosForUser(userID)"
-          class="bg-proto_blue rounded-md px-4 py-0.5 text-white hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+          class="bg-proto_blue rounded-md px-4 py-0.5 text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
           Remove all my videos
         </button>
       </div>
