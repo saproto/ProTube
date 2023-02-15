@@ -26,9 +26,7 @@
   </div>
   <div v-else class="mx-auto sm:pt-0 md:p-4 xl:max-w-screen-2xl">
     <router-view v-slot="{ Component }">
-      <!-- <keep-alive> -->
       <component :is="Component" />
-      <!-- </keep-alive> -->
     </router-view>
   </div>
 </template>

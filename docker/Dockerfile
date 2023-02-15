@@ -2,7 +2,6 @@ FROM node:16-alpine
 
 RUN apk update
 RUN apk add nano
-RUN ls
 
 RUN mkdir /protube
 COPY . /protube
