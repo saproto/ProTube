@@ -1,6 +1,5 @@
 FROM node:16-alpine
 
-RUN which node
 RUN apk update
 RUN apk add nano
 
