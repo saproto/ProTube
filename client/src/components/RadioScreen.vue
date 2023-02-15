@@ -1,7 +1,6 @@
 <template>
   <div class="z-50">
-    <div
-      class="relative overflow-hidden rounded-lg p-1 text-white">
+    <div class="relative overflow-hidden rounded-lg p-1 text-white">
       <img
         :alt="radio.o"
         class="bg-proto_blue hover:bg-proto_blue/80 overflow-hidden truncate rounded-lg"

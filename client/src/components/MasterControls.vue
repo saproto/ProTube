@@ -137,7 +137,7 @@ socket.on("update-admin-panel", (newSettings) => {
 });
 
 function displayToast(toast) {
-  emit('display-toast', toast);
+  emit("display-toast", toast);
 }
 
 async function switchTheme() {
