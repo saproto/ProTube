@@ -61,13 +61,13 @@ this.protubeApi.post("/updateadmin", async function (req, res) {
 
 // Endpoint to skip a song
 this.protubeApi.post("/skipsong", function (req, res) {
-  const wasPlaying = (getPlayerMode() !== enums.MODES.IDLE);
+  const wasPlaying = getPlayerMode() !== enums.MODES.IDLE;
   try {
     playNextVideo();
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   } catch {}
   // we were playing sth so we did have a successful skip
-  return res.send({ success: wasPlaying});
+  return res.send({ success: wasPlaying });
 });
 
 this.protubeApi.post("/playsound", async function (req, res) {

@@ -8,7 +8,7 @@ const {
   toggleType,
   playNextVideo,
   setVolume,
-  getPlayerType
+  getPlayerType,
 } = require("../PlaybackManager");
 const { isEmpty } = require("lodash");
 const { adminResetScreenCode } = require("../ScreenCode");
@@ -87,12 +87,12 @@ endpoint.on("connection", (socket) => {
 
   socket.on("skip-video", (callback) => {
     logger.adminInfo(`${socket.id} Requested to skip a video`);
-    const wasPlaying = (getPlayerMode() !== enums.MODES.IDLE);
+    const wasPlaying = getPlayerMode() !== enums.MODES.IDLE;
     try {
       callback({ success: playNextVideo() });
     } catch (e) {
       // unable to play next video (empty queue), but we were playing so we did have a successful skip
-      if(wasPlaying) callback({ success: enums.SUCCESS });
+      if (wasPlaying) callback({ success: enums.SUCCESS });
 
       callback(e.getInfo());
     }
