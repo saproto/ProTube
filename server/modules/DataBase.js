@@ -108,11 +108,12 @@ exports.Session = this.sequelize.define("sessions", {
 
 //syncing tables
 this.sequelize
-  .sync()
+  .sync({ force: process.env.NODE_ENV === 'production' })
   .then(() => {
     logger.dbLog("Successfully synchronized tables!");
   })
-  .catch(() => {
+  .catch((e) => {
     logger.dbLog("Unable to sync tables");
+    logger.dbLog(e);
     process.exit(10);
   });
