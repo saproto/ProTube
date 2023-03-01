@@ -1,8 +1,4 @@
 import { createApp } from "vue";
-
-// snowflake (after use delete import)
-import "@/assets/snowfall.scss";
-
 import App from "./App.vue";
 
 // import { eventBus } from '@/js/eventbus'
