@@ -10,7 +10,6 @@ const {
   setVolume,
   getPlayerType,
 } = require("../PlaybackManager");
-const { isEmpty } = require("lodash");
 const { adminResetScreenCode } = require("../ScreenCode");
 const radio = require("../RadioStations");
 const queueManager = require("../QueueManager");
