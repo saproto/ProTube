@@ -15,46 +15,24 @@ this.protubeApi.post("/updateadmin", async function (req, res) {
     `Attempt from ${req.hostname} to update the admin status of a user`
   );
   // Check if the required data is present and parse it
-  if (!req.body?.user_id || !req.body?.admin) {
+  if (!req.body?.user_id || !req.body?.admin_until) {
     logger.apiInfo("Request had incomplete body");
     return res.send({ success: enums.FAIL, message: "Incomplete body" });
   }
   const userID = parseInt(req.body.user_id);
-  const isAdmin = parseInt(req.body.admin) === 1;
+  const adminUntil = parseInt(req.body.admin);
 
   // finding and updating the users admin status in the database
   const user = await User.findByPk(userID);
-
   if (!user) {
     logger.apiInfo("User is not found!");
     return res.send({ success: enums.FAIL, message: "User not found!" });
   }
-  user.admin = isAdmin;
+
+  user.admin_until = adminUntil;
   await user.save();
-  logger.apiInfo(`User ${userID}'s new admin status: ${isAdmin}`);
 
-  if (isAdmin) return res.send({ success: enums.SUCCESS });
-
-  // disconnecting admin screen and remote sockets if present
-  const sockets = await io.of("/socket/remote/admin").fetchSockets();
-  const screenSockets = await io.of("/socket/screen/admin").fetchSockets();
-
-  for (const sock of sockets) {
-    await sock.request.user.reload();
-    if (sock.request.user.id === userID) {
-      logger.apiInfo(`Disconnected admin remote socket`);
-      sock.disconnect(true);
-    }
-  }
-
-  for (const sock of screenSockets) {
-    await sock.request.user.reload();
-    if (sock.request.user.id === userID) {
-      logger.apiInfo(`Disconnected admin screen socket`);
-      sock.disconnect(true);
-    }
-  }
-
+  logger.apiInfo(`User ${userID}'s is admin until: ${adminUntil}`);
   return res.send({ success: enums.SUCCESS });
 });
 

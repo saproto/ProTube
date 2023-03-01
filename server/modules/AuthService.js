@@ -14,7 +14,6 @@ passport.use(
       tokenURL: tokenURL,
       clientID: process.env.OAUTH_CLIENT_ID,
       clientSecret: process.env.OAUTH_CLIENT_SECRET,
-      //callbackURL: "http://localhost:3000/api/auth/example/callback"
     },
     async function (accessToken, refreshToken, profile, done) {
       let response = await fetch(
@@ -30,13 +29,13 @@ passport.use(
         await User.upsert({
           id: userData.id,
           name: userData.name,
-          admin: +userData.admin,
+          admin_until: +userData.admin_until,
           refresh_token: refreshToken,
           access_token: accessToken,
         });
         return done(null, {
           id: userData.id,
-          admin: userData.admin,
+          admin_until: userData.admin_until,
           name: userData.name,
         });
       }

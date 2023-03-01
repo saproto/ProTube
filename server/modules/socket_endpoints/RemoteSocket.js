@@ -19,7 +19,7 @@ endpoint.on("connection", (socket) => {
       const result = await youtube.search(
         request.query,
         request.continuationToken,
-        socket.request.user.admin,
+        socket.request.user.isAdmin(),
         queueManager.getQueue()
       );
       callback(result);
@@ -33,7 +33,7 @@ endpoint.on("connection", (socket) => {
     try {
       const videos = await youtube.getVideosInPlaylist(
         playlistId,
-        socket.request.user.admin
+        socket.request.user.isAdmin()
       );
       videos.forEach((video) => (video.user = formatUser(socket)));
       callback(queueManager.addAllFair(videos));
@@ -44,7 +44,7 @@ endpoint.on("connection", (socket) => {
 
   socket.on("fetch-then-add-video", async (videoId, callback) => {
     try {
-      const video = await youtube.getVideo(videoId, socket.request.user.admin);
+      const video = await youtube.getVideo(videoId, socket.request.user.isAdmin());
       video.user = formatUser(socket);
 
       callback({ success: queueManager.addFair(video) });
@@ -62,7 +62,7 @@ endpoint.on("connection", (socket) => {
         success: queueManager.removeVideos(
           videoIDs,
           socket.request.session.passport.user.id,
-          socket.request.user.admin
+          socket.request.user.isAdmin()
         ),
       });
     } catch (e) {
@@ -82,7 +82,7 @@ function formatUser(socket) {
   return {
     name: socket.request.user.name,
     id: socket.request.user.id,
-    admin: socket.request.user.admin,
+    admin: socket.request.user.isAdmin(),
   };
 }
 

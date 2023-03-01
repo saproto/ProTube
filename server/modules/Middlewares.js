@@ -33,7 +33,7 @@ exports.socketCheckAuthenticated = (socket, next) => {
 
 exports.socketCheckAdminAuthenticated = (socket, next) => {
   if (socket.request.isAuthenticated()) {
-    if (socket.request.user.admin) return next();
+    if (socket.request.user.isAdmin()) return next();
     else return next(new Error("forbidden"));
   }
   // accept localhost connections also to be admin (local client)
