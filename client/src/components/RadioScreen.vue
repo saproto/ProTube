@@ -41,6 +41,7 @@ const props = defineProps({
 onMounted(() => {
   document.getElementById("radio").addEventListener("canplaythrough", () => {
     if (!document.getElementById("radio").paused) playButton.value = false;
+    if(props.volume < 0) return;
     document.getElementById("radio").volume = props.volume / 100;
   });
 });
