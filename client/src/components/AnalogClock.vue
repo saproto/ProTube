@@ -12,10 +12,8 @@
       :style="`transform:rotate(${i * (360 / 12)}deg)`">
       <div
         class="w-full rounded"
-        :class="[
-          i % 3 == 0 ? 'w-6' : 'w-3',
-          i % 3 == 0 ? 'bg-proto_blue' : 'bg-gray-400',
-        ]"></div>
+        :class="i % 3 === 0 ? 'w-6 bg-proto_blue' : 'w-3 bg-gray-400'">
+      </div>
     </div>
 
     <!--minute hand-->
@@ -34,12 +32,15 @@ import { ref, onMounted, computed } from "vue";
 
 const minute = ref(0);
 const hour = ref(0);
+
 const hourRotation = computed(() => {
-  return `transform:rotate(${hour.value * (360 / 12)}deg)`;
+  return `transform:rotate(${hour.value * (360 / 12) + minute.value*(360.0 / 12 / 60)}deg)`;
 });
+
 const minuteRotation = computed(() => {
   return `transform:rotate(${minute.value * (360 / 60)}deg)`;
 });
+
 onMounted(() => {
   const date = new Date();
   minute.value = date.getMinutes();
