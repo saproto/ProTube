@@ -22,6 +22,9 @@
       </div>
     </div>
 
+    <div class="absolute right-0 top-16 h-32 w-32">
+    <AnalogClock class="w-full h-full"></AnalogClock>
+    </div>
     <div v-if="isPlayingVideo">
       <div class="absolute bottom-0 mb-1 w-screen rounded-lg">
         <div class="flex justify-between">
@@ -108,6 +111,7 @@ import {
 import socket, { connectSocket } from "@/js/ScreenSocket";
 import YoutubePlayer from "youtube-player";
 import enums from "@/js/Enums";
+import AnalogClock from "../components/AnalogClock.vue";
 
 const playerID = "player-" + Math.random();
 const totalDuration = ref();
