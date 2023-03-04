@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <div class="absolute right-0 top-16 h-32 w-32 mr-4">
+    <div class="absolute right-0 top-16 mr-4 h-32 w-32">
       <AnalogClock class="h-full w-full opacity-90"></AnalogClock>
     </div>
     <div v-if="isPlayingVideo">
