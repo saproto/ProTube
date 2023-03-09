@@ -3,7 +3,7 @@
     class="relative flex h-full w-full -rotate-90 items-center justify-end overflow-hidden rounded-full">
     <!--background accent ring-->
     <div
-      class="h-full w-full rounded-full bg-gray-600 ring-2 ring-inset ring-gray-400" />
+      class="h-full w-full rounded-full ring-2 ring-inset ring-gray-400" />
     <!-- the stripes for the indicators-->
     <div
       v-for="i in 12"
