@@ -15,12 +15,13 @@ this.protubeApi.post("/updateadmin", async function (req, res) {
     `Attempt from ${req.hostname} to update the admin status of a user`
   );
   // Check if the required data is present and parse it
-  if (!req.body?.user_id || !req.body?.admin_until) {
+  if (!req.body?.user_id || !req.body?.admin_until || !req.body?.admin_from) {
     logger.apiInfo("Request had incomplete body");
     return res.send({ success: enums.FAIL, message: "Incomplete body" });
   }
   const userID = parseInt(req.body.user_id);
-  const adminUntil = parseInt(req.body.admin);
+  const adminFrom = parseInt(req.body.admin_from);
+  const adminUntil = parseInt(req.body.admin_until);
 
   // finding and updating the users admin status in the database
   const user = await User.findByPk(userID);
@@ -30,9 +31,10 @@ this.protubeApi.post("/updateadmin", async function (req, res) {
   }
 
   user.admin_until = adminUntil;
+  user.admin_from = adminFrom;
   await user.save();
 
-  logger.apiInfo(`User ${userID}'s is admin until: ${adminUntil}`);
+  logger.apiInfo(`User ${userID}'s is admin from: ${adminFrom} until: ${adminUntil}`);
   return res.send({ success: enums.SUCCESS });
 });
 

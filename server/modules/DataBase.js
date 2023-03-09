@@ -38,7 +38,7 @@ this.sequelize
 
 class User extends Model {
   isAdmin() {
-    return this.admin_until > getCurrentUnix();
+    return this.admin_from < getCurrentUnix() && this.admin_until > getCurrentUnix();
   }
 
   hasValidRemote() {
@@ -73,6 +73,7 @@ User.init(
       primaryKey: true,
     },
     name: DataTypes.TEXT,
+    admin_from: DataTypes.INTEGER,
     admin_until: DataTypes.INTEGER,
     valid_remote_until: {
       type: DataTypes.INTEGER,
