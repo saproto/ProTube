@@ -38,7 +38,9 @@ this.sequelize
 
 class User extends Model {
   isAdmin() {
-    return this.admin_from < getCurrentUnix() && this.admin_until > getCurrentUnix();
+    return (
+      this.admin_from < getCurrentUnix() && this.admin_until > getCurrentUnix()
+    );
   }
 
   hasValidRemote() {

@@ -34,7 +34,9 @@ this.protubeApi.post("/updateadmin", async function (req, res) {
   user.admin_from = adminFrom;
   await user.save();
 
-  logger.apiInfo(`User ${userID}'s is admin from: ${adminFrom} until: ${adminUntil}`);
+  logger.apiInfo(
+    `User ${userID}'s is admin from: ${adminFrom} until: ${adminUntil}`
+  );
   return res.send({ success: enums.SUCCESS });
 });
 
