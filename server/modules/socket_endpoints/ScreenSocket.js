@@ -65,6 +65,10 @@ eventBus.on("new-video-timestamp", (timestamp) => {
   endpoint.emit("new-video-timestamp", timestamp);
 });
 
+eventBus.on("new-screen-setting", (newSetting) => {
+  endpoint.emit("new-screen-setting", newSetting);
+});
+
 function emitNewPhoto() {
   if (newPhotoInterval === null) {
     newPhotoInterval = setInterval(emitNewPhoto, 10000);

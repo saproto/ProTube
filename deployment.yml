@@ -1,0 +1,41 @@
+version: "3.1"
+
+services:
+  mysql:
+    image: "mysql:8.0"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "thisisareallystrongpassword123"
+      MYSQL_DATABASE: "protube_production"
+      MYSQL_USER: "protube_mainuser"
+      MYSQL_PASSWORD: "hetan9t84anne"
+
+  
+  nginx-proxy:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: always
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+
+  protube:
+    image: "hyttioaoac/protube:latest"
+    restart: "always"
+    pull_policy: "always"
+    volumes:
+      - ./protube/.env:/xxxx/.env
+      - ./protube/logs:/xxxx/logs
+  
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_HOST=mysql
+

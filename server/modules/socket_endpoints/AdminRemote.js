@@ -13,6 +13,7 @@ const {
 const { adminResetScreenCode } = require("../ScreenCode");
 const radio = require("../RadioStations");
 const queueManager = require("../QueueManager");
+const screenSettings = require('../ScreenSettings');
 
 endpoint.use(socketCheckAdminAuthenticated);
 
@@ -93,6 +94,15 @@ endpoint.on("connection", (socket) => {
     }
   });
 
+  socket.on("set-screen-setting", (newSetting, callback) => {
+    logger.adminInfo(`${socket.id} Requested to set the screensetting to ${newSetting}`);
+    try {
+      callback({ success: screenSettings.newScreenSetting(newSetting) });
+    } catch (e) {
+      callback(e.getInfo());
+    }
+  });
+
   // change the screen's volume
   socket.on("set-new-volume", (volume, callback) => {
     logger.adminInfo(
@@ -115,6 +125,10 @@ eventBus.on("queue-update", () => {
     queue: queueManager.getQueue(),
     duration: queueManager.getTotalDurationFormatted(),
   });
+});
+
+eventBus.on("new-screen-setting", (newSetting) => {
+  endpoint.emit("new-screen-setting", newSetting);
 });
 
 function updateAdminPanels() {

@@ -77,6 +77,7 @@
             </font-awesome-icon>
           </div>
           <!--     New code button     -->
+          <ScreenSettingsButton :screenSetting="screenSetting" @click="nextScreenSetting()"/>
           <div class="relative ml-auto">
             <div class="absolute -right-full min-w-max">
               <button
@@ -98,10 +99,12 @@ import { ref, onBeforeMount, onBeforeUnmount, defineEmits } from "vue";
 import { useRouter } from "vue-router";
 import enums from "@/js/Enums";
 import ContentField from "../layout/ContentField.vue";
+import ScreenSettingsButton from "./ScreenSettingsButton.vue";
 
 const emit = defineEmits(["display-toast"]);
 
 const user = ref({});
+const screenSetting = ref(enums.SCREEN_SETTINGS.SHOW_DEFAULT);
 const playerSettings = ref({
   volume: 75,
   playerMode: enums.MODES.IDLE,
@@ -134,6 +137,10 @@ socket.on("connect", () => {
 
 socket.on("update-admin-panel", (newSettings) => {
   playerSettings.value = newSettings;
+});
+
+socket.on("new-screen-setting", (newSetting) => {
+  screenSetting.value = newSetting;
 });
 
 function displayToast(toast) {
@@ -184,6 +191,21 @@ async function toggleRadioProtube() {
           ? "Radio"
           : "ProTube"
       }`,
+  });
+}
+
+async function nextScreenSetting() {
+  let nextSetting = (screenSetting.value++) % 4;
+  console.log("next");
+
+  const data = await new Promise((resolve) => {
+    socket.emit("set-screen-setting", nextSetting, callback => {
+      resolve(callback);
+    });
+  });
+  displayToast({
+    status: data.status ?? enums.STATUS.SUCCESS,
+    message: data.message ?? `Successfully changed screen setting!`,
   });
 }
 
