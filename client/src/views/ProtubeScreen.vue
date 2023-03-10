@@ -22,9 +22,6 @@
       </div>
     </div>
 
-    <div class="absolute right-0 top-16 mr-4 h-32 w-32">
-      <AnalogClock class="h-full w-full opacity-90"></AnalogClock>
-    </div>
     <div v-if="isPlayingVideo">
       <div class="absolute bottom-0 mb-1 w-screen rounded-lg">
         <div class="flex justify-between">
@@ -100,7 +97,6 @@
 import RadioScreen from "@/components/RadioScreen";
 import ReconnectionHandler from "@/components/ReconnectionHandler";
 import VideoCard from "@/components/VideoCard.vue";
-import AnalogClock from "@/components/AnalogClock.vue";
 import {
   onMounted,
   onBeforeUnmount,
