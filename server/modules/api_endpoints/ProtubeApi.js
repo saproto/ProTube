@@ -2,6 +2,7 @@ const express = require("express");
 const bearerToken = require("express-bearer-token");
 const { checkBearerToken } = require("../Middlewares");
 const { playSound } = require("../socket_endpoints/SoundBoard");
+const { playNextVideo, getPlayerMode } = require("../PlaybackManager");
 const { User } = require("../DataBase");
 
 exports.protubeApi = express.Router();
@@ -56,6 +57,17 @@ this.protubeApi.post("/updateadmin", async function (req, res) {
   }
 
   return res.send({ success: enums.SUCCESS });
+});
+
+// Endpoint to skip a song
+this.protubeApi.post("/skipsong", function (req, res) {
+  const wasPlaying = getPlayerMode() !== enums.MODES.IDLE;
+  try {
+    playNextVideo();
+    // eslint-disable-next-line
+  } catch {}
+  // we were playing sth so we did have a successful skip
+  return res.send({ success: wasPlaying });
 });
 
 this.protubeApi.post("/playsound", async function (req, res) {
