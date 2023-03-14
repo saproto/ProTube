@@ -22,7 +22,8 @@ const props = defineProps({
 
 props.socket.on("connect", () => {
   // Reload window on reconnection, occurs when the server goes down (for a new deployment e.g.)
-  if(connectionAttempts > 0) { // Prevent reload looping
+  if (connectionAttempts > 0) {
+    // Prevent reload looping
     window.location.reload();
   }
   message.value = "";
