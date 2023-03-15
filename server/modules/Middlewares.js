@@ -3,7 +3,7 @@ const { sequelize } = require("./DataBase");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const { getCurrentUnix } = require("../utils/time-formatter");
 const { checkScreenCode } = require("./ScreenCode");
-const { execSync } = require('child_process');
+const { execSync } = require("child_process");
 const moment = require("moment");
 require("passport");
 
@@ -12,8 +12,12 @@ const sessionStore = new SequelizeStore({ db: sequelize, table: "sessions" });
 // Connections that come from x.x.x.x:3000 go through the gateway but those from ngingx
 // originate from the nginx container
 const allowLocalAdminConnections = process.env.LOCAL_CLIENT_IP_CHECK === "true";
-// Get the current gateway ip of the docker container, 
-let gatewayIP = execSync("ip route | awk '/default/ {print $3}'", { shell: true }).toString().trimEnd();
+// Get the current gateway ip of the docker container,
+let gatewayIP = execSync("ip route | awk '/default/ {print $3}'", {
+  shell: true,
+})
+  .toString()
+  .trimEnd();
 let allowedIP = `::ffff:${gatewayIP}`;
 
 exports.sessionMiddleware = session({
