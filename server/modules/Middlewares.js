@@ -13,12 +13,12 @@ const sessionStore = new SequelizeStore({ db: sequelize, table: "sessions" });
 // originate from the nginx container
 const allowLocalAdminConnections = process.env.LOCAL_CLIENT_IP_CHECK === "true";
 // Get the current gateway ip of the docker container,
-let gatewayIP = execSync("ip route | awk '/default/ {print $3}'", {
+const gatewayIP = execSync("ip route | awk '/default/ {print $3}'", {
   shell: true,
 })
   .toString()
   .trimEnd();
-let allowedIP = `::ffff:${gatewayIP}`;
+const allowedIP = `::ffff:${gatewayIP}`;
 
 exports.sessionMiddleware = session({
   secret: process.env.SESSION_SECRET,
