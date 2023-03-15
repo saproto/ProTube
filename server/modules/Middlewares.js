@@ -3,10 +3,18 @@ const { sequelize } = require("./DataBase");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const { getCurrentUnix } = require("../utils/time-formatter");
 const { checkScreenCode } = require("./ScreenCode");
+const { execSync } = require('child_process');
 const moment = require("moment");
 require("passport");
 
 const sessionStore = new SequelizeStore({ db: sequelize, table: "sessions" });
+
+// Connections that come from x.x.x.x:3000 go through the gateway but those from ngingx
+// originate from the nginx container
+const allowLocalAdminConnections = process.env.LOCAL_CLIENT_IP_CHECK === "true";
+// Get the current gateway ip of the docker container, 
+let gatewayIP = execSync("ip route | awk '/default/ {print $3}'", { shell: true }).toString().trimEnd();
+let allowedIP = `::ffff:${gatewayIP}`;
 
 exports.sessionMiddleware = session({
   secret: process.env.SESSION_SECRET,
@@ -37,7 +45,7 @@ exports.socketCheckAdminAuthenticated = (socket, next) => {
     else return next(new Error("forbidden"));
   }
   // accept localhost connections also to be admin (local client)
-  else if (socket.handshake.address === process.env.LOCAL_CLIENT_IP)
+  else if (allowLocalAdminConnections && socket.handshake.address === allowedIP)
     return next();
   next(new Error("unauthorized"));
 };
