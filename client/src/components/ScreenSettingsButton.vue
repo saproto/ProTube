@@ -1,6 +1,10 @@
 <template>
-    <transition name="slide-up">
-        <button>{{ currentScreenSetting }}</button>
+    <transition name="slide-up" mode="out-in" class="bg-proto_blue hover:bg-proto_blue/80 rounded-md py-1 px-2 text-sm text-white shadow-md hover:opacity-80">
+        <button v-if="screenSetting === enums.SCREEN_SETTINGS.SHOW_DEFAULT" >{{ currentScreenSetting }}</button>
+        <button v-else-if="screenSetting === enums.SCREEN_SETTINGS.SHOW_NOQUEUE" >{{ currentScreenSetting }}</button>
+        <button v-else-if="screenSetting === enums.SCREEN_SETTINGS.SHOW_NOTHING" >{{ currentScreenSetting }}</button>
+        <button v-else-if="screenSetting === enums.SCREEN_SETTINGS.SHOW_PHOTOS" >{{ currentScreenSetting }}</button>
+        <button v-else-if="screenSetting === enums.SCREEN_SETTINGS.SHOW_QUEUE" >{{ currentScreenSetting }}</button>
     </transition>
 </template>
 
@@ -20,6 +24,8 @@ const currentScreenSetting = computed(() => {
             return "Queue only";
         case enums.SCREEN_SETTINGS.SHOW_PHOTOS:
             return "Photos only";
+        case enums.SCREEN_SETTINGS.SHOW_NOQUEUE:
+            return "No queue";
         case enums.SCREEN_SETTINGS.SHOW_NOTHING:
         default:
             return "Nothing";

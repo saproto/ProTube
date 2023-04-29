@@ -23,6 +23,8 @@ import {
   faTrash,
   faQuestionCircle,
   faCaretDown,
+  faRadio,
+  faTv
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -44,7 +46,9 @@ library.add(
   faSearch,
   faTrash,
   faCaretDown,
-  faQuestionCircle
+  faQuestionCircle,
+  faRadio,
+  faTv
 );
 
 import "./assets/tailwind.css";
