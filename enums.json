@@ -21,6 +21,7 @@
     "SHOW_QUEUE": 0,
     "SHOW_PHOTOS": 1,
     "SHOW_NOTHING": 2,
-    "SHOW_DEFAULT": 3
+    "SHOW_DEFAULT": 3,
+    "SHOW_NOQUEUE": 4
   }
 }

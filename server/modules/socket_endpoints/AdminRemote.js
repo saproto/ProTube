@@ -94,10 +94,10 @@ endpoint.on("connection", (socket) => {
     }
   });
 
-  socket.on("set-screen-setting", (newSetting, callback) => {
-    logger.adminInfo(`${socket.id} Requested to set the screensetting to ${newSetting}`);
+  socket.on("set-screen-setting", (callback) => {
+    logger.adminInfo(`${socket.id} Requested to change the screensetting`);
     try {
-      callback({ success: screenSettings.newScreenSetting(newSetting) });
+      callback({ success: screenSettings.newScreenSetting() });
     } catch (e) {
       callback(e.getInfo());
     }

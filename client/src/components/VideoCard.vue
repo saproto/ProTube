@@ -11,7 +11,7 @@
       `">
       <div
         :style="`width:${progressBar}%;`"
-        class="bg-proto_blue absolute bottom-0 h-2 w-0 rounded-sm opacity-60"></div>
+        class="duration-500 ease-linear bg-proto_blue absolute bottom-0 h-2 w-0 rounded-sm opacity-60"></div>
       <button
         :disabled="!clickable"
         @click="$emit('video-clicked', videoID)"

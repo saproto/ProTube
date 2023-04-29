@@ -195,11 +195,8 @@ async function toggleRadioProtube() {
 }
 
 async function nextScreenSetting() {
-  let nextSetting = (screenSetting.value++) % 4;
-  console.log("next");
-
   const data = await new Promise((resolve) => {
-    socket.emit("set-screen-setting", nextSetting, callback => {
+    socket.emit("set-screen-setting", callback => {
       resolve(callback);
     });
   });

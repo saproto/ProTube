@@ -2,6 +2,7 @@ const fetch = require("node-fetch");
 const endpoint = io.of("/socket/screen");
 const queueManager = require("../QueueManager");
 const playbackManager = require("../PlaybackManager");
+const { getCurrentSetting } = require('../ScreenSettings');
 let newPhotoInterval = null;
 let photo = null;
 
@@ -13,6 +14,8 @@ endpoint.on("connection", (socket) => {
   if (!photo) emitNewPhoto();
   socket.emit("photo-update", photo);
 
+  socket.emit("new-screen-setting", getCurrentSetting());
+
   socket.emit("queue-update", {
     queue: queueManager.getQueue(),
     duration: queueManager.getTotalDurationFormatted(),
@@ -20,6 +23,10 @@ endpoint.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     logger.screenInfo(`Disconnected socket: ${socket.id}`);
+  });
+
+  socket.on("get-photo", (callback) => {
+      callback(photo);
   });
 
   socket.emit("player-update", {

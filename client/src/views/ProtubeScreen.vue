@@ -1,6 +1,5 @@
 <template>
   <div class="dark:bg-proto_background_gray-dark">
-    <!-- empty filler block for the grid -->
     <div class="absolute top-0 mt-2 w-full">
       <div
         v-show="screenCode !== -1"
@@ -9,7 +8,7 @@
       </div>
     </div>
 
-    <div v-show="isPlayingVideo">
+    <div v-show="displayYouTube">
       <div :id="playerID" class="min-h-screen w-full" />
     </div>
 
@@ -22,67 +21,30 @@
       </div>
     </div>
 
-    <div v-if="isPlayingVideo">
-      <div class="absolute bottom-0 mb-1 w-screen rounded-lg">
-        <div class="flex justify-between">
-          <div
-            class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
-            Queue: {{ totalDuration }}
-          </div>
-        </div>
-        <div class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
-          <VideoCard
-            v-for="(video, index) in queueWithCurrent.slice(0, 5)"
-            :key="video.id"
-            :index="index"
-            :title="video.title"
-            :name="video.user.name"
-            :channel="video.channel"
-            :duration="video.durationFormatted"
-            :thumbnail="video.thumbnail.url"
-            :videoID="video.id"
-            :textScrolling="true"
-            :roundedCorners="true"
-            :progressBar="index === 0 ? queueProgress : 0"
-            :opacity="0.9" />
-        </div>
-      </div>
-    </div>
+    <ScreenQueue 
+      v-if="displayQueue"
+      :currentVideo="playerState.video" 
+      :queue="queue" 
+      :currentTimeStamp="currentTimeStamp"
+    />
 
-    <div v-if="!isPlayingVideo" class="dark:text-white">
-      <div v-if="photo && !photo.error && photo.url !== ''">
-        <div class="flex h-screen justify-center overflow-x-hidden p-5">
-          <img
-            :src="photo.url"
-            class="dark:bg-proto_secondary_gray-dark -z-10 h-full max-w-none rounded-lg bg-white"
-            alt="Loading..." />
-        </div>
-        <div class="absolute top-0 left-0 mt-2 ml-4 rounded-lg text-lg">
-          <div
-            class="border-proto_blue dark:bg-proto_secondary_gray-dark rounded-lg border-l-4 bg-white p-1 px-4 py-2 text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
-            Album: {{ photo.album_name }}<br />
-            Taken on: {{ photo.date_taken }}
-          </div>
-        </div>
-      </div>
-      <div
-        v-else-if="playerState.playerType === enums.TYPES.RADIO"
-        class="grid h-screen place-items-center">
-        <div class="text-4xl dark:text-white">
-          Nothing currently in the queue...<br />
-          Visit protu.be to add some tunes!
-        </div>
-      </div>
+    <RadioScreen 
+      v-if="isPlayingRadio"
+      :radio="playerState.radio" 
+      :volume="volume" 
+    />
+    
+    <PhotosOverlay v-if="displayPhotos"/>
 
-      <div
-        v-if="isPlayingRadio"
-        class=""
-        :class="
-          photo && !photo.error && photo.url !== ''
-            ? 'absolute right-0 bottom-0 mr-2 place-items-end'
-            : ' grid h-screen place-items-center'
-        ">
-        <RadioScreen :radio="playerState.radio" :volume="volume" />
+    <div
+      v-if="playerState.playerType === enums.TYPES.VIDEO 
+        && !isPlayingVideo
+        && !showPhotos
+      "
+      class="grid h-screen place-items-center">
+      <div class="text-4xl dark:text-white">
+        Nothing currently in the queue...<br />
+        Visit protu.be to add some tunes!
       </div>
     </div>
   </div>
@@ -96,7 +58,6 @@
 <script setup>
 import RadioScreen from "@/components/RadioScreen";
 import ReconnectionHandler from "@/components/ReconnectionHandler";
-import VideoCard from "@/components/VideoCard.vue";
 import {
   onMounted,
   onBeforeUnmount,
@@ -108,11 +69,16 @@ import {
 import socket, { connectSocket } from "@/js/ScreenSocket";
 import YoutubePlayer from "youtube-player";
 import enums from "@/js/Enums";
+import ScreenQueue from "../components/ScreenQueue.vue";
+import PhotosOverlay from "../components/PhotosOverlay.vue";
 
 const playerID = "player-" + Math.random();
-const totalDuration = ref();
-const queueProgress = ref(0);
+const currentTimeStamp = ref({
+  timestamp: 0,
+  totalDuration: "00:00:00"
+});
 const queue = ref([]);
+const screenSetting = ref(enums.SCREEN_SETTINGS.SHOW_DEFAULT);
 let player;
 const playerState = ref({
   playerMode: enums.MODES.IDLE,
@@ -122,12 +88,6 @@ const playerState = ref({
   timestamp: 0,
   video: {},
   volume: 0,
-});
-
-const photo = ref({
-  url: "",
-  album_name: "",
-  date_taken: 0,
 });
 
 const emit = defineEmits(["youtube-media-error"]);
@@ -142,25 +102,56 @@ const props = defineProps({
   },
 });
 
-// Compute the queue with the currently playing video at the front
-const queueWithCurrent = computed(() => {
-  let currentVideo = playerState.value.video;
-  // if currentvideo = empty -> queue is empty
-  if (Object.keys(currentVideo).length === 0) return [];
-  return [currentVideo].concat(queue.value);
-});
-
 const isPlayingVideo = computed(
   () =>
     playerState.value.playerType === enums.TYPES.VIDEO &&
     playerState.value.playerMode !== enums.MODES.IDLE
 );
 
+const isVideoIdle = computed(() => {
+    return playerState.value.playerType === enums.TYPES.VIDEO &&
+    playerState.value.playerMode === enums.MODES.IDLE
+});
+
 const isPlayingRadio = computed(
   () =>
     playerState.value.playerType === enums.TYPES.RADIO &&
     playerState.value.playerMode === enums.MODES.IDLE
 );
+
+// show if playing video and when in showDefault or queue only
+const displayQueue = computed(() => {
+  return isPlayingVideo.value && (showDefault.value || showQueue.value);
+});
+
+// show photos if show photos, or default and video idle
+const displayPhotos = computed(() => {
+  // show if idle or radio and set to showDefault or showNoQueue
+  if((isVideoIdle.value || isPlayingRadio.value) && (showDefault.value || showNoQueue.value)) return true;
+  // otherwise show when showPhotos
+  return showPhotos.value;
+});
+
+// show youtube screen if playing and not showPhotos
+const displayYouTube = computed(() => {
+  return !showPhotos.value && isPlayingVideo.value;
+});
+
+const showPhotos = computed(() => {
+  return screenSetting.value === enums.SCREEN_SETTINGS.SHOW_PHOTOS;
+});
+
+const showNoQueue = computed(() => {
+  return screenSetting.value === enums.SCREEN_SETTINGS.SHOW_NOQUEUE;
+});
+
+const showQueue = computed(() => {
+  return screenSetting.value === enums.SCREEN_SETTINGS.SHOW_QUEUE;
+});
+
+const showDefault = computed(() => {
+  return screenSetting.value === enums.SCREEN_SETTINGS.SHOW_DEFAULT;
+});
 
 onBeforeMount(() => {
   connectSocket();
@@ -207,9 +198,8 @@ socket.on("player-update", (newState) => {
 });
 
 socket.on("new-video-timestamp", async (newStamp) => {
-  totalDuration.value = newStamp.totalDuration;
-  queueProgress.value =
-    (newStamp.timestamp / playerState.value.video.duration) * 100;
+  currentTimeStamp.value = newStamp;
+  // keep video in sync with backend
   if (Math.abs((await player.getCurrentTime()) - newStamp.timestamp) > 5) {
     player.seekTo(newStamp.timestamp, true);
     if ((await player.getPlayerState()) === 2) player.playVideo();
@@ -220,7 +210,7 @@ socket.on("queue-update", (newQueue) => {
   queue.value = newQueue.queue;
 });
 
-socket.on("photo-update", (newPhoto) => {
-  photo.value = newPhoto;
+socket.on("new-screen-setting", (newSetting) => {
+  screenSetting.value = newSetting;
 });
 </script>
