@@ -44,7 +44,10 @@ endpoint.on("connection", (socket) => {
 
   socket.on("fetch-then-add-video", async (videoId, callback) => {
     try {
-      const video = await youtube.getVideo(videoId, socket.request.user.isAdmin());
+      const video = await youtube.getVideo(
+        videoId,
+        socket.request.user.isAdmin()
+      );
       video.user = formatUser(socket);
 
       callback({ success: queueManager.addFair(video) });

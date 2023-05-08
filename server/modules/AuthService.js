@@ -29,6 +29,7 @@ passport.use(
         await User.upsert({
           id: userData.id,
           name: userData.name,
+          admin_from: +userData.admin_from,
           admin_until: +userData.admin_until,
           refresh_token: refreshToken,
           access_token: accessToken,
