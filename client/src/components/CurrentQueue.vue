@@ -128,7 +128,6 @@ const userHasItemsInQueue = computed(() => {
   const videosOfUser = queue.value.filter((video) => {
     return video.user.id === props.userID;
   });
-  console.log(videosOfUser);
   return videosOfUser.length > 0;
 });
 

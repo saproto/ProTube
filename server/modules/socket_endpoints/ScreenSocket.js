@@ -14,7 +14,7 @@ endpoint.on("connection", (socket) => {
   if (!photo) emitNewPhoto();
   socket.emit("photo-update", photo);
 
-  socket.emit("new-screen-setting", getCurrentSetting());
+  socket.emit("queue-photos-visibility-changed", getCurrentSetting());
 
   socket.emit("queue-update", {
     queue: queueManager.getQueue(),

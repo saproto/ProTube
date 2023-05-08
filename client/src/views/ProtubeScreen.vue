@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <div v-show="displayYouTube">
+    <div v-show="isPlayingVideo && !screenSetting.showPhotos">
       <div :id="playerID" class="min-h-screen w-full" />
     </div>
 
@@ -78,7 +78,10 @@ const currentTimeStamp = ref({
   totalDuration: "00:00:00"
 });
 const queue = ref([]);
-const screenSetting = ref(enums.SCREEN_SETTINGS.SHOW_DEFAULT);
+const screenSetting = ref({
+  'showQueue': true,
+  'showPhotos': true
+});
 let player;
 const playerState = ref({
   playerMode: enums.MODES.IDLE,
@@ -121,36 +124,12 @@ const isPlayingRadio = computed(
 
 // show if playing video and when in showDefault or queue only
 const displayQueue = computed(() => {
-  return isPlayingVideo.value && (showDefault.value || showQueue.value);
+  return isPlayingVideo.value && screenSetting.value.showQueue;
 });
 
 // show photos if show photos, or default and video idle
 const displayPhotos = computed(() => {
-  // show if idle or radio and set to showDefault or showNoQueue
-  if((isVideoIdle.value || isPlayingRadio.value) && (showDefault.value || showNoQueue.value)) return true;
-  // otherwise show when showPhotos
-  return showPhotos.value;
-});
-
-// show youtube screen if playing and not showPhotos
-const displayYouTube = computed(() => {
-  return !showPhotos.value && isPlayingVideo.value;
-});
-
-const showPhotos = computed(() => {
-  return screenSetting.value === enums.SCREEN_SETTINGS.SHOW_PHOTOS;
-});
-
-const showNoQueue = computed(() => {
-  return screenSetting.value === enums.SCREEN_SETTINGS.SHOW_NOQUEUE;
-});
-
-const showQueue = computed(() => {
-  return screenSetting.value === enums.SCREEN_SETTINGS.SHOW_QUEUE;
-});
-
-const showDefault = computed(() => {
-  return screenSetting.value === enums.SCREEN_SETTINGS.SHOW_DEFAULT;
+  return (isVideoIdle.value || isPlayingRadio.value) || (isPlayingVideo.value && screenSetting.value.showPhotos);
 });
 
 onBeforeMount(() => {
@@ -210,7 +189,7 @@ socket.on("queue-update", (newQueue) => {
   queue.value = newQueue.queue;
 });
 
-socket.on("new-screen-setting", (newSetting) => {
+socket.on("queue-photos-visibility-changed", (newSetting) => {
   screenSetting.value = newSetting;
 });
 </script>

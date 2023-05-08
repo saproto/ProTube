@@ -24,7 +24,10 @@ import {
   faQuestionCircle,
   faCaretDown,
   faRadio,
-  faTv
+  faTv,
+  faRectangleList,
+  faBan,
+  faCamera
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -48,7 +51,10 @@ library.add(
   faCaretDown,
   faQuestionCircle,
   faRadio,
-  faTv
+  faTv,
+  faRectangleList,
+  faBan,
+  faCamera
 );
 
 import "./assets/tailwind.css";

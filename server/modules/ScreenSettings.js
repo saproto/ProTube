@@ -1,8 +1,22 @@
-let screenSetting = enums.SCREEN_SETTINGS.SHOW_DEFAULT;
+let showQueue = true;
+let showPhotos = true;
 
-exports.getCurrentSetting = () => screenSetting;
 
-exports.newScreenSetting = () => {
-    screenSetting = (screenSetting + 1) % Object.keys(enums.SCREEN_SETTINGS).length;
-    eventBus.emit('new-screen-setting', screenSetting);
+exports.getCurrentSetting = () => {
+    return {
+        'showQueue': showQueue,
+        'showPhotos': showPhotos
+    }
+}
+
+exports.toggleQueueVisibility = () => {
+    showQueue = !showQueue;
+    eventBus.emit('queue-photos-visibility-changed', this.getCurrentSetting());
+    return enums.SUCCESS;
+}
+
+exports.togglePhotosVisibility = () => {
+    showPhotos = !showPhotos;
+    eventBus.emit('queue-photos-visibility-changed', this.getCurrentSetting());
+    return enums.SUCCESS;
 }

@@ -43,7 +43,7 @@
           </font-awesome-icon>
         </div>
       </div>
-      <div class="mx-auto mt-2 grid grid-cols-3 md:grid-cols-1 gap-2">
+      <div class="mx-auto mt-2 grid grid-cols-2 lg:grid-cols-1 gap-2">
         <ToggleSlider @click="toggleRadioProtube" :isLeft="playerSettings.playerType === enums.TYPES.RADIO">
           <template #left>
             <font-awesome-icon
@@ -55,6 +55,34 @@
             <font-awesome-icon
               class="cursor-pointer text-2xl text-gray-600 dark:text-white"
               icon="fa-radio">
+            </font-awesome-icon>
+          </template>
+        </ToggleSlider>
+        <ToggleSlider @click="togglePhotosOverlay" :isLeft="playerSettings.screenSettings.showPhotos">
+          <template #left>
+            <font-awesome-icon
+              class="cursor-pointer text-2xl text-gray-600 dark:text-white"
+              icon="fa-camera">
+            </font-awesome-icon>
+          </template>
+          <template #right>
+            <font-awesome-icon
+              class="cursor-pointer text-2xl text-gray-600 dark:text-white"
+              icon="fa-ban">
+            </font-awesome-icon>
+          </template>
+        </ToggleSlider>
+        <ToggleSlider @click="toggleQueueOverlay" :isLeft="playerSettings.screenSettings.showQueue">
+          <template #left>
+            <font-awesome-icon
+              class="cursor-pointer text-2xl text-gray-600 dark:text-white"
+              icon="fa-rectangle-list">
+            </font-awesome-icon>
+          </template>
+          <template #right>
+            <font-awesome-icon
+              class="cursor-pointer text-2xl text-gray-600 dark:text-white"
+              icon="fa-ban">
             </font-awesome-icon>
           </template>
         </ToggleSlider>
@@ -83,7 +111,7 @@ const playerSettings = ref({
   volume: 75,
   playerMode: enums.MODES.IDLE,
   playerType: enums.TYPES.VIDEO,
-  screenSetting: {
+  screenSettings: {
     'showQueue': true,
     'showPhotos': true
   }
@@ -117,9 +145,9 @@ socket.on("update-admin-panel", (newSettings) => {
   playerSettings.value = newSettings;
 });
 
-// socket.on("new-screen-setting", (newSetting) => {
-//   screenSetting.value = newSetting;
-// });
+socket.on("queue-photos-visibility-changed", (newSetting) => {
+  playerSettings.value.screenSettings = newSetting;
+});
 
 function displayToast(toast) {
   emit("display-toast", toast);
@@ -172,29 +200,29 @@ async function toggleRadioProtube() {
   });
 }
 
-// async function togglePhotosOverlay() {
-//   const data = await new Promise((resolve) => {
-//     socket.emit("toggle-photos-visibility", callback => {
-//       resolve(callback);
-//     });
-//   });
-//   displayToast({
-//     status: data.status ?? enums.STATUS.SUCCESS,
-//     message: data.message ?? `Successfully changed the photos visibility setting!`,
-//   });
-// }
+async function togglePhotosOverlay() {
+  const data = await new Promise((resolve) => {
+    socket.emit("toggle-photos-visibility", callback => {
+      resolve(callback);
+    });
+  });
+  displayToast({
+    status: data.status ?? enums.STATUS.SUCCESS,
+    message: data.message ?? `Successfully changed the photos visibility setting!`,
+  });
+}
 
-// async function toggleQueueOverlay() {
-//   const data = await new Promise((resolve) => {
-//     socket.emit("toggle-queue-visibility", callback => {
-//       resolve(callback);
-//     });
-//   });
-//   displayToast({
-//     status: data.status ?? enums.STATUS.SUCCESS,
-//     message: data.message ?? `Successfully changed the queue visibility setting!`,
-//   });
-// }
+async function toggleQueueOverlay() {
+  const data = await new Promise((resolve) => {
+    socket.emit("toggle-queue-visibility", callback => {
+      resolve(callback);
+    });
+  });
+  displayToast({
+    status: data.status ?? enums.STATUS.SUCCESS,
+    message: data.message ?? `Successfully changed the queue visibility setting!`,
+  });
+}
 
 async function skipVideo() {
   const data = await new Promise((resolve) => {

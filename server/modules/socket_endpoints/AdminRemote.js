@@ -41,6 +41,7 @@ endpoint.on("connection", (socket) => {
       volume: getVolume(),
       playerMode: getPlayerMode(),
       playerType: getPlayerType(),
+      screenSettings: screenSettings.getCurrentSetting()
     });
   });
 
@@ -94,10 +95,19 @@ endpoint.on("connection", (socket) => {
     }
   });
 
-  socket.on("set-screen-setting", (callback) => {
+  socket.on("toggle-photos-visibility", (callback) => {
     logger.adminInfo(`${socket.id} Requested to change the screensetting`);
     try {
-      callback({ success: screenSettings.newScreenSetting() });
+      callback({ success: screenSettings.togglePhotosVisibility() });
+    } catch (e) {
+      callback(e.getInfo());
+    }
+  });
+
+  socket.on("toggle-queue-visibility", (callback) => {
+    logger.adminInfo(`${socket.id} Requested to change the screensetting`);
+    try {
+      callback({ success: screenSettings.toggleQueueVisibility() });
     } catch (e) {
       callback(e.getInfo());
     }
@@ -127,8 +137,8 @@ eventBus.on("queue-update", () => {
   });
 });
 
-eventBus.on("new-screen-setting", (newSetting) => {
-  endpoint.emit("new-screen-setting", newSetting);
+eventBus.on("queue-photos-visibility-changed", (newSetting) => {
+  endpoint.emit("queue-photos-visibility-changed", newSetting);
 });
 
 function updateAdminPanels() {
@@ -136,5 +146,6 @@ function updateAdminPanels() {
     volume: getVolume(),
     playerMode: getPlayerMode(),
     playerType: getPlayerType(),
+    screenSettings: screenSettings.getCurrentSetting()
   });
 }
