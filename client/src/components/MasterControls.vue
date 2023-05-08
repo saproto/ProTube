@@ -44,44 +44,26 @@
         </div>
       </div>
       <div class="mx-auto mt-2 grid grid-cols-3 md:grid-cols-1 gap-2">
-      <!--     Video/Radio toggle     -->
-          <div class="flex mx-auto">
+        <ToggleSlider @click="toggleRadioProtube" :isLeft="playerSettings.playerType === enums.TYPES.RADIO">
+          <template #left>
             <font-awesome-icon
               class="cursor-pointer text-2xl text-gray-600 dark:text-white"
               icon="fa-tv">
             </font-awesome-icon>
-            <button
-              @click="toggleRadioProtube"
-              type="button"
-              :class="
-                playerSettings.playerType === enums.TYPES.RADIO
-                  ? 'bg-proto_blue'
-                  : 'bg-proto_green'
-              "
-              class="mx-3 relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              role="switch">
-              <span
-                :class="
-                  playerSettings.playerType === enums.TYPES.RADIO
-                    ? 'translate-x-5'
-                    : 'translate-x-0'
-                "
-                class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out">
-              </span>
-            </button>
-              <font-awesome-icon
-                class="cursor-pointer text-2xl text-gray-600 dark:text-white"
-                icon="fa-radio">
-              </font-awesome-icon>
-          </div>
-          <!--     New code button     -->
-          <ScreenSettingsButton :screenSetting="screenSetting" @click="nextScreenSetting()"/>
-          <button
-            @click="resetScreenCode"
-            class="bg-proto_blue hover:bg-proto_blue/80 rounded-md py-1 px-2 text-sm text-white shadow-md duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80">
-            New code
-          </button>
-        </div>
+          </template>
+          <template #right>
+            <font-awesome-icon
+              class="cursor-pointer text-2xl text-gray-600 dark:text-white"
+              icon="fa-radio">
+            </font-awesome-icon>
+          </template>
+        </ToggleSlider>
+        <button
+          @click="resetScreenCode"
+          class="bg-proto_blue hover:bg-proto_blue/80 rounded-md py-1 px-2 text-sm text-white shadow-md duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80">
+          New code
+        </button>
+      </div>
     </div>
   </ContentField>
 </template>
@@ -92,16 +74,19 @@ import { ref, onBeforeMount, onBeforeUnmount, defineEmits } from "vue";
 import { useRouter } from "vue-router";
 import enums from "@/js/Enums";
 import ContentField from "../layout/ContentField.vue";
-import ScreenSettingsButton from "./ScreenSettingsButton.vue";
+import ToggleSlider from "./ToggleSlider.vue";
 
 const emit = defineEmits(["display-toast"]);
 
 const user = ref({});
-const screenSetting = ref(enums.SCREEN_SETTINGS.SHOW_DEFAULT);
 const playerSettings = ref({
   volume: 75,
   playerMode: enums.MODES.IDLE,
   playerType: enums.TYPES.VIDEO,
+  screenSetting: {
+    'showQueue': true,
+    'showPhotos': true
+  }
 });
 
 const router = useRouter();
@@ -132,9 +117,9 @@ socket.on("update-admin-panel", (newSettings) => {
   playerSettings.value = newSettings;
 });
 
-socket.on("new-screen-setting", (newSetting) => {
-  screenSetting.value = newSetting;
-});
+// socket.on("new-screen-setting", (newSetting) => {
+//   screenSetting.value = newSetting;
+// });
 
 function displayToast(toast) {
   emit("display-toast", toast);
@@ -187,17 +172,29 @@ async function toggleRadioProtube() {
   });
 }
 
-async function nextScreenSetting() {
-  const data = await new Promise((resolve) => {
-    socket.emit("set-screen-setting", callback => {
-      resolve(callback);
-    });
-  });
-  displayToast({
-    status: data.status ?? enums.STATUS.SUCCESS,
-    message: data.message ?? `Successfully changed screen setting!`,
-  });
-}
+// async function togglePhotosOverlay() {
+//   const data = await new Promise((resolve) => {
+//     socket.emit("toggle-photos-visibility", callback => {
+//       resolve(callback);
+//     });
+//   });
+//   displayToast({
+//     status: data.status ?? enums.STATUS.SUCCESS,
+//     message: data.message ?? `Successfully changed the photos visibility setting!`,
+//   });
+// }
+
+// async function toggleQueueOverlay() {
+//   const data = await new Promise((resolve) => {
+//     socket.emit("toggle-queue-visibility", callback => {
+//       resolve(callback);
+//     });
+//   });
+//   displayToast({
+//     status: data.status ?? enums.STATUS.SUCCESS,
+//     message: data.message ?? `Successfully changed the queue visibility setting!`,
+//   });
+// }
 
 async function skipVideo() {
   const data = await new Promise((resolve) => {
