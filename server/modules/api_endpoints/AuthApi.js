@@ -23,6 +23,6 @@ this.authApi.get("/user", checkAuthenticated, (req, res) => {
     name: req.user.name,
     admin: req.user.isAdmin(),
     hasValidRemote: req.user.hasValidRemote(),
-    id: req.user.id
+    id: req.user.id,
   });
 });
