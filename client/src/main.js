@@ -27,7 +27,7 @@ import {
   faTv,
   faRectangleList,
   faBan,
-  faCamera
+  faCamera,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(

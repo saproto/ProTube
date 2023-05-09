@@ -13,7 +13,7 @@ const {
 const { adminResetScreenCode } = require("../ScreenCode");
 const radio = require("../RadioStations");
 const queueManager = require("../QueueManager");
-const screenSettings = require('../ScreenSettings');
+const screenSettings = require("../ScreenSettings");
 
 endpoint.use(socketCheckAdminAuthenticated);
 
@@ -41,7 +41,7 @@ endpoint.on("connection", (socket) => {
       volume: getVolume(),
       playerMode: getPlayerMode(),
       playerType: getPlayerType(),
-      screenSettings: screenSettings.getCurrentSetting()
+      screenSettings: screenSettings.getCurrentSetting(),
     });
   });
 
@@ -146,6 +146,6 @@ function updateAdminPanels() {
     volume: getVolume(),
     playerMode: getPlayerMode(),
     playerType: getPlayerType(),
-    screenSettings: screenSettings.getCurrentSetting()
+    screenSettings: screenSettings.getCurrentSetting(),
   });
 }

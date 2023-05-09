@@ -10,14 +10,13 @@ services:
       MYSQL_USER: "protube_mainuser"
       MYSQL_PASSWORD: "hetan9t84anne"
 
-  
   nginx-proxy:
-    image: 'jc21/nginx-proxy-manager:latest'
+    image: "jc21/nginx-proxy-manager:latest"
     restart: always
     ports:
-      - '80:80'
-      - '81:81'
-      - '443:443'
+      - "80:80"
+      - "81:81"
+      - "443:443"
     volumes:
       - ./data:/data
       - ./letsencrypt:/etc/letsencrypt
@@ -29,7 +28,6 @@ services:
     volumes:
       - ./protube/.env:/xxxx/.env
       - ./protube/logs:/xxxx/logs
-  
 
   phpmyadmin:
     image: phpmyadmin
@@ -38,4 +36,3 @@ services:
       - 8080:80
     environment:
       - PMA_HOST=mysql
-

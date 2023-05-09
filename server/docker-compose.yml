@@ -14,12 +14,12 @@ services:
       - "${DATABASE_PORT}:3306"
 
   phpmyadmin:
-        container_name: "${DOCKER_CONTAINER_NAME}-pma"
-        image: phpmyadmin
-        ports:
-            - '3002:80'
-        environment:
-            - 'PMA_HOST=mysql'
-            - 'PMA_USER=${DATABASE_USER}'
-            - 'PMA_PASSWORD=${DATABASE_PASSWORD}'
-            - 'PMA_PORT=3002'
+    container_name: "${DOCKER_CONTAINER_NAME}-pma"
+    image: phpmyadmin
+    ports:
+      - "3002:80"
+    environment:
+      - "PMA_HOST=mysql"
+      - "PMA_USER=${DATABASE_USER}"
+      - "PMA_PASSWORD=${DATABASE_PASSWORD}"
+      - "PMA_PORT=3002"

@@ -10,9 +10,9 @@ this.protubeApi.use(bearerToken());
 this.protubeApi.use(checkBearerToken);
 
 // Endpoint to update the admin status of a user id
-this.protubeApi.post("/updateadmin/:userID(\d+)", async function (req, res) {
+this.protubeApi.post("/updateadmin/:userID(d+)", async function (req, res) {
   const userID = parseInt(req.params.userID);
-  
+
   logger.apiInfo(
     `Attempt from ${req.hostname} to update the admin status of user ${userID}`
   );
@@ -22,15 +22,12 @@ this.protubeApi.post("/updateadmin/:userID(\d+)", async function (req, res) {
     logger.apiInfo("User is not found!");
     return res.send({ success: enums.FAIL, message: "User not found!" });
   }
-  
-  fetch(
-    `${process.env.LARAVEL_ENDPOINT}/api/protube/userdetails`,
-    {
-      headers: {
-        Authorization: "Bearer " + user.access_token,
-      },
-    }
-  ).then(async (response) => {
+
+  fetch(`${process.env.LARAVEL_ENDPOINT}/api/protube/userdetails`, {
+    headers: {
+      Authorization: "Bearer " + user.access_token,
+    },
+  }).then(async (response) => {
     const userData = await response.json();
     await User.upsert({
       id: userData.id,

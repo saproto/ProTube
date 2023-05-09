@@ -11,8 +11,8 @@
         Switch Theme
       </button>
     </div>
-    <div class="lg:flex text-center">
-      <div class="mx-auto my-auto lg:w-2/3 ">
+    <div class="text-center lg:flex">
+      <div class="mx-auto my-auto lg:w-2/3">
         <span
           class="w-full text-right text-lg text-gray-500 dark:text-white md:text-center">
           Volume - {{ playerSettings.volume }}
@@ -43,8 +43,10 @@
           </font-awesome-icon>
         </div>
       </div>
-      <div class="mx-auto mt-2 grid grid-cols-2 lg:grid-cols-1 gap-2">
-        <ToggleSlider @click="toggleRadioProtube" :isLeft="playerSettings.playerType === enums.TYPES.RADIO">
+      <div class="mx-auto mt-2 grid grid-cols-2 gap-2 lg:grid-cols-1">
+        <ToggleSlider
+          @click="toggleRadioProtube"
+          :isLeft="playerSettings.playerType === enums.TYPES.RADIO">
           <template #left>
             <font-awesome-icon
               class="cursor-pointer text-2xl text-gray-600 dark:text-white"
@@ -58,7 +60,9 @@
             </font-awesome-icon>
           </template>
         </ToggleSlider>
-        <ToggleSlider @click="togglePhotosOverlay" :isLeft="playerSettings.screenSettings.showPhotos">
+        <ToggleSlider
+          @click="togglePhotosOverlay"
+          :isLeft="playerSettings.screenSettings.showPhotos">
           <template #left>
             <font-awesome-icon
               class="cursor-pointer text-2xl text-gray-600 dark:text-white"
@@ -72,7 +76,9 @@
             </font-awesome-icon>
           </template>
         </ToggleSlider>
-        <ToggleSlider @click="toggleQueueOverlay" :isLeft="playerSettings.screenSettings.showQueue">
+        <ToggleSlider
+          @click="toggleQueueOverlay"
+          :isLeft="playerSettings.screenSettings.showQueue">
           <template #left>
             <font-awesome-icon
               class="cursor-pointer text-2xl text-gray-600 dark:text-white"
@@ -112,9 +118,9 @@ const playerSettings = ref({
   playerMode: enums.MODES.IDLE,
   playerType: enums.TYPES.VIDEO,
   screenSettings: {
-    'showQueue': true,
-    'showPhotos': true
-  }
+    showQueue: true,
+    showPhotos: true,
+  },
 });
 
 const router = useRouter();
@@ -202,25 +208,27 @@ async function toggleRadioProtube() {
 
 async function togglePhotosOverlay() {
   const data = await new Promise((resolve) => {
-    socket.emit("toggle-photos-visibility", callback => {
+    socket.emit("toggle-photos-visibility", (callback) => {
       resolve(callback);
     });
   });
   displayToast({
     status: data.status ?? enums.STATUS.SUCCESS,
-    message: data.message ?? `Successfully changed the photos visibility setting!`,
+    message:
+      data.message ?? `Successfully changed the photos visibility setting!`,
   });
 }
 
 async function toggleQueueOverlay() {
   const data = await new Promise((resolve) => {
-    socket.emit("toggle-queue-visibility", callback => {
+    socket.emit("toggle-queue-visibility", (callback) => {
       resolve(callback);
     });
   });
   displayToast({
     status: data.status ?? enums.STATUS.SUCCESS,
-    message: data.message ?? `Successfully changed the queue visibility setting!`,
+    message:
+      data.message ?? `Successfully changed the queue visibility setting!`,
   });
 }
 

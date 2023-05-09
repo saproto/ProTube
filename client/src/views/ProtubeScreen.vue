@@ -21,25 +21,24 @@
       </div>
     </div>
 
-    <ScreenQueue 
+    <ScreenQueue
       v-if="displayQueue"
-      :currentVideo="playerState.video" 
-      :queue="queue" 
-      :currentTimeStamp="currentTimeStamp"
-    />
+      :currentVideo="playerState.video"
+      :queue="queue"
+      :currentTimeStamp="currentTimeStamp" />
 
-    <RadioScreen 
+    <RadioScreen
       v-if="isPlayingRadio"
-      :radio="playerState.radio" 
-      :volume="volume" 
-    />
-    
-    <PhotosOverlay v-if="displayPhotos"/>
+      :radio="playerState.radio"
+      :volume="volume" />
+
+    <PhotosOverlay v-if="displayPhotos" />
 
     <div
-      v-if="playerState.playerType === enums.TYPES.VIDEO 
-        && !isPlayingVideo
-        && !showPhotos
+      v-if="
+        playerState.playerType === enums.TYPES.VIDEO &&
+        !isPlayingVideo &&
+        !showPhotos
       "
       class="grid h-screen place-items-center">
       <div class="text-4xl dark:text-white">
@@ -75,12 +74,12 @@ import PhotosOverlay from "../components/PhotosOverlay.vue";
 const playerID = "player-" + Math.random();
 const currentTimeStamp = ref({
   timestamp: 0,
-  totalDuration: "00:00:00"
+  totalDuration: "00:00:00",
 });
 const queue = ref([]);
 const screenSetting = ref({
-  'showQueue': true,
-  'showPhotos': true
+  showQueue: true,
+  showPhotos: true,
 });
 let player;
 const playerState = ref({
@@ -112,8 +111,10 @@ const isPlayingVideo = computed(
 );
 
 const isVideoIdle = computed(() => {
-    return playerState.value.playerType === enums.TYPES.VIDEO &&
+  return (
+    playerState.value.playerType === enums.TYPES.VIDEO &&
     playerState.value.playerMode === enums.MODES.IDLE
+  );
 });
 
 const isPlayingRadio = computed(
@@ -129,7 +130,11 @@ const displayQueue = computed(() => {
 
 // show photos if show photos, or default and video idle
 const displayPhotos = computed(() => {
-  return (isVideoIdle.value || isPlayingRadio.value) || (isPlayingVideo.value && screenSetting.value.showPhotos);
+  return (
+    isVideoIdle.value ||
+    isPlayingRadio.value ||
+    (isPlayingVideo.value && screenSetting.value.showPhotos)
+  );
 });
 
 onBeforeMount(() => {

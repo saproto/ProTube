@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 const endpoint = io.of("/socket/screen");
 const queueManager = require("../QueueManager");
 const playbackManager = require("../PlaybackManager");
-const { getCurrentSetting } = require('../ScreenSettings');
+const { getCurrentSetting } = require("../ScreenSettings");
 let newPhotoInterval = null;
 let photo = null;
 
@@ -26,7 +26,7 @@ endpoint.on("connection", (socket) => {
   });
 
   socket.on("get-photo", (callback) => {
-      callback(photo);
+    callback(photo);
   });
 
   socket.emit("player-update", {
