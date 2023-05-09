@@ -91,7 +91,7 @@ exports.screenCodeCheck = async (socket, next) => {
 };
 
 exports.checkBearerToken = (req, res, next) => {
-  if (req.token === process.env.PROTUBE_API_SECRET) return next();
+  if (req.token === process.env.PROTUBE_SHARED_SECRET) return next();
   return res.status(401).json({
     success: false,
     message: "Not Authorized for this API",
