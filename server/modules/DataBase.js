@@ -109,9 +109,9 @@ exports.Session = this.sequelize.define("sessions", {
   data: DataTypes.TEXT,
 });
 
-//syncing tables
+//syncing tables and drop them in production upon (re)start
 this.sequelize
-  .sync()
+  .sync({ force: process.env.NODE_ENV !== 'development' })
   .then(() => {
     logger.dbLog("Successfully synchronized tables!");
   })
