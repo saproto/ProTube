@@ -1,6 +1,7 @@
 const express = require("express");
 const bearerToken = require("express-bearer-token");
 const { checkBearerToken } = require("../Middlewares");
+const fetch = require("node-fetch");
 const { playSound } = require("../socket_endpoints/SoundBoard");
 const { User } = require("../DataBase");
 
@@ -10,7 +11,7 @@ this.protubeApi.use(bearerToken());
 this.protubeApi.use(checkBearerToken);
 
 // Endpoint to update the admin status of a user id
-this.protubeApi.post("/updateadmin/:userID(d+)", async function (req, res) {
+this.protubeApi.post("/updateadmin/:userID", async function (req, res) {
   const userID = parseInt(req.params.userID);
 
   logger.apiInfo(
@@ -22,21 +23,16 @@ this.protubeApi.post("/updateadmin/:userID(d+)", async function (req, res) {
     logger.apiInfo("User is not found!");
     return res.send({ success: enums.FAIL, message: "User not found!" });
   }
-
+  // Fetch the new userdata and update the user
   fetch(`${process.env.LARAVEL_ENDPOINT}/api/protube/userdetails`, {
     headers: {
       Authorization: "Bearer " + user.access_token,
     },
   }).then(async (response) => {
     const userData = await response.json();
-    await User.upsert({
-      id: userData.id,
-      name: userData.name,
-      admin_from: +userData.admin_from,
-      admin_until: +userData.admin_until,
-      refresh_token: refreshToken,
-      access_token: accessToken,
-    });
+    user.admin_from = +userData.admin_from;
+    user.admin_until = +userData.admin_until;
+    await user.save();
   });
   return res.send({ success: enums.SUCCESS });
 });
