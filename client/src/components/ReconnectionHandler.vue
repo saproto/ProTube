@@ -21,6 +21,11 @@ const props = defineProps({
 });
 
 props.socket.on("connect", () => {
+  // Reload window on reconnection, occurs when the server goes down (for a new deployment e.g.)
+  if (connectionAttempts > 0) {
+    // Prevent reload looping
+    window.location.reload();
+  }
   message.value = "";
   connectionAttempts = 0;
 });
@@ -29,8 +34,10 @@ props.socket.on("connect_error", async (err) => {
   if (stopConnecting) return;
   if (err.message == "unauthorized")
     return router.push({ name: "Error", params: { errorcode: 401 } });
+
   connectionAttempts++;
   message.value = `Connection attempt ${connectionAttempts} failed.`;
+
   if (props.maxAttempts < 0 || connectionAttempts < props.maxAttempts) {
     await new Promise((resolve) => {
       setTimeout(() => {
