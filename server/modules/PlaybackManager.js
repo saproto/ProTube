@@ -9,7 +9,7 @@ let playerType = enums.TYPES.VIDEO;
 
 let selectedRadioStation = {};
 let playbackInterval;
-let volume = 75;
+let volume = 35;
 let timestamp = 0;
 
 exports.getCurrentVideoTimestamp = () => timestamp;
