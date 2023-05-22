@@ -49,13 +49,13 @@
           :isLeft="playerSettings.playerType === enums.TYPES.RADIO">
           <template #left>
             <font-awesome-icon
-              class="cursor-pointer text-2xl text-gray-600 dark:text-white w-7"
+              class="w-7 cursor-pointer text-2xl text-gray-600 dark:text-white"
               icon="fa-radio">
             </font-awesome-icon>
           </template>
           <template #right>
             <font-awesome-icon
-              class="cursor-pointer text-2xl text-gray-600 dark:text-white w-7"
+              class="w-7 cursor-pointer text-2xl text-gray-600 dark:text-white"
               icon="fa-tv">
             </font-awesome-icon>
           </template>
@@ -65,13 +65,13 @@
           :isLeft="playerSettings.screenSettings.showPhotos">
           <template #left>
             <font-awesome-icon
-              class="cursor-pointer text-2xl text-gray-600 dark:text-white w-7"
+              class="w-7 cursor-pointer text-2xl text-gray-600 dark:text-white"
               icon="fa-camera">
             </font-awesome-icon>
           </template>
           <template #right>
             <font-awesome-icon
-              class="cursor-pointer text-2xl text-gray-600 dark:text-white w-7"
+              class="w-7 cursor-pointer text-2xl text-gray-600 dark:text-white"
               icon="fa-ban">
             </font-awesome-icon>
           </template>
@@ -81,13 +81,13 @@
           :isLeft="playerSettings.screenSettings.showQueue">
           <template #left>
             <font-awesome-icon
-              class="cursor-pointer text-2xl text-gray-600 dark:text-white w-7"
+              class="w-7 cursor-pointer text-2xl text-gray-600 dark:text-white"
               icon="fa-rectangle-list">
             </font-awesome-icon>
           </template>
           <template #right>
             <font-awesome-icon
-              class="cursor-pointer text-2xl text-gray-600 dark:text-white w-7"
+              class="w-7 cursor-pointer text-2xl text-gray-600 dark:text-white"
               icon="fa-ban">
             </font-awesome-icon>
           </template>

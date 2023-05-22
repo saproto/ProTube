@@ -8,7 +8,11 @@
       </div>
     </div>
 
-    <div v-show="(isPlayingVideo && !screenSetting.showPhotos) || ytAutoPlayStarted === -1">
+    <div
+      v-show="
+        (isPlayingVideo && !screenSetting.showPhotos) ||
+        ytAutoPlayStarted === -1
+      ">
       <div :id="playerID" class="min-h-screen w-full" />
     </div>
 
@@ -122,11 +126,11 @@ const displayQueue = computed(() => {
   return isPlayingVideo.value && screenSetting.value.showQueue;
 });
 
-// show photos if show photos, and the video is 
+// show photos if show photos, and the video is
 const displayPhotos = computed(() => {
   if (isPlayingVideo.value && ytAutoPlayStarted.value === -1) return false;
-  
-  return screenSetting.value.showPhotos
+
+  return screenSetting.value.showPhotos;
 });
 
 onBeforeMount(() => {
@@ -150,7 +154,7 @@ onMounted(() => {
     emit("youtube-media-error", event.data);
   });
 
-  player.on('stateChange', (newstate) => {
+  player.on("stateChange", (newstate) => {
     ytAutoPlayStarted.value = newstate.data;
   });
 });
