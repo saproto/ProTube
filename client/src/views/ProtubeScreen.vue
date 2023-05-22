@@ -8,7 +8,7 @@
       </div>
     </div>
 
-    <div v-show="isPlayingVideo && !screenSetting.showPhotos">
+    <div v-show="(isPlayingVideo && !screenSetting.showPhotos) || ytAutoPlayStarted === -1">
       <div :id="playerID" class="min-h-screen w-full" />
     </div>
 
@@ -38,7 +38,7 @@
       v-if="
         playerState.playerType === enums.TYPES.VIDEO &&
         !isPlayingVideo &&
-        !showPhotos
+        !displayPhotos
       "
       class="grid h-screen place-items-center">
       <div class="text-4xl dark:text-white">
@@ -76,6 +76,7 @@ const currentTimeStamp = ref({
   timestamp: 0,
   totalDuration: "00:00:00",
 });
+const ytAutoPlayStarted = ref(false);
 const queue = ref([]);
 const screenSetting = ref({
   showQueue: true,
@@ -110,13 +111,6 @@ const isPlayingVideo = computed(
     playerState.value.playerMode !== enums.MODES.IDLE
 );
 
-const isVideoIdle = computed(() => {
-  return (
-    playerState.value.playerType === enums.TYPES.VIDEO &&
-    playerState.value.playerMode === enums.MODES.IDLE
-  );
-});
-
 const isPlayingRadio = computed(
   () =>
     playerState.value.playerType === enums.TYPES.RADIO &&
@@ -128,13 +122,11 @@ const displayQueue = computed(() => {
   return isPlayingVideo.value && screenSetting.value.showQueue;
 });
 
-// show photos if show photos, or default and video idle
+// show photos if show photos, and the video is 
 const displayPhotos = computed(() => {
-  return (
-    isVideoIdle.value ||
-    isPlayingRadio.value ||
-    (isPlayingVideo.value && screenSetting.value.showPhotos)
-  );
+  if (isPlayingVideo.value && ytAutoPlayStarted.value === -1) return false;
+  
+  return screenSetting.value.showPhotos
 });
 
 onBeforeMount(() => {
@@ -156,6 +148,10 @@ onMounted(() => {
   // the iframe api player generates any error (unplayable media)
   player.on("error", (event) => {
     emit("youtube-media-error", event.data);
+  });
+
+  player.on('stateChange', (newstate) => {
+    ytAutoPlayStarted.value = newstate.data;
   });
 });
 
