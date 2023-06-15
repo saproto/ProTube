@@ -49,8 +49,13 @@ exports.socketCheckAdminAuthenticated = (socket, next) => {
     else return next(new Error("forbidden"));
   }
   // accept localhost connections also to be admin (local client)
-  else if (allowLocalAdminConnections && socket.handshake.address === allowedIP)
+  else if (
+    allowLocalAdminConnections &&
+    (socket.handshake.address === allowedIP ||
+      socket.handshake.headers["x-real-ip"] === process.env.ROUTER_IP)
+  ) {
     return next();
+  }
   next(new Error("unauthorized"));
 };
 
