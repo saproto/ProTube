@@ -199,7 +199,11 @@ onBeforeUnmount(() => {
 socket.on("player-update", (newState) => {
   if (newState.playerType === enums.TYPES.VIDEO) {
     if (newState.playerMode === enums.MODES.PLAYING) {
-      player.loadVideoById(newState.video.id, newState.timestamp);
+      if(playerState.value.playerMode === enums.MODES.PAUSED) {
+        player.playVideo();
+      }else{
+        player.loadVideoById(newState.video.id, newState.timestamp);
+      }
     } else player.pauseVideo();
   } else if (playerState.value.playerType === enums.TYPES.VIDEO)
     player.stopVideo();
