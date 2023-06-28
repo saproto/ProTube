@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import ReloadPrompt from './ReloadPrompt.vue';
 
 defineProps<{ msg: string }>()
 
@@ -28,6 +29,7 @@ const count = ref(0)
     <a href="https://github.com/vuejs/language-tools" target="_blank">Volar</a>
     in your IDE for a better DX
   </p>
+  <ReloadPrompt />
   <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
 </template>
 

@@ -1,5 +1,25 @@
 <script setup lang="ts">
+import { onBeforeMount } from 'vue';
 import HelloWorld from './components/HelloWorld.vue'
+import MyWorker from './my-worker?worker'
+
+const worker = new MyWorker()
+
+const messageFromWorker = async (...data: unknown[]) => {
+  console.log(data);
+  console.log('from sw');
+}
+
+const runWorker = async () => {
+  worker.postMessage('ping')
+}
+const resetMessage = async () => {
+  worker.postMessage('clear')
+}
+
+onBeforeMount(() => {
+  worker.addEventListener('message', messageFromWorker)
+})
 </script>
 
 <template>
@@ -12,6 +32,13 @@ import HelloWorld from './components/HelloWorld.vue'
     </a>
   </div>
   <HelloWorld msg="Vite + Vue" />
+  <button @click="runWorker">
+    Ping web worker
+  </button>
+  &#160;&#160;
+  <button @click="resetMessage">
+    Reset message
+  </button>
 </template>
 
 <style scoped>

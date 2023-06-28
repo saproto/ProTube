@@ -1,6 +1,7 @@
 import { CommonServerOptions, defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
+// @ts-ignore there are no types
 import httpsLocalhost from 'https-localhost'
 import { configDotenv } from 'dotenv'
 import path from 'path'
@@ -49,10 +50,16 @@ export default defineConfig(async () => {
         plugins: [
             vue(),
             VitePWA({
+                mode: 'development',
+                base: '/',
                 registerType: 'autoUpdate',
                 devOptions: {
                     enabled: true,
+                    type: 'module'
                 },
+                srcDir: 'src',
+                // strategies: 'injectManifest',
+                // filename: 'claims-sw.ts',
                 manifest: {
                     name: 'Protube',
                     short_name: 'PTV2',
