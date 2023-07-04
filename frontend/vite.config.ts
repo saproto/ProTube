@@ -28,6 +28,7 @@ export default defineConfig(async () => {
     const port = parseInt(process.env.PORT ?? '3000');
 
     return {
+        assetsInclude: ['src/icons/*.png'],
         server: {
             port,
             https,
@@ -58,32 +59,41 @@ export default defineConfig(async () => {
                     type: 'module'
                 },
                 srcDir: 'src',
+                strategies: 'generateSW',
                 // strategies: 'injectManifest',
-                // filename: 'claims-sw.ts',
+                // filename: 'prompt-sw.ts',
+                workbox: {
+                    // globPatterns: ['**/*.{js,css,html,png}'],
+                    // globPatterns: ['**/*.{js,css,html,png,svg}'],
+                    // globDirectory: 'src/icons',
+                    globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2}']
+                },
+                //     navigateFallback: 'offline.html'
+                // },
                 manifest: {
                     name: 'Protube',
                     short_name: 'PTV2',
                     description: 'Protube test pwa',
-                    theme_color: '#ffffff',
+                    theme_color: '#83b716',
                     icons: [
                         {
-                            src: 'pwa-64x64.png',
+                            src: 'icons/pwa-64x64.png',
                             sizes: '64x64',
                             type: 'image/png'
                         },
                         {
-                            src: 'pwa-192x192.png',
+                            src: 'icons/pwa-192x192.png',
                             sizes: '192x192',
                             type: 'image/png'
                         },
                         {
-                            src: 'pwa-512x512.png',
+                            src: 'icons/pwa-512x512.png',
                             sizes: '512x512',
                             type: 'image/png',
                             purpose: 'any'  
                         },
                         {
-                            src: 'maskable-icon-512x512.png',
+                            src: 'icons/maskable-icon-512x512.png',
                             sizes: '512x512',
                             type: 'image/png',
                             purpose: 'maskable'
