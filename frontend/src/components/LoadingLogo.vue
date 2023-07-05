@@ -122,7 +122,7 @@
 
 <style>
 #e52IJWXs3z93_to {
-    animation: e52IJWXs3z93_to__to 1000ms linear infinite normal forwards;
+    animation: e52IJWXs3z93_to__to 750ms linear infinite normal forwards;
 }
 @keyframes e52IJWXs3z93_to__to {
     0% {
@@ -138,7 +138,7 @@
     }
 }
 #e52IJWXs3z97_to {
-    animation: e52IJWXs3z97_to__to 1000ms linear infinite normal forwards;
+    animation: e52IJWXs3z97_to__to 750ms linear infinite normal forwards;
 }
 @keyframes e52IJWXs3z97_to__to {
     0% {
@@ -154,7 +154,7 @@
     }
 }
 #e52IJWXs3z911_to {
-    animation: e52IJWXs3z911_to__to 1000ms linear infinite normal forwards;
+    animation: e52IJWXs3z911_to__to 750ms linear infinite normal forwards;
 }
 @keyframes e52IJWXs3z911_to__to {
     0% {
