@@ -169,4 +169,8 @@
         transform: translate(617.328628px, 959.200073px);
     }
 }
+
+#e52IJWXs3z91 {
+    filter: drop-shadow(-9px -5px 7px rgb(0 0 0 / 0.75));
+}
 </style>
