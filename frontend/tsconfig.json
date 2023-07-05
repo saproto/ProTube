@@ -22,7 +22,16 @@
     "types": [
       "vite-plugin-pwa/vue",
       "vite-plugin-pwa/info"
-    ]
+    ],
+
+    "baseUrl": "./src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@router/*": ["router/*"],
+      "@assets/*": ["assets/*"],
+      "@stores/*": ["stores/*"],
+      "@/*": ["./*"],
+    },
   },
   // "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "**/*.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }],

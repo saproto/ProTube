@@ -3,5 +3,5 @@ import ServiceWorker from './ServiceWorker.vue';
 </script>
 
 <template>
-  <ServiceWorker />
+    <ServiceWorker />
 </template>
