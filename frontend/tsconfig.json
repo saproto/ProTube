@@ -1,10 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2022",
     "useDefineForClassFields": true,
     "module": "ESNext",
-    "lib": ["ESNext", "DOM", "WebWorker"],
+    "lib": ["ES2022", "DOM", "WebWorker"],
     "skipLibCheck": true,
+
+    "baseUrl": "./src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@router/*": ["router/*"],
+      "@assets/*": ["assets/*"],
+      "@stores/*": ["stores/*"],
+      "@/*": ["./*"],
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -23,16 +32,8 @@
       "vite-plugin-pwa/vue",
       "vite-plugin-pwa/info"
     ],
-
-    "baseUrl": "./src",
-    "paths": {
-      "@components/*": ["components/*"],
-      "@router/*": ["router/*"],
-      "@assets/*": ["assets/*"],
-      "@stores/*": ["stores/*"],
-      "@/*": ["./*"],
-    },
   },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   // "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "**/*.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }],
 //   "include": [

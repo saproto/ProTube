@@ -1,13 +1,14 @@
+// vite.config.ts
 import { CommonServerOptions, defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
-// @ts-ignore there are no types
 import eslint from 'vite-plugin-eslint';
 // @ts-ignore there are no types
 import httpsLocalhost from 'https-localhost';
 import { configDotenv } from 'dotenv';
 import path from 'path';
 import viteCompression from 'vite-plugin-compression';
+import tsConfigPaths from 'vite-tsconfig-paths';
 
 configDotenv({
     path: '../backend/.env',
@@ -60,6 +61,7 @@ export default defineConfig(async () => {
                 exclude: ['**/node_modules/**', '**/dev-dist/**', '**/dist/**'],
             },
             viteCompression(),
+            tsConfigPaths(),
             VitePWA({
                 mode: 'development',
                 base: '/',
