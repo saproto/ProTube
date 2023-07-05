@@ -7,3 +7,12 @@
         font-family: Lato, system-ui, sans-serif;
     }
 }
+
+@layer utilities {
+    .bg-primary-gray {
+        @apply bg-[#ffffff] dark:bg-[#303030] dark:text-white
+    }
+    .bg-secondary-gray {
+        @apply bg-[#f1f1f1] dark:bg-[#424242] dark:text-white
+    }
+}

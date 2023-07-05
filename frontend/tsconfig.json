@@ -12,6 +12,7 @@
       "@router/*": ["router/*"],
       "@assets/*": ["assets/*"],
       "@stores/*": ["stores/*"],
+      "@layouts/*": ["layouts/*"],
       "@/*": ["./*"],
     },
 

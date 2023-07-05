@@ -122,6 +122,7 @@ export default defineConfig(async () => {
                 '@router': path.resolve(__dirname, './src/router'),
                 '@assets': path.resolve(__dirname, './src/assets'),
                 '@stores': path.resolve(__dirname, './src/stores'),
+                '@layouts': path.resolve(__dirname, './src/layouts'),
             },
         },
     };
