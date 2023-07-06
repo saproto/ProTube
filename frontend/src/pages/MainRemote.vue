@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import PrimaryLayout from '@/layouts/PrimaryLayout.vue';
+import RemoteHeader from '@/components/remote/RemoteHeader.vue';
+import { useSearchVideosStore } from '@stores/searchVideosStore';
+
+const videoSearch = useSearchVideosStore();
 </script>
 
 <template>
     <PrimaryLayout>
-        <template #header> Header </template>
-        <template #body> Body </template>
+        <template #header>
+            <RemoteHeader />
+        </template>
+        <template #body> Body {{ videoSearch.status.isLoading }} </template>
         <template #sidebar> Sidebar </template>
     </PrimaryLayout>
 </template>

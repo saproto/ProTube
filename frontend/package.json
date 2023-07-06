@@ -10,7 +10,9 @@
     "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {
+    "@iconoir/vue": "^6.9.0",
     "@vueuse/core": "^10.2.1",
+    "@vueuse/integrations": "^10.2.1",
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
     "pinia": "^2.1.4",

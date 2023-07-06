@@ -21,6 +21,8 @@ module.exports = {
     ],
     plugins: ['vue', '@typescript-eslint', 'prettier'],
     rules: {
+        'vue/no-v-model-argument': 'off',
+        'vue/no-multiple-template-root': 'off',
         'vue/script-indent': ['error', 4],
         'prettier/prettier': 'error',
         'vue/html-indent': ['error', 4],
