@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "module": "CommonJS",
+    "target": "ES2022",
+    "outDir": "./dist",
+    "paths": {
+      "@controllers/*": ["controllers/*"],
+      "@models/*": ["models/*"],
+      "@routes/*": ["routes/*"],
+      "@services/*": ["services/*"],
+      "@serviceproviders/*": ["serviceproviders/*"],
+      "@utils/*": ["utils/*"],
+      "@middlewares/*": ["middlewares/*"],
+      "@validators/*": ["validators/*"],
+      "@exceptions/*": ["exceptions/*"],
+      "@app/*": ["*"],
+      "@seeders/*": ["seeders/*"]
+    },
+    "strict": true,
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "skipLibCheck": true
+  },
+  "plugins": [
+    {
+      "name": "tsconfig-paths",
+      "afterDeclarations": true
+    }
+  ],
+  "ts-node": {
+    "files": true
+  }
+}
