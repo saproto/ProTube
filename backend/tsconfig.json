@@ -15,14 +15,18 @@
       "@validators/*": ["validators/*"],
       "@exceptions/*": ["exceptions/*"],
       "@app/*": ["*"],
-      "@seeders/*": ["seeders/*"]
+      "@seeders/*": ["seeders/*"],
+      "@Kernel/*": ["Kernel/*"],
+      "@Models/*": ["Models/*"],
+      "config": ["Kernel/Config.ts"]
     },
     "strict": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "emitDecoratorMetadata": true,
   },
   "plugins": [
     {
