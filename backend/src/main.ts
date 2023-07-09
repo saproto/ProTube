@@ -1,26 +1,15 @@
+import WebRoutes from '@routes/web';
+import ApiRoutes from '@routes/api';
+import RouteRegistrar from '@routes/RouteRegistrar';
 import fastify from 'fastify';
-import { jsonSchemaTransform, serializerCompiler, validatorCompiler, type ZodTypeProvider } from 'fastify-type-provider-zod';
-import z from 'zod';
+import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
 
 const server = fastify();
+
 server.setValidatorCompiler(validatorCompiler);
 server.setSerializerCompiler(serializerCompiler);
-
-// const opts: ZodTypeProvider = {
-//     schema: {
-//         querystring: z.object({
-//             name: z.string().min(4)
-//         }),
-//         response: {
-//             200: z.string()
-//         }
-//     },
-//     handler: async function (request, reply) {
-//         await reply.send({ helo: 'world' });
-//     }
-// };
 
 void server.register(fastifySwagger, {
     openapi: {
@@ -42,27 +31,17 @@ void server.register(fastifySwagger, {
 void server.register(fastifySwaggerUI, {
     routePrefix: '/documentation'
 });
+
 server.after(() => {
-    server.withTypeProvider<ZodTypeProvider>().route({
-        method: 'GET',
-        url: '/home',
-        // Define your schema
-        schema: {
-            querystring: z.object({
-                name: z.string()
-            }),
-            response: {
-                200: z.string()
-            }
-        },
-        handler: async (req, res) => {
-            await res.send(req.query.name);
-        }
-    });
+    const registrar = new RouteRegistrar();
+    registrar.register(server, WebRoutes);
+    registrar.register(server, ApiRoutes);
+    console.log(server.printRoutes());
 });
 
 async function run (): Promise<void> {
     await server.ready();
+
     server.listen({ port: 8000 }, (err, address) => {
         if (err != null) {
             console.error(err);
@@ -71,4 +50,5 @@ async function run (): Promise<void> {
         console.log(`Server listening at ${address}`);
     });
 }
+
 run().catch(console.error);
