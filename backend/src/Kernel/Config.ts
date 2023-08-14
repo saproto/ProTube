@@ -9,6 +9,12 @@ interface appConfig {
         password: string
         database: string
     }
+    oauth: {
+        id: string
+        secret: string
+        host: string
+        redirect_host: string
+    }
 }
 
 const config: appConfig = {
@@ -18,6 +24,12 @@ const config: appConfig = {
         username: process.env.DATABASE_USER ?? 'protube',
         password: process.env.DATABASE_PASSWORD ?? 'protube',
         database: process.env.DATABASE_DB ?? 'protube'
+    },
+    oauth: {
+        id: process.env.OAUTH_ID ?? '0',
+        secret: process.env.OAUTH_SECRET ?? '',
+        host: process.env.OAUTH_HOST ?? 'https://proto.utwente.nl',
+        redirect_host: process.env.OAUTH_REDIRECT_HOST ?? 'http://localhost:3000'
     }
 };
 
