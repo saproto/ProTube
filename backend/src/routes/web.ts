@@ -1,16 +1,19 @@
-import RoomController from '@app/Controllers/RoomController';
+import * as RoomController from '@app/Controllers/DemoController';
 import { type DefinedRoutes } from './RouteRegistrar';
 
 const web: DefinedRoutes = {
-    prefix: '/api',
+    prefix: '/users',
     middlewares: [],
+    name: 'users',
     routes: [
-        ['GET', '/room', RoomController.get],
+        ['GET', 'all', '', RoomController.firstRoute],
         {
-            prefix: '/v1',
+            prefix: '/create',
             middlewares: [],
+            name: 'create',
             routes: [
-                ['GET', '/test', RoomController.test]
+                ['GET', 'test', '/new', RoomController.createUser]
+                // ['POST', 'test2', '/example/at/:hour(^\\d{2})h:minute(^\\d{2})m', RoomController.test],
             ]
         }
     ]

@@ -14,6 +14,8 @@
       "@stores/*": ["stores/*"],
       "@layouts/*": ["layouts/*"],
       "@/*": ["./*"],
+      "routeHelper": ["utils/route/routeHelper"],
+      "routeHelper-types": ["utils/route/types"],
     },
 
     /* Bundler mode */

@@ -15,6 +15,10 @@ interface appConfig {
         host: string
         redirect_host: string
     }
+    env: {
+        development: boolean
+        production: boolean
+    }
 }
 
 const config: appConfig = {
@@ -30,6 +34,10 @@ const config: appConfig = {
         secret: process.env.OAUTH_SECRET ?? '',
         host: process.env.OAUTH_HOST ?? 'https://proto.utwente.nl',
         redirect_host: process.env.OAUTH_REDIRECT_HOST ?? 'http://localhost:3000'
+    },
+    env: {
+        development: process.env.NODE_ENV === 'development',
+        production: process.env.NODE_ENV === 'production'
     }
 };
 

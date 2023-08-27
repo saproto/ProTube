@@ -1,11 +1,13 @@
 import WebRoutes from '@routes/web';
 import ApiRoutes from '@routes/api';
 import RouteRegistrar from '@routes/RouteRegistrar';
-import fastify from 'fastify';
-import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
+import fastify, { type FastifyInstance, FastifyPluginOptions } from 'fastify';
+import { type ZodTypeProvider, jsonSchemaTransform, serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
 import { registerAuthentication } from './Authentication';
+import { fastifyRoutes } from '@fastify/routes';
+import z from 'zod';
 
 const server = fastify();
 
@@ -13,6 +15,7 @@ server.setValidatorCompiler(validatorCompiler);
 server.setSerializerCompiler(serializerCompiler);
 
 export async function startWebServer (): Promise<void> {
+    await server.register(fastifyRoutes);
     await server.register(fastifySwagger, {
         openapi: {
             info: {
@@ -37,9 +40,11 @@ export async function startWebServer (): Promise<void> {
     await registerAuthentication(server);
 
     const registrar = new RouteRegistrar();
-    registrar.register(server, WebRoutes);
-    registrar.register(server, ApiRoutes);
+    registrar.register(server, WebRoutes, 'http');
+    registrar.register(server, ApiRoutes, 'api');
+
     console.log(server.printRoutes());
+    registrar.exportRouteTypings();
 
     await server.ready();
 

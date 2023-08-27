@@ -11,7 +11,7 @@ const videoSearch = useSearchVideosStore();
         <template #header>
             <RemoteHeader />
         </template>
-        <template #body> Body {{ videoSearch.status.isLoading }} </template>
+        <template #body> Body {{ videoSearch.status.isLoading }} {{ route('http.v1.test') }}</template>
         <template #sidebar> Sidebar </template>
     </PrimaryLayout>
 </template>

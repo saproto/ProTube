@@ -19,5 +19,5 @@ const sequelize = new Sequelize(
 export async function startDatabaseConnection (): Promise<void> {
     await sequelize.authenticate();
     loadUser(sequelize);
-    await sequelize.sync({ force: true });
+    // await sequelize.sync({ force: true });
 }
