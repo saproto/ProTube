@@ -18,7 +18,8 @@
       "@seeders/*": ["seeders/*"],
       "@Kernel/*": ["Kernel/*"],
       "@Models/*": ["Models/*"],
-      "config": ["Kernel/Config.ts"]
+      "config": ["Kernel/Config.ts"],
+      "routeHelper": ["routes/routeHelper.ts"],
     },
     "strict": true,
     "strictNullChecks": true,
@@ -27,6 +28,7 @@
     "strictPropertyInitialization": false,
     "skipLibCheck": true,
     "emitDecoratorMetadata": true,
+    "types": [ "route-typings"]
   },
   "plugins": [
     {

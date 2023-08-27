@@ -1,6 +1,7 @@
 import { User } from '@app/Models/User';
 import UserSchema from '@app/Schemas/UserSchema';
 import { route } from '@routes/RouteRegistrar';
+import url from 'routeHelper';
 import z from 'zod';
 
 export const firstRoute = route({
@@ -20,5 +21,21 @@ export const createUser = route({
         });
 
         reply.send({});
+    }
+});
+
+export const demoPost = route({
+    schema: z.object({
+        name: z.string()
+    }),
+    bodySchema: z.object({
+        test: z.number()
+    }),
+    handler: async (request, reply) => {
+        const body = request.body;
+        reply.send({
+            // name: url('http.create.test')
+            name: url('http.create.test3', { id: body.test })
+        });
     }
 });

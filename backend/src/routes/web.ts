@@ -12,8 +12,9 @@ const web: DefinedRoutes = {
             middlewares: [],
             name: 'create',
             routes: [
-                ['GET', 'test', '/new', RoomController.createUser]
-                // ['POST', 'test2', '/example/at/:hour(^\\d{2})h:minute(^\\d{2})m', RoomController.test],
+                ['GET', 'test', '/new', RoomController.createUser],
+                ['POST', 'test2', '/post', RoomController.demoPost],
+                ['POST', 'test3', '/post/:id', RoomController.demoPost]
             ]
         }
     ]

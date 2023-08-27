@@ -124,7 +124,6 @@ export default defineConfig(async () => {
                 '@stores': path.resolve(__dirname, './src/stores'),
                 '@layouts': path.resolve(__dirname, './src/layouts'),
                 routeHelper: path.resolve(__dirname, './src/utils/route/routeHelper.ts'),
-                'routeHelper-types': path.resolve(__dirname, './src/utils/route/types'),
             },
         },
     };

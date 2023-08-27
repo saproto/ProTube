@@ -172,7 +172,7 @@ export default class WebRoutes {
         // add the route responses
         allTypings += builtRouteResponseTypings;
 
-        writeFileSync(path.resolve(__dirname, './route-typings.d.ts'), allTypings);
+        writeFileSync(path.resolve(__dirname, './route-typings.ts'), allTypings);
     }
 
     /**
@@ -300,7 +300,7 @@ export default class WebRoutes {
     #buildRouteResponseTypes (routes: exportedRoutes, prefix = ''): string {
         let generatedFile = '';
 
-        generatedFile += `declare namespace ${routes.namespace} {\n`;
+        generatedFile += `namespace ${routes.namespace} {\n`;
 
         for (const route of routes.routes) {
             if ('namespace' in route) {
