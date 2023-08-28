@@ -1,4 +1,4 @@
-import { RouteParamsMap, urlMappings } from './route-typings';
+import { type RouteParamsMap, urlMappings } from '@routes/typings/route-typings';
 
 type RouteTag = keyof RouteParamsMap;
 
@@ -9,14 +9,14 @@ type RouteTag = keyof RouteParamsMap;
  * @param {object} [params] - Route parameters to be replaced in the URL
  * @returns {string} An URL path
  */
-export default function route<T extends RouteTag>(
-    ...args: keyof RouteParamsMap[T] extends undefined ? [tag: T] : [tag: T, params: RouteParamsMap[T]]
-): string {
+export default function route<T extends RouteTag> (...args: keyof RouteParamsMap[T] extends undefined
+    ? [tag: T]
+    : [tag: T, params: RouteParamsMap[T]]): string {
     const [tag, params] = args;
     const route = {
         tag,
         params: params ?? {},
-        url: urlMappings[tag], // Get the associated URL from the mapping
+        url: urlMappings[tag] // Get the associated URL from the mapping
     };
 
     for (const [param, value] of Object.entries(route.params)) {

@@ -5,6 +5,8 @@ import path from 'path';
 import { createTypeAlias, printNode, zodToTs } from 'zod-to-ts';
 import { type ZodTypeAny } from 'zod';
 import type z from 'zod';
+import root from '@app/rootPath';
+import { copySync } from 'fs-extra';
 
 type url = `/${string}` | '';
 
@@ -112,6 +114,10 @@ export default class WebRoutes {
     register (fastify: FastifyInstance, routes: DefinedRoutes, name: string): void {
         this.#registerRoute(fastify, routes, routes.prefix);
 
+        this.onlyLoadRoutes(routes, name);
+    }
+
+    onlyLoadRoutes (routes: DefinedRoutes, name: string): void {
         const exportedRoutes = this.#formatExportedRoutes(routes, name, name);
         const routeTyping: routeTypings = {
             name: name + routes.name,
@@ -167,12 +173,13 @@ export default class WebRoutes {
 
         const routeParamsMap = this.#buildRouteParamsMap(allRoutes);
 
-        // The route param typings
-        let allTypings = builtParamRouteTypes + routeParamsMap + '\n';
-        // add the route responses
-        allTypings += builtRouteResponseTypings;
+        writeFileSync(path.resolve(root(), 'routes/typings/route-typings.ts'), builtParamRouteTypes + routeParamsMap + '\n');
+        writeFileSync(path.resolve(root(), 'routes/typings/response-typings.d.ts'), builtRouteResponseTypings);
 
-        writeFileSync(path.resolve(__dirname, './route-typings.ts'), allTypings);
+        const sourceDir = path.join(path.resolve(root(), 'routes/typings'));
+        const targetDir = path.join(path.resolve(root(), '../../frontend/src/utils/route-typings'));
+
+        copySync(sourceDir, targetDir, { overwrite: true });
     }
 
     /**
@@ -300,7 +307,7 @@ export default class WebRoutes {
     #buildRouteResponseTypes (routes: exportedRoutes, prefix = ''): string {
         let generatedFile = '';
 
-        generatedFile += `namespace ${routes.namespace} {\n`;
+        generatedFile += `declare namespace ${routes.namespace} {\n`;
 
         for (const route of routes.routes) {
             if ('namespace' in route) {

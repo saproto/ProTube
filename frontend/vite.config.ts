@@ -3,7 +3,6 @@ import { CommonServerOptions, defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
 import eslint from 'vite-plugin-eslint';
-// @ts-ignore there are no types
 import httpsLocalhost from 'https-localhost';
 import { configDotenv } from 'dotenv';
 import path from 'path';

@@ -1,2 +1,3 @@
-src/routes/*.d.ts
-src/routes/*.json
+src/Kernel/*.json
+src/routes/typings
+coverage

@@ -14,7 +14,7 @@
       "@stores/*": ["stores/*"],
       "@layouts/*": ["layouts/*"],
       "@/*": ["./*"],
-      "routeHelper": ["utils/route/routeHelper"],
+      "routeHelper": ["utils/routeHelper"],
     },
 
     /* Bundler mode */
@@ -32,16 +32,12 @@
     "noFallthroughCasesInSwitch": true,
     "types": [
       "vite-plugin-pwa/vue",
-      "vite-plugin-pwa/info"
+      "vite-plugin-pwa/info",
+      "src/utils/route/generated.d.ts",
     ],
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  // "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "**/*.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }],
-//   "include": [
-//     "./**/*",
-//     "node_modules/vite-plugin-pwa/client.d.ts"
-//  ],
   "exclude": [
     "dist"
   ]

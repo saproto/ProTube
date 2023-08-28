@@ -1,4 +1,4 @@
-import { type DefinedRoutes } from './RouteRegistrar';
+import { type DefinedRoutes } from '../Kernel/RouteRegistrar';
 // import * as RoomController from '@app/Controllers/RoomController';
 
 const api: DefinedRoutes = {

@@ -9,13 +9,12 @@ module.exports = {
     parserOptions: {
         ecmaVersion: 2022,
         parser: '@typescript-eslint/parser',
+        sourceType: 'module',
     },
     parser: 'vue-eslint-parser',
     extends: [
-        'plugin:vue/base',
         'eslint:recommended',
         'plugin:vue/vue3-recommended',
-        'plugin:vue/essential',
         'plugin:@typescript-eslint/recommended',
         'plugin:prettier/recommended',
     ],
@@ -26,6 +25,7 @@ module.exports = {
         'vue/script-indent': ['error', 4],
         'prettier/prettier': 'error',
         'vue/html-indent': ['error', 4],
+        'no-undef': 'off',
         'vue/max-attributes-per-line': [
             'error',
             {

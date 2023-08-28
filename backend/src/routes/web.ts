@@ -1,5 +1,5 @@
 import * as RoomController from '@app/Controllers/DemoController';
-import { type DefinedRoutes } from './RouteRegistrar';
+import { type DefinedRoutes } from '@Kernel/RouteRegistrar';
 
 const web: DefinedRoutes = {
     prefix: '/users',

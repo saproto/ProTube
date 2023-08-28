@@ -1,13 +1,12 @@
 import WebRoutes from '@routes/web';
 import ApiRoutes from '@routes/api';
-import RouteRegistrar from '@routes/RouteRegistrar';
-import fastify, { type FastifyInstance, FastifyPluginOptions } from 'fastify';
-import { type ZodTypeProvider, jsonSchemaTransform, serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
+import RouteRegistrar from '@app/Kernel/RouteRegistrar';
+import fastify from 'fastify';
+import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
 import { registerAuthentication } from './Authentication';
 import { fastifyRoutes } from '@fastify/routes';
-import z from 'zod';
 
 const server = fastify();
 

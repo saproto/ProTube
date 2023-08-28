@@ -1,7 +1,7 @@
 import { User } from '@app/Models/User';
 import UserSchema from '@app/Schemas/UserSchema';
-import { route } from '@routes/RouteRegistrar';
-import url from 'routeHelper';
+import { route } from '@Kernel/RouteRegistrar';
+import url from '@Services/RoutingService';
 import z from 'zod';
 
 export const firstRoute = route({
@@ -35,7 +35,7 @@ export const demoPost = route({
         const body = request.body;
         reply.send({
             // name: url('http.create.test')
-            name: url('http.create.test3', { id: body.test })
+            name: url('http.create.test')
         });
     }
 });
