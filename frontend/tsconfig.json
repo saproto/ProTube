@@ -32,8 +32,7 @@
     "noFallthroughCasesInSwitch": true,
     "types": [
       "vite-plugin-pwa/vue",
-      "vite-plugin-pwa/info",
-      "src/utils/route/generated.d.ts",
+      "vite-plugin-pwa/info"
     ],
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],

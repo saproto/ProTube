@@ -24,6 +24,7 @@ export default function route<T extends RouteTag>(
         route.url = route.url.replace(dynamicSegmentRegex, (value as number | string).toString());
     }
 
+    console.log('rrrrr');
     route.url = route.url.replace(/\/:\w+\?$/, '');
 
     return route.url;

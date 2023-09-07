@@ -30,6 +30,7 @@ interface exportRoute {
     fullName: string
     name: string
     type: string
+    bodyType: string
     url: string
     params: routeParam[]
 }
@@ -75,6 +76,12 @@ interface routeInterface<T extends ZodTypeAny, U extends ZodTypeAny | undefined>
         : never
 }
 
+/**
+ * Used to enable Typescript typings for routes
+ *
+ * @param input - The route configuration
+ * @returns - The same route configuration, but typed
+ */
 export function route<T extends ZodTypeAny = ZodTypeAny, U extends ZodTypeAny | undefined = undefined> (input: {
     schema: T
     bodySchema?: U
@@ -117,14 +124,48 @@ export default class WebRoutes {
         this.onlyLoadRoutes(routes, name);
     }
 
+    /**
+     * Load and prepare the typings for the routes
+     *
+     * @param routes - The routes to load in
+     * @param name - The name prefix to use for the routes
+     */
     onlyLoadRoutes (routes: DefinedRoutes, name: string): void {
         const exportedRoutes = this.#formatExportedRoutes(routes, name, name);
+
         const routeTyping: routeTypings = {
             name: name + routes.name,
             allRoutes: this.#getAllRoutes(exportedRoutes),
             exportedRoutes
         };
         this.#routeTypings.push(routeTyping);
+    }
+
+    /**
+     * Export the route typings to be used by the backend and frontend
+     */
+    exportRouteTypings (): void {
+        const allRoutes: allRoutes[] = [];
+
+        let builtRouteResponseTypings = '';
+        let builtParamRouteTypes = '';
+
+        for (const typings of this.#routeTypings) {
+            allRoutes.push(...typings.allRoutes);
+            builtRouteResponseTypings += this.#buildRouteResponseTypes(typings.exportedRoutes, typings.name);
+            builtParamRouteTypes += this.#buildParamRouteTypes(typings.exportedRoutes);
+            this.printRoutes(typings.exportedRoutes, typings.name);
+        }
+
+        const routeParamsMap = this.#buildRouteParamsMap(allRoutes);
+
+        writeFileSync(path.resolve(root(), 'routes/typings/route-typings.ts'), builtParamRouteTypes + routeParamsMap + '\n');
+        writeFileSync(path.resolve(root(), 'routes/typings/response-typings.d.ts'), builtRouteResponseTypings);
+
+        const sourceDir = path.join(path.resolve(root(), 'routes/typings'));
+        const targetDir = path.join(path.resolve(root(), '../../frontend/src/utils/route-typings'));
+
+        copySync(sourceDir, targetDir, { overwrite: true });
     }
 
     /**
@@ -156,30 +197,6 @@ export default class WebRoutes {
                 this.#registerRoute(fastify, route, (prefix ?? '') + route.prefix);
             }
         }
-    }
-
-    exportRouteTypings (): void {
-        const allRoutes: allRoutes[] = [];
-
-        let builtRouteResponseTypings = '';
-        let builtParamRouteTypes = '';
-
-        for (const typings of this.#routeTypings) {
-            allRoutes.push(...typings.allRoutes);
-            builtRouteResponseTypings += this.#buildRouteResponseTypes(typings.exportedRoutes, typings.name);
-            builtParamRouteTypes += this.#buildParamRouteTypes(typings.exportedRoutes);
-            this.printRoutes(typings.exportedRoutes, typings.name);
-        }
-
-        const routeParamsMap = this.#buildRouteParamsMap(allRoutes);
-
-        writeFileSync(path.resolve(root(), 'routes/typings/route-typings.ts'), builtParamRouteTypes + routeParamsMap + '\n');
-        writeFileSync(path.resolve(root(), 'routes/typings/response-typings.d.ts'), builtRouteResponseTypings);
-
-        const sourceDir = path.join(path.resolve(root(), 'routes/typings'));
-        const targetDir = path.join(path.resolve(root(), '../../frontend/src/utils/route-typings'));
-
-        copySync(sourceDir, targetDir, { overwrite: true });
     }
 
     /**
@@ -276,14 +293,12 @@ export default class WebRoutes {
             // it's an array, so its a route definition
             if (Array.isArray(route)) {
                 const routeName = route[rDef.name];
-                const { node } = zodToTs(route[rDef.route].schema, routeName);
-                const nodeAlias = createTypeAlias(node, routeName);
-                const type = printNode(nodeAlias);
 
                 const routeType: exportRoute = {
                     name: routeName,
                     fullName: fullNamespace + '.' + routeName,
-                    type,
+                    type: this.#createTsTypes(routeName, route[rDef.route].schema),
+                    bodyType: this.#createTsTypes('request', route[rDef.route].bodySchema),
                     url: route[rDef.url],
                     params: this.#findRouteParams(route[rDef.url])
                 };
@@ -298,11 +313,26 @@ export default class WebRoutes {
     }
 
     /**
+     * Create the typescript typings for a schema
+     *
+     * @param routeName - The name of the route
+     * @param schema - The schema to create the types for
+     * @returns Typescript typings for the schema
+     */
+    #createTsTypes (routeName: string, schema: ZodTypeAny | undefined): string {
+        if (schema === undefined) return '';
+
+        const { node } = zodToTs(schema, routeName);
+        const nodeAlias = createTypeAlias(node, routeName);
+        return printNode(nodeAlias);
+    }
+
+    /**
      * Create the typescript typings (namespaces) for the route responses
      *
      * @param routes - The routes to build the typings for
      * @param prefix - The prefix to add to the routes
-     * @returns typescript typings
+     * @returns Typescript typings
      */
     #buildRouteResponseTypes (routes: exportedRoutes, prefix = ''): string {
         let generatedFile = '';
@@ -314,6 +344,11 @@ export default class WebRoutes {
                 generatedFile += this.#buildRouteResponseTypes(route);
             } else {
                 generatedFile += `export ${route.type}\n`;
+                if (route.bodyType !== '') {
+                    generatedFile += `declare namespace ${route.name} { \n`;
+                    generatedFile += `export ${route.bodyType}\n`;
+                    generatedFile += '}\n';
+                }
             }
         }
 
@@ -325,7 +360,7 @@ export default class WebRoutes {
      * Create the typescript code for the route params map and url mappings
      *
      * @param routes - all routes for which to create the route params map and url mappings
-     * @returns typescript typings
+     * @returns Typescript typings
      */
     #buildRouteParamsMap (routes: allRoutes[]): string {
         let generatedFile = '';
@@ -341,6 +376,12 @@ export default class WebRoutes {
         return generatedFile;
     }
 
+    /**
+     * Print all routes to a json file for debugging
+     *
+     * @param routes - The routes to print
+     * @param name - The name prefix of the routes
+     */
     printRoutes (routes: exportedRoutes, name: string): void {
         writeFileSync(path.resolve(__dirname, `./${name}_types.json`), JSON.stringify(routes, null, 2));
     }

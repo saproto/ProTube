@@ -1,12 +1,4 @@
 import axios, { type AxiosResponse } from 'axios';
-// let response = await fetch(
-//     `${process.env.LARAVEL_ENDPOINT}/api/protube/userdetails`,
-//     {
-//       headers: {
-//         Authorization: "Bearer " + accessToken,
-//       },
-//     }
-//   );
 
 const BASE_URL = 'http://localhost:8080/api/protube/userdetails';
 

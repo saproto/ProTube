@@ -5,9 +5,9 @@ type RouteTag = keyof RouteParamsMap;
 /**
  * Create a URL path from a route name and parameters
  *
- * @param {string} tag - The name of the route
+ * @param tag - The name of the route
  * @param {object} [params] - Route parameters to be replaced in the URL
- * @returns {string} An URL path
+ * @returns An URL path
  */
 export default function route<T extends RouteTag> (...args: keyof RouteParamsMap[T] extends undefined
     ? [tag: T]

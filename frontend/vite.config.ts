@@ -122,7 +122,7 @@ export default defineConfig(async () => {
                 '@assets': path.resolve(__dirname, './src/assets'),
                 '@stores': path.resolve(__dirname, './src/stores'),
                 '@layouts': path.resolve(__dirname, './src/layouts'),
-                routeHelper: path.resolve(__dirname, './src/utils/route/routeHelper.ts'),
+                routeHelper: path.resolve(__dirname, './src/utils/routeHelper.ts'),
             },
         },
     };
