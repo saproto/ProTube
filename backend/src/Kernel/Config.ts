@@ -19,6 +19,10 @@ interface appConfig {
         development: boolean
         production: boolean
     }
+    redis: {
+        host: string
+        port: number
+    }
 }
 
 const config: appConfig = {
@@ -38,6 +42,10 @@ const config: appConfig = {
     env: {
         development: process.env.NODE_ENV === 'development',
         production: process.env.NODE_ENV === 'production'
+    },
+    redis: {
+        host: process.env.REDIS_HOST ?? 'localhost',
+        port: parseInt(process.env.REDIS_PORT ?? '6379')
     }
 };
 

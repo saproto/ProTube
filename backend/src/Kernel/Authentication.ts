@@ -1,10 +1,14 @@
 import { type FastifyInstance } from 'fastify';
 import c from 'config';
 import oauthPlugin, { type OAuth2Namespace } from '@fastify/oauth2';
-
+import crypto from 'crypto';
+import { User } from '@app/Models/User';
 declare module 'fastify' {
     interface FastifyInstance {
         saproto: OAuth2Namespace
+    }
+    interface Session {
+        user: User
     }
 }
 
@@ -13,8 +17,8 @@ export async function registerAuthentication (fastify: FastifyInstance): Promise
         name: 'saproto',
         credentials: {
             client: {
-                id: '1',
-                secret: 'PVZcFei1IDHzwpihmJWd5owU1xHAUktFJMvIAZm9'
+                id: c.oauth.id,
+                secret: c.oauth.secret
             },
             auth: {
                 authorizeHost: c.oauth.host,
@@ -23,21 +27,71 @@ export async function registerAuthentication (fastify: FastifyInstance): Promise
                 tokenPath: '/oauth/token'
             }
         },
-        startRedirectPath: '/login',
+        startRedirectPath: '/api/auth/login',
         callbackUri: 'http://localhost:8000/auth/callback',
-        scope: []
+        scope: [],
+        // @ts-expect-error No typing available
+        generateStateFunction: (request) => {
+            const state = crypto.randomBytes(16).toString('base64url');
+            request.session.set('oauth-state', state);
+            return state;
+        },
+        // @ts-expect-error No typing available
+        checkStateFunction: (request, callback) => {
+            const sessionState = request.session.get('oauth-state');
+            if (request.query.state === sessionState) {
+                callback();
+                return;
+            }
+            callback(new Error('Invalid state'));
+        }
+    });
+
+    fastify.addHook('onRequest', async function (request, reply) {
+        request.session.set('user', await User.findByPk(1));
     });
 
     fastify.get('/auth/callback', async function (request, reply) {
-        // const { token } = await this.facebookOAuth2.getAccessTokenFromAuthorizationCodeFlow(request);
         const token = await this.saproto.getAccessTokenFromAuthorizationCodeFlow(request);
 
-        console.log(token);
-        
-        // if later you need to refresh the token you can use
-        // const { token: newToken } = await this.getNewAccessTokenUsingRefreshToken(token)
+        interface AuthenticatedUser {
+            authenticated: true
+            name: string
+            admin: boolean
+            id: number
+        }
 
-        // await reply.send({ access_token: token });
-        await reply.redirect('/api/v1/test');
+        interface UnauthenticatedUser {
+            authenticated: false
+        }
+
+          type User = AuthenticatedUser | UnauthenticatedUser;
+
+          const response = await fetch(
+              `${c.oauth.host}/api/protube/userdetails`,
+              {
+                  headers: {
+                      Authorization: `Bearer ${token.token.access_token}`
+                  }
+              }
+          );
+          const userData: User = await response.json();
+
+          request.session.get('cookie');
+
+          if (!userData.authenticated) {
+              await reply.send('/unauthenticated');
+              return;
+          }
+
+          await User.upsert({
+              id: userData.id,
+              name: userData.name,
+              admin: userData.admin,
+              refresh_token: token.token.refresh_token ?? '',
+              access_token: token.token.access_token
+          });
+
+          await reply.redirect('/api/v1/test');
     });
 }

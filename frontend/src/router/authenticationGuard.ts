@@ -9,12 +9,13 @@ const authenticationGuard: NavigationGuardWithThis<undefined> = (to, from) => {
 
     if (!userStore.initialized && !userStore.initializing) {
         userStore.init().then(() => {
-            console.log('then');
+            console.log(to.name, 'then init');
             router.push(to);
             return;
         });
         return { name: 'Login' };
     }
+    console.log(to.name, userStore.user, 'logged out?');
 
     if (!userStore.user.authenticated) return { name: 'Login' };
 };

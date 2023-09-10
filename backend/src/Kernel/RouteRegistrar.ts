@@ -118,10 +118,10 @@ export default class WebRoutes {
      * @param routes - The routes to register
      * @param name - The name prefix to use for the routes
      */
-    register (fastify: FastifyInstance, routes: DefinedRoutes, name: string): void {
+    register (fastify: FastifyInstance, routes: DefinedRoutes): void {
         this.#registerRoute(fastify, routes, routes.prefix);
 
-        this.onlyLoadRoutes(routes, name);
+        this.onlyLoadRoutes(routes, routes.name);
     }
 
     /**

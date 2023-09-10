@@ -3,7 +3,7 @@ import { type DefinedRoutes } from '../Kernel/RouteRegistrar';
 
 const api: DefinedRoutes = {
     prefix: '/',
-    name: 'web',
+    name: 'api',
     middlewares: [],
     routes: [
         // ['PUT', 'room', '/room', RoomController.get],

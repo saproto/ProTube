@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export default z.array(z.object({
+export default z.object({
     id: z.number({
         description: 'The id of the user'
     }),
@@ -9,8 +9,5 @@ export default z.array(z.object({
     }),
     admin: z.boolean({
         description: 'Whether the user is an admin or not'
-    }),
-    createdAt: z.date({
-        description: 'The date the user was created'
     })
-}));
+});

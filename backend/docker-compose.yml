@@ -13,6 +13,12 @@ services:
     ports:
       - "${DATABASE_PORT}:3306"
   
+  redis:
+    image: redis/redis-stack
+    ports:
+      - "6377:6379"
+      - "8002:8001"
+  
   phpmyadmin:
     container_name: 'protube-2-pma'
     image: phpmyadmin

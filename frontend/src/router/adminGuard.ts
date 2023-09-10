@@ -6,7 +6,7 @@ const adminGuard: NavigationGuardWithThis<undefined> = (to, from) => {
 
     const userStore = useUserStore();
 
-    console.log(userStore.user);
+    console.log(userStore.user, 'user');
     const isAdmin = false;
     return {
         name: 'Error',
