@@ -2,8 +2,7 @@ import { type FastifyInstance } from 'fastify';
 import c from 'config';
 import oauthPlugin, { type OAuth2Namespace } from '@fastify/oauth2';
 import crypto from 'crypto';
-import { User } from '@app/Models/User';
-import route from '@Services/RoutingService';
+
 declare module 'fastify' {
     interface FastifyInstance {
         saproto: OAuth2Namespace
@@ -28,8 +27,8 @@ export async function registerAuthentication (fastify: FastifyInstance): Promise
                 tokenPath: '/oauth/token'
             }
         },
-        startRedirectPath: '/api/auth/login',
-        callbackUri: 'http://localhost:8000/auth/callback',
+        startRedirectPath: '/auth/login',
+        callbackUri: 'http://localhost:8000/auth/login/callback',
         scope: [],
         // @ts-expect-error No typing available
         generateStateFunction: (request) => {
@@ -46,49 +45,5 @@ export async function registerAuthentication (fastify: FastifyInstance): Promise
             }
             callback(new Error('Invalid state'));
         }
-    });
-
-    fastify.get('/auth/callback', async function (request, reply) {
-        const token = await this.saproto.getAccessTokenFromAuthorizationCodeFlow(request);
-
-        interface AuthenticatedUser {
-            authenticated: true
-            name: string
-            admin: boolean
-            id: number
-        }
-
-        interface UnauthenticatedUser {
-            authenticated: false
-        }
-
-          type User = AuthenticatedUser | UnauthenticatedUser;
-
-          const response = await fetch(
-              `${c.oauth.host}/api/protube/userdetails`,
-              {
-                  headers: {
-                      Authorization: `Bearer ${token.token.access_token}`
-                  }
-              }
-          );
-          const userData: User = await response.json();
-
-          if (!userData.authenticated) {
-              await reply.send('/unauthenticated');
-              return;
-          }
-
-          await User.upsert({
-              id: userData.id,
-              name: userData.name,
-              admin: userData.admin,
-              refresh_token: token.token.refresh_token ?? '',
-              access_token: token.token.access_token
-          });
-
-          request.session.set('user_id', userData.id);
-
-          await reply.redirect(route('http.user'));
     });
 }

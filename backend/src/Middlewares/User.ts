@@ -18,10 +18,9 @@ async function loadUser (fastify: FastifyInstance, options: unknown): Promise<vo
     fastify.addHook('preHandler', async (req, reply) => {
         const user = await User.findByPk(req.session.get('user_id'));
         if (user === null) {
-            reply.statusCode = 401;
-            throw Error('User not found');
+            await reply.redirect('/auth/login');
+            return;
         }
-
         req.user = user;
     });
 }
