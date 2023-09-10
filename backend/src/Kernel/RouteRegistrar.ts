@@ -1,4 +1,4 @@
-import { type RouteOptions, type FastifyInstance, type HTTPMethods } from 'fastify';
+import { type RouteOptions, type FastifyInstance, type HTTPMethods, type FastifyPlugin } from 'fastify';
 import { type ZodTypeProvider } from 'fastify-type-provider-zod';
 import { writeFileSync } from 'fs';
 import path from 'path';
@@ -22,7 +22,7 @@ enum rDef {
 export interface DefinedRoutes {
     prefix: url
     name: string
-    middlewares: string[]
+    middlewares: FastifyPlugin[]
     routes: Array<RouteDefinition | DefinedRoutes>
 }
 
@@ -118,8 +118,8 @@ export default class WebRoutes {
      * @param routes - The routes to register
      * @param name - The name prefix to use for the routes
      */
-    register (fastify: FastifyInstance, routes: DefinedRoutes): void {
-        this.#registerRoute(fastify, routes, routes.prefix);
+    async register (fastify: FastifyInstance, routes: DefinedRoutes): Promise<void> {
+        await this.#registerRoute(fastify, routes, '');
 
         this.onlyLoadRoutes(routes, routes.name);
     }
@@ -131,7 +131,7 @@ export default class WebRoutes {
      * @param name - The name prefix to use for the routes
      */
     onlyLoadRoutes (routes: DefinedRoutes, name: string): void {
-        const exportedRoutes = this.#formatExportedRoutes(routes, name, name);
+        const exportedRoutes = this.#formatExportedRoutes(routes, name, name, '');
 
         const routeTyping: routeTypings = {
             name: name + routes.name,
@@ -175,7 +175,21 @@ export default class WebRoutes {
      * @param routes - The routes to register
      * @param prefix - The prefix to add to the routes
      */
-    #registerRoute (fastify: FastifyInstance, routes: DefinedRoutes, prefix: string): void {
+    async #registerRoute (fastify: FastifyInstance, routes: DefinedRoutes, prefix: string): Promise<void> {
+        const routePrefix = prefix + routes.prefix;
+        // if there are middlewares create a new context and 'rerun' the registerRoute function with the new context
+        if (routes.middlewares.length > 0) {
+            await fastify.register(async (middlewaredServer) => {
+                for (const middleware of routes.middlewares) {
+                    await middlewaredServer.register(middleware);
+                }
+                // flush the middlewares so they don't get applied again
+                routes.middlewares = [];
+                await this.#registerRoute(middlewaredServer, routes, prefix);
+            });
+            return;
+        }
+
         for (const route of routes.routes) {
             // it's an array, so its a route definition
             if (Array.isArray(route)) {
@@ -190,11 +204,11 @@ export default class WebRoutes {
                     },
                     handler: route[rDef.route].handler,
                     method: route[rDef.method],
-                    url: (prefix ?? '') + route[rDef.url]
+                    url: routePrefix + route[rDef.url]
                 });
             } else {
                 // it's a route group with subroutes
-                this.#registerRoute(fastify, route, (prefix ?? '') + route.prefix);
+                await this.#registerRoute(fastify, route, routePrefix);
             }
         }
     }
@@ -283,7 +297,7 @@ export default class WebRoutes {
      * @param fullNamespace - The full namespace of the routes
      * @returns formatted routes
      */
-    #formatExportedRoutes (routes: DefinedRoutes, namespace: string, fullNamespace: string): exportedRoutes {
+    #formatExportedRoutes (routes: DefinedRoutes, namespace: string, fullNamespace: string, routePrefix: string): exportedRoutes {
         const exportedRoutes: exportedRoutes = {
             namespace,
             routes: []
@@ -299,14 +313,15 @@ export default class WebRoutes {
                     fullName: fullNamespace + '.' + routeName,
                     type: this.#createTsTypes(routeName, route[rDef.route].schema),
                     bodyType: this.#createTsTypes('request', route[rDef.route].bodySchema),
-                    url: route[rDef.url],
+                    url: routePrefix + routes.prefix + route[rDef.url],
                     params: this.#findRouteParams(route[rDef.url])
                 };
 
                 exportedRoutes.routes.push(routeType);
-            } else {
-                // it's a route group with subroutes
-                exportedRoutes.routes.push(this.#formatExportedRoutes(route, route.name, fullNamespace + '.' + route.name));
+            } else { // it's a route group with subroutes
+                // if the route has no name, use the namespace as name
+                const namespace = route.name === '' ? fullNamespace : fullNamespace + '.' + route.name;
+                exportedRoutes.routes.push(this.#formatExportedRoutes(route, route.name, namespace, routePrefix + routes.prefix));
             }
         }
         return exportedRoutes;

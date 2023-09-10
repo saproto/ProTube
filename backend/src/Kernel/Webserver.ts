@@ -1,5 +1,5 @@
 import WebRoutes from '@routes/web';
-import ApiRoutes from '@routes/api';
+import GuestRoutes from '@routes/guest';
 import RouteRegistrar from '@Kernel/RouteRegistrar';
 import fastify from 'fastify';
 import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
@@ -62,8 +62,13 @@ export async function startWebServer (): Promise<void> {
     await registerAuthentication(server);
 
     const registrar = new RouteRegistrar();
-    registrar.register(server, WebRoutes);
-    registrar.register(server, ApiRoutes);
+    await registrar.register(server, WebRoutes);
+    await registrar.register(server, GuestRoutes);
+
+    // await server.register(async function publicContext (childServer) {
+    //     await childServer.register(UserPlugin);
+    //     registrar.register(childServer, WebRoutes);
+    // });
 
     console.log(server.printRoutes());
     registrar.exportRouteTypings();

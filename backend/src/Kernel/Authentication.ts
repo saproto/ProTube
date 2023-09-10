@@ -3,12 +3,13 @@ import c from 'config';
 import oauthPlugin, { type OAuth2Namespace } from '@fastify/oauth2';
 import crypto from 'crypto';
 import { User } from '@app/Models/User';
+import route from '@Services/RoutingService';
 declare module 'fastify' {
     interface FastifyInstance {
         saproto: OAuth2Namespace
     }
     interface Session {
-        user: User
+        user_id: number
     }
 }
 
@@ -47,10 +48,6 @@ export async function registerAuthentication (fastify: FastifyInstance): Promise
         }
     });
 
-    fastify.addHook('onRequest', async function (request, reply) {
-        request.session.set('user', await User.findByPk(1));
-    });
-
     fastify.get('/auth/callback', async function (request, reply) {
         const token = await this.saproto.getAccessTokenFromAuthorizationCodeFlow(request);
 
@@ -77,8 +74,6 @@ export async function registerAuthentication (fastify: FastifyInstance): Promise
           );
           const userData: User = await response.json();
 
-          request.session.get('cookie');
-
           if (!userData.authenticated) {
               await reply.send('/unauthenticated');
               return;
@@ -92,6 +87,8 @@ export async function registerAuthentication (fastify: FastifyInstance): Promise
               access_token: token.token.access_token
           });
 
-          await reply.redirect('/api/v1/test');
+          request.session.set('user_id', userData.id);
+
+          await reply.redirect(route('http.user'));
     });
 }

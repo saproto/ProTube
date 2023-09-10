@@ -1,9 +1,9 @@
 import { type DefinedRoutes } from '../Kernel/RouteRegistrar';
 // import * as RoomController from '@app/Controllers/RoomController';
 
-const api: DefinedRoutes = {
+const guest: DefinedRoutes = {
     prefix: '/',
-    name: 'api',
+    name: 'guest',
     middlewares: [],
     routes: [
         // ['PUT', 'room', '/room', RoomController.get],
@@ -19,4 +19,4 @@ const api: DefinedRoutes = {
     ]
 };
 
-export default api;
+export default guest;

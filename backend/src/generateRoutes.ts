@@ -11,7 +11,7 @@ if (!existsSync(path.resolve(root(), 'routes/typings'))) {
 closeSync(openSync(path.resolve(root(), 'routes/typings/route-typings.ts'), 'w'));
 
 import WebRoutes from '@routes/web';
-import ApiRoutes from '@routes/api';
+import ApiRoutes from '@routes/guest';
 import RouteRegistrar from '@Kernel/RouteRegistrar';
 
 const registrar = new RouteRegistrar();
