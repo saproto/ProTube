@@ -13,6 +13,7 @@ import RedisStore from 'connect-redis';
 import redis from '@Kernel/Redis';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyCors from '@fastify/cors';
+import socketioServer from 'fastify-socket.io'
 
 const server = fastify();
 
@@ -45,6 +46,7 @@ export async function startWebServer (): Promise<void> {
     await server.register(fastifyHelmet);
     await server.register(fastifyCors);
     await server.register(fastifyCookie);
+    await server.register(socketioServer);
     await server.register(fastifySession, {
         // ToDo: fill up the cookie's options
         cookie: {
@@ -80,6 +82,8 @@ export async function startWebServer (): Promise<void> {
             console.error(err);
             process.exit(1);
         }
+        server.io.on('connection', (socket) => {
+        });
         console.log(`Server listening at ${address}`);
     });
 }

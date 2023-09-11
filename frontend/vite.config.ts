@@ -38,13 +38,19 @@ export default defineConfig(async () => {
             proxy: {
                 // send all api requests to the nodejs server
                 '^/api/.': {
-                    target: `${target}:/n/localhost:${port}`,
+                    target: `http://localhost:8000`,
+                    changeOrigin: true,
+                    secure: false,
+                },
+                // send all api requests to the nodejs server
+                '^/auth/.': {
+                    target: `http://localhost:8000`,
                     changeOrigin: true,
                     secure: false,
                 },
                 // send all socket connections to the nodejs server
                 '^/socket.io/.': {
-                    target: `${target}://localhost:${port}`,
+                    target: `http://localhost:8000`,
                     secure: false,
                     ws: true,
                     changeOrigin: true,

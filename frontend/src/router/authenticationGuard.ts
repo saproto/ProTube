@@ -6,6 +6,7 @@ const authenticationGuard: NavigationGuardWithThis<undefined> = (to, from) => {
     if (to.name === 'Login') return true;
 
     const userStore = useUserStore();
+    // console.log(from.name, to.name, userStore.user, 'logged out?');
 
     if (!userStore.initialized && !userStore.initializing) {
         userStore.init().then(() => {
@@ -15,9 +16,9 @@ const authenticationGuard: NavigationGuardWithThis<undefined> = (to, from) => {
         });
         return { name: 'Login' };
     }
-    console.log(to.name, userStore.user, 'logged out?');
 
     if (!userStore.user.authenticated) return { name: 'Login' };
+    // return true;
 };
 
 export default authenticationGuard;
