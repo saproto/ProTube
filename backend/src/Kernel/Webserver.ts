@@ -13,7 +13,7 @@ import RedisStore from 'connect-redis';
 import redis from '@Kernel/Redis';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyCors from '@fastify/cors';
-import socketioServer from 'fastify-socket.io'
+import socketioServer from 'fastify-socket.io';
 
 const server = fastify();
 
@@ -44,7 +44,9 @@ export async function startWebServer (): Promise<void> {
     });
 
     await server.register(fastifyHelmet);
-    await server.register(fastifyCors);
+    // await server.register(fastifyCors, {
+    //     origin: '*'
+    // });
     await server.register(fastifyCookie);
     await server.register(socketioServer);
     await server.register(fastifySession, {
@@ -82,7 +84,20 @@ export async function startWebServer (): Promise<void> {
             console.error(err);
             process.exit(1);
         }
-        server.io.on('connection', (socket) => {
+
+        // server.io.engine.use((req, res, next) => {
+        //     // do something
+        //     console.log(req);
+        //     next();
+        //   });
+        // });
+
+        server.io.of('/socket').on('connection', (socket) => {
+            console.log('socket connected');
+            socket.on('disconnect', () => {
+                console.log('socket disconnected');
+                console.log(socket);
+            });
         });
         console.log(`Server listening at ${address}`);
     });

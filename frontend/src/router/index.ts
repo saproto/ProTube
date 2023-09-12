@@ -30,6 +30,7 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: LoginPage,
+        beforeEnter: authenticationGuard,
     },
     {
         path: '/:pathMatch(.*)*',

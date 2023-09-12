@@ -1,44 +1,34 @@
-import axios from 'axios';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-// import { useAxios } from '@vueuse/integrations/useAxios';
 
 export const useUserStore = defineStore('user', () => {
-    // axios.defaults.headers.get['Access-Control-Allow-Origin'] = '*';
+    let userFetched: (value: boolean | PromiseLike<boolean>) => void;
+
     const user = ref({
         name: 'unknown',
         authenticated: false,
+        admin: false,
     });
 
-    // const { data, isFinished } = useAxios('/api/user');
+    const userIsAuthenticated = new Promise((resolve) => {
+        userFetched = resolve;
+    });
 
-    let hasFetchedData = false;
-    const initialized = ref(false);
-    const initializing = ref(false);
+    fetch('api/user', {
+        redirect: 'manual',
+    }).then(async (response) => {
+        console.log('logging in...');
+        if (response.type === 'opaqueredirect') {
+            window.location.href = '/auth/login';
+            return;
+        } else {
+            const data = (await response.json()) as http.user;
+            user.value.authenticated = true;
+            user.value.name = data.name;
+            user.value.admin = data.admin;
+            userFetched(true);
+        }
+    });
 
-    async function init(): Promise<void> {
-        if (hasFetchedData || initializing.value) return;
-        await fetchAndUpdateUser();
-    }
-
-    async function fetchAndUpdateUser(): Promise<void> {
-        initializing.value = true;
-        const response = (await axios.get('api/user')).data;
-        console.log(response);
-        // if (!response.success) return;
-
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        console.log('user fetched');
-        // user.value = rexport type first = {second}esponse.data as userInfo;
-        const data = response as http.user;
-        user.value.authenticated = true;
-        hasFetchedData = true;
-        initialized.value = true;
-        user.value.name = data.name;
-        initializing.value = false;
-        return;
-    }
-
-    return { user, init, initialized, initializing };
+    return { userIsAuthenticated, user };
 });

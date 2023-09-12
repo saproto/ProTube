@@ -48,17 +48,17 @@ export const loginCallback = route({
 
         request.session.set('user_id', userData.id);
 
-        await reply.redirect(router('http.user'));
+        await reply.redirect('/');
     }
 });
 
 export const user = route({
     schema: UserSchema,
     handler: async (request, reply) => {
-        if (request.user === undefined) {
-            await reply.redirect('/auth/login');
-            return;
-        }
+        // if (request.user === undefined) {
+        //     await reply.redirect('/auth/login');
+        //     return;
+        // }
         await reply.send(request.user);
     }
 });
