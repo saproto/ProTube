@@ -1,3 +1,4 @@
+import route from '@/utils/routeHelper';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
@@ -14,7 +15,7 @@ export const useUserStore = defineStore('user', () => {
         userFetched = resolve;
     });
 
-    fetch('api/user', {
+    fetch(route('http.user'), {
         redirect: 'manual',
     }).then(async (response) => {
         console.log('logging in...');
