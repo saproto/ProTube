@@ -7,13 +7,15 @@ import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
 import { registerAuthentication } from './Authentication';
 import { fastifyRoutes } from '@fastify/routes';
-import fastifySession from '@fastify/session';
 import fastifyCookie from '@fastify/cookie';
-import RedisStore from 'connect-redis';
-import redis from '@Kernel/Redis';
+import redisClient from '@Kernel/Redis';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyCors from '@fastify/cors';
+import fastifySession from '@mgcrea/fastify-session';
 import socketioServer from 'fastify-socket.io';
+import RedisStore from '@mgcrea/fastify-session-redis-store';
+import c from 'config';
+import fastifySocketSession from 'fastify-socketio-session';
 
 const server = fastify();
 
@@ -44,24 +46,26 @@ export async function startWebServer (): Promise<void> {
     });
 
     await server.register(fastifyHelmet);
-    // await server.register(fastifyCors, {
-    //     origin: '*'
-    // });
+    await server.register(fastifyCors, {
+        origin: '*'
+    });
     await server.register(fastifyCookie);
-    await server.register(socketioServer);
+    // ToDo: further session security (keys, etc)
     await server.register(fastifySession, {
-        // ToDo: fill up the cookie's options
-        cookie: {
-            secure: false,
-            maxAge: 1000 * 3600,
-            domain: 'localhost'
-        },
         store: new RedisStore({
-            client: redis,
+            client: redisClient,
+            ttl: c.session.ttl_seconds,
             prefix: 'session:'
         }),
-        secret: 'a secret with minimum length of 32 characters'
+        secret: c.session.secret,
+        cookie: {
+            maxAge: c.session.ttl_seconds
+        },
+        cookieName: c.session.name
     });
+
+    await server.register(socketioServer);
+    await server.register(fastifySocketSession);
 
     await registerAuthentication(server);
 
@@ -69,36 +73,14 @@ export async function startWebServer (): Promise<void> {
     await registrar.register(server, WebRoutes);
     await registrar.register(server, GuestRoutes);
 
-    // await server.register(async function publicContext (childServer) {
-    //     await childServer.register(UserPlugin);
-    //     registrar.register(childServer, WebRoutes);
-    // });
-
     console.log(server.printRoutes());
     registrar.exportRouteTypings();
 
     await server.ready();
 
     server.listen({ port: 8000 }, (err, address) => {
-        if (err != null) {
-            console.error(err);
-            process.exit(1);
-        }
+        if (err != null) throw err;
 
-        // server.io.engine.use((req, res, next) => {
-        //     // do something
-        //     console.log(req);
-        //     next();
-        //   });
-        // });
-
-        server.io.of('/socket').on('connection', (socket) => {
-            console.log('socket connected');
-            socket.on('disconnect', () => {
-                console.log('socket disconnected');
-                console.log(socket);
-            });
-        });
         console.log(`Server listening at ${address}`);
     });
 }

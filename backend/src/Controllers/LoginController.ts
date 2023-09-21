@@ -1,7 +1,6 @@
 import z from 'zod';
 import c from '@Kernel/Config';
 import { User } from '@app/Models/User';
-import router from '@Services/RoutingService';
 import { route } from '@app/Kernel/RouteRegistrar';
 import UserSchema from '@app/Schemas/UserSchema';
 

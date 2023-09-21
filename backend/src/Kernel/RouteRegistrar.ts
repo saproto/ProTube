@@ -95,7 +95,7 @@ export function route<T extends ZodTypeAny = ZodTypeAny, U extends ZodTypeAny | 
                 body: U extends undefined ? never : z.infer<U>
             },
             reply: Omit<ReplyType, 'send'> & {
-                send: (payload: z.infer<T>) => any
+                send: (payload: z.infer<T>) => Promise<any>
             },
             ...args: any[]
         ) => ReturnType

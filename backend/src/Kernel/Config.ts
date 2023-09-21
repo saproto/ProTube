@@ -23,6 +23,11 @@ interface appConfig {
         host: string
         port: number
     }
+    session: {
+        ttl_seconds: number
+        name: string
+        secret: string
+    }
 }
 
 const config: appConfig = {
@@ -46,6 +51,11 @@ const config: appConfig = {
     redis: {
         host: process.env.REDIS_HOST ?? 'localhost',
         port: parseInt(process.env.REDIS_PORT ?? '6379')
+    },
+    session: {
+        ttl_seconds: parseInt(process.env.SESSION_TTL_SECONDS ?? '3600'),
+        name: process.env.SESSION_NAME ?? 'ptv2-session',
+        secret: process.env.SESSION_SECRET ?? 'not so very secret and it must be minimal 32 chars long'
     }
 };
 

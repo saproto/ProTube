@@ -7,9 +7,6 @@ declare module 'fastify' {
     interface FastifyInstance {
         saproto: OAuth2Namespace
     }
-    interface Session {
-        user_id: number
-    }
 }
 
 export async function registerAuthentication (fastify: FastifyInstance): Promise<void> {
