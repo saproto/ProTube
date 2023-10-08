@@ -1,9 +1,10 @@
-import { type SocketRoute } from '@app/Kernel/SocketRegistrar';
+import { type SocketRoute } from '@app/Kernel/Routes/SocketRegistrar';
 import * as dashboardSocket from '@app/SocketControllers/DashboardSocket';
 import { sessionRefreshMiddleware } from 'fastify-socketio-session';
 import loadUser from '@app/SocketMiddlewares/User';
 
 const socket: SocketRoute[] = [{
+    name: 'devsocket',
     namespace: '/dev-socket',
     preConnectionMiddlewares: [loadUser, (socket, next: (err?: Error) => void) => {
         console.log('preconnection middleware');

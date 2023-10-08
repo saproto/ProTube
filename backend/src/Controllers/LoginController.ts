@@ -1,7 +1,7 @@
 import z from 'zod';
-import c from '@Kernel/Config';
+import c from '@app/Kernel/Services/Config';
 import { User } from '@app/Models/User';
-import { route } from '@app/Kernel/RouteRegistrar';
+import { route } from '@app/Kernel/Routes/RouteRegistrar';
 import UserSchema from '@app/Schemas/UserSchema';
 
 export const loginCallback = route({

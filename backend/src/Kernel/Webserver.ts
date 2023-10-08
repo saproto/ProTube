@@ -1,23 +1,23 @@
 import WebRoutes from '@routes/web';
 import GuestRoutes from '@routes/guest';
 import SocketRoutes from '@routes/socket';
-import RouteRegistrar from '@Kernel/RouteRegistrar';
+import RouteRegistrar from '@app/Kernel/Routes/RouteRegistrar';
 import fastify from 'fastify';
 import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
-import { registerAuthentication } from './Authentication';
+import { registerAuthentication } from './Services/Authentication';
 import { fastifyRoutes } from '@fastify/routes';
 import fastifyCookie from '@fastify/cookie';
-import redisClient from '@Kernel/Redis';
+import redisClient from '@app/Kernel/Services/Redis';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyCors from '@fastify/cors';
 import fastifySession from '@mgcrea/fastify-session';
 import socketioServer from 'fastify-socket.io';
 import RedisStore from '@mgcrea/fastify-session-redis-store';
-import c from 'config';
+import c from '@app/Kernel/Services/Config';
 import fastifySocketSession from 'fastify-socketio-session';
-import SocketRegistrar from './SocketRegistrar';
+import SocketRegistrar from './Routes/SocketRegistrar';
 
 const server = fastify();
 

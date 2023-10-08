@@ -1,4 +1,4 @@
-import c from 'config';
+import c from '@app/Kernel/Services/Config';
 import mysql2 from 'mysql2';
 import { Sequelize } from 'sequelize';
 import { loadUser } from '@Models/User';

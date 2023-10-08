@@ -1,4 +1,4 @@
-import { route } from '@Kernel/RouteRegistrar';
+import { route } from '@app/Kernel/Routes/RouteRegistrar';
 import UserSchema from '@app/Schemas/UserSchema';
 import z from 'zod';
 

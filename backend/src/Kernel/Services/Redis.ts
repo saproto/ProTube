@@ -1,5 +1,5 @@
 import { Redis } from 'ioredis';
-import c from 'config';
+import c from '@app/Kernel/Services/Config';
 
 const redis = new Redis({
     host: c.redis.host,

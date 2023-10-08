@@ -1,4 +1,4 @@
-import { socketRoute } from '@app/Kernel/SocketRegistrar';
+import { socketRoute } from '@app/Kernel/Routes/SocketRegistrar';
 import z from 'zod';
 
 export const testRoute = socketRoute({

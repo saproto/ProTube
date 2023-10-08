@@ -1,8 +1,8 @@
-import { type DefinedRoutes } from '../Kernel/RouteRegistrar';
+import { type WebRoute } from '../Kernel/Routes/RouteRegistrar';
 // import * as RoomController from '@app/Controllers/RoomController';
 import * as LoginController from '@Controllers/LoginController';
 
-const guest: DefinedRoutes = {
+const guest: WebRoute = {
     prefix: '',
     name: 'guest',
     middlewares: [],

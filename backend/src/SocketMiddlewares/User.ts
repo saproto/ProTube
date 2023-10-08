@@ -1,4 +1,4 @@
-import { type preConnectionSocketMiddleware } from '@app/Kernel/SocketRegistrar';
+import { type preConnectionSocketMiddleware } from '@app/Kernel/Routes/SocketRegistrar';
 import { User } from '@app/Models/User';
 
 declare module 'http' {

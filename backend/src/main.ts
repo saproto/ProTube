@@ -1,7 +1,7 @@
-import 'config';
+import '@app/Kernel/Services/Config';
 import { startWebServer } from '@Kernel/Webserver';
-import { startDatabaseConnection } from '@Kernel/Database';
-import { startRedisConnection } from './Kernel/Redis';
+import { startDatabaseConnection } from '@app/Kernel/Services/Database';
+import { startRedisConnection } from './Kernel/Services/Redis';
 
 (async () => {
     await startDatabaseConnection();

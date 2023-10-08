@@ -2,14 +2,14 @@
 import * as UserController from '@app/Controllers/UserController';
 import UserPlugin from '@app/Middlewares/User';
 import AdminPlugin from '@app/Middlewares/Admin';
-import { type DefinedRoutes } from '@Kernel/RouteRegistrar';
+import { type WebRoute } from '@app/Kernel/Routes/RouteRegistrar';
 
-const web: DefinedRoutes = {
+const web: WebRoute = {
     prefix: '/api',
     middlewares: [UserPlugin],
     name: 'http',
     routes: [
-        ['GET', 'user', '/user', UserController.userInfo],
+        ['POST', 'user', '/user', UserController.userInfo],
         {
             prefix: '',
             middlewares: [AdminPlugin],

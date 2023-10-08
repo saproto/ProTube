@@ -1,7 +1,12 @@
 import { type FastifyInstance } from 'fastify';
+import { copySync } from 'fs-extra';
 import { type Socket, type Server } from 'socket.io';
 import type z from 'zod';
 import { type ZodTypeAny } from 'zod';
+import RouteTypeExporter, { type exportedRoutes, type allRoutes, type routeTypings, type exportRoute } from '@app/Kernel/Routes/RouteTypeExporter';
+import { writeFileSync } from 'fs';
+import path from 'path';
+import root from '@app/rootPath';
 
 export type preConnectionSocketMiddleware = (socket: Socket, next: (err?: Error) => void) => void;
 export type postConnectionSocketMiddleware = (socket: Socket) => (event: any, next: (err?: Error) => void) => void;
@@ -12,6 +17,7 @@ type RouteDefinition = [string, socketRouteInterface<any, any>];
 
 export interface SocketRoute {
     namespace: url
+    name: string
     preConnectionMiddlewares: preConnectionSocketMiddleware[]
     postConnectionMiddlewares: postConnectionSocketMiddleware[]
     connectionEvent?: (socket: Socket) => void
@@ -62,21 +68,45 @@ export function socketRoute<Data extends ZodTypeAny = Zod.ZodNever, Callback ext
     };
 }
 
-// socketRoute({
-//     // schema: UserSchema,
-//     callbackSchema: z.string(),
-//     // callbackSchema: UserSchema,
-//     handler: (socket, data) => {
-//         data('test');
-//     }
-// });
-
 export default class SocketRegistrar {
+    #routeTypeExporter: RouteTypeExporter;
+
+    constructor () {
+        this.#routeTypeExporter = new RouteTypeExporter();
+    }
+
+    /**
+     * Register the routes from the routes file with fastify and build its typings
+     *
+     * @param fastify - The fastify instance
+     * @param routes - The socket routes to register
+     */
     async register (fastify: FastifyInstance, routes: SocketRoute[]): Promise<void> {
         const io = fastify.io;
+
         for (const route of routes) {
-            console.log(route);
             await this.#registerRoute(io, route);
+        }
+
+        this.onlyLoadRoutes(routes, 'socket.');
+    }
+
+    /**
+     * Load and prepare the typings for the routes
+     *
+     * @param routes - The routes to load in
+     * @param name - The name prefix to use for the routes
+     */
+    onlyLoadRoutes (routes: SocketRoute[], name: string): void {
+        for (const route of routes) {
+            const exportedRoutes = this.#formatExportedRoutes(route, name);
+
+            const routeTyping: routeTypings = {
+                name: name + route.name,
+                allRoutes: this.#routeTypeExporter.getAllRoutes(exportedRoutes),
+                exportedRoutes
+            };
+            this.#routeTypeExporter.routeTypings.push(routeTyping);
         }
     }
 
@@ -114,5 +144,56 @@ export default class SocketRegistrar {
                 });
             };
         });
+    }
+
+    /**
+     * Export the route typings to be used by the backend and frontend
+     */
+    exportRouteTypings (): void {
+        const allRoutes: allRoutes[] = [];
+
+        let builtRouteResponseTypings = '';
+
+        for (const typings of this.#routeTypeExporter.routeTypings) {
+            allRoutes.push(...typings.allRoutes);
+            builtRouteResponseTypings += this.#routeTypeExporter.buildRouteResponseTypes(typings.exportedRoutes, typings.name);
+            this.#routeTypeExporter.printRoutes(typings.exportedRoutes, typings.name);
+        }
+        writeFileSync(path.resolve(root(), 'routes/typings/socket-response-typings.d.ts'), builtRouteResponseTypings);
+
+        const sourceDir = path.join(path.resolve(root(), 'routes/typings'));
+        const targetDir = path.join(path.resolve(root(), '../../frontend/src/utils/route-typings'));
+
+        copySync(sourceDir, targetDir, { overwrite: true });
+    }
+
+    /**
+     * Recursively the definedRoutes into a more convenient format
+     *
+     * @param routes - The defined routes
+     * @returns formatted routes
+     */
+    #formatExportedRoutes (socketRoute: SocketRoute, routePrefix: string): exportedRoutes {
+        const exportedRoutes: exportedRoutes = {
+            namespace: routePrefix + socketRoute.name,
+            routes: []
+        };
+
+        for (const route of socketRoute.routes) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const [eventName, handler] = route;
+
+            const routeType: exportRoute = {
+                name: eventName,
+                fullName: routePrefix + socketRoute.name + '.' + eventName,
+                type: this.#routeTypeExporter.createTsTypes(eventName, handler.schema),
+                bodyType: this.#routeTypeExporter.createTsTypes('request', handler.bodySchema),
+                url: socketRoute.namespace,
+                params: []
+            };
+
+            exportedRoutes.routes.push(routeType);
+        }
+        return exportedRoutes;
     }
 }
