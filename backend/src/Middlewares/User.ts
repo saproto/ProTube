@@ -16,7 +16,6 @@ async function loadUser (fastify: FastifyInstance, options: unknown): Promise<vo
     fastify.decorateRequest('user', null);
 
     fastify.addHook('preHandler', async (req, reply) => {
-        // @ts-expect-error t te
         const user = await User.findByPk(req.session.get('user_id'));
         if (user === null) {
             await reply.redirect('/auth/login');

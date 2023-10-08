@@ -28,6 +28,9 @@ interface appConfig {
         name: string
         secret: string
     }
+    server: {
+        port: number
+    }
 }
 
 const config: appConfig = {
@@ -56,6 +59,9 @@ const config: appConfig = {
         ttl_seconds: parseInt(process.env.SESSION_TTL_SECONDS ?? '3600'),
         name: process.env.SESSION_NAME ?? 'ptv2-session',
         secret: process.env.SESSION_SECRET ?? 'not so very secret and it must be minimal 32 chars long'
+    },
+    server: {
+        port: parseInt(process.env.PORT ?? '8000')
     }
 };
 

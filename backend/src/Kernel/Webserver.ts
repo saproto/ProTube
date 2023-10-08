@@ -1,5 +1,6 @@
 import WebRoutes from '@routes/web';
 import GuestRoutes from '@routes/guest';
+import SocketRoutes from '@routes/socket';
 import RouteRegistrar from '@Kernel/RouteRegistrar';
 import fastify from 'fastify';
 import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
@@ -16,6 +17,7 @@ import socketioServer from 'fastify-socket.io';
 import RedisStore from '@mgcrea/fastify-session-redis-store';
 import c from 'config';
 import fastifySocketSession from 'fastify-socketio-session';
+import SocketRegistrar from './SocketRegistrar';
 
 const server = fastify();
 
@@ -47,10 +49,10 @@ export async function startWebServer (): Promise<void> {
 
     await server.register(fastifyHelmet);
     await server.register(fastifyCors, {
-        origin: '*'
+        origin: 'http://localhost:3000'
     });
     await server.register(fastifyCookie);
-    // ToDo: further session security (keys, etc)
+    // // ToDo: further session security (keys, etc)
     await server.register(fastifySession, {
         store: new RedisStore({
             client: redisClient,
@@ -64,7 +66,12 @@ export async function startWebServer (): Promise<void> {
         cookieName: c.session.name
     });
 
-    await server.register(socketioServer);
+    await server.register(socketioServer, {
+        cors: {
+            origin: 'http://localhost:3000',
+            credentials: true
+        }
+    });
     await server.register(fastifySocketSession);
 
     await registerAuthentication(server);
@@ -78,7 +85,25 @@ export async function startWebServer (): Promise<void> {
 
     await server.ready();
 
-    server.listen({ port: 8000 }, (err, address) => {
+    const socketRegistrar = new SocketRegistrar();
+    await socketRegistrar.register(server, SocketRoutes);
+
+    // server.io.of('/dev-socket').on('connection', (socket) => {
+    //     console.log('new connection');
+
+    //     // each pong will increment the session value with 1 and save it
+    //     socket.on('pong', async () => {
+    //         console.log('pong');
+    //         // socket.use(sessionRefreshMiddleware(socket));
+
+    //         const incr = socket.request.session.get('incremental') ?? 1;
+    //         socket.request.session.set('incremental', parseInt(incr as string) + 1);
+
+    //         await socket.request.session.save();
+    //     });
+    // });
+
+    server.listen({ port: c.server.port }, (err, address) => {
         if (err != null) throw err;
 
         console.log(`Server listening at ${address}`);

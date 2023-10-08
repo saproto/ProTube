@@ -5,12 +5,18 @@ import { useSearchVideosStore } from '@stores/searchVideosStore';
 import { io } from 'socket.io-client';
 
 const videoSearch = useSearchVideosStore();
-const socket = io('localhost:3005/socket', {
+const socket = io('http://localhost:3000/dev-socket', {
     withCredentials: true,
+    extraHeaders: {
+        'Access-Control-Allow-Origin': 'http://localhost:3000',
+    },
 });
 
 socket.on('connect', () => {
     console.log('connected socket');
+    setInterval(() => {
+        socket.emit('homeevent');
+    }, 3000);
 });
 </script>
 
