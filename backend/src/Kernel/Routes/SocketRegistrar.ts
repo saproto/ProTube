@@ -153,12 +153,20 @@ export default class SocketRegistrar {
         const allRoutes: allRoutes[] = [];
 
         let builtRouteResponseTypings = '';
+        // let builtParamRouteTypes = '';
 
         for (const typings of this.#routeTypeExporter.routeTypings) {
             allRoutes.push(...typings.allRoutes);
             builtRouteResponseTypings += this.#routeTypeExporter.buildRouteResponseTypes(typings.exportedRoutes, typings.name);
+            // builtParamRouteTypes += this.#routeTypeExporter.buildParamRouteTypes(typings.exportedRoutes);
             this.#routeTypeExporter.printRoutes(typings.exportedRoutes, typings.name);
         }
+
+        // const routeParamsMap = this.#routeTypeExporter.buildRouteParamsMap(allRoutes);
+        // const routeUrlMap = this.#routeTypeExporter.buildUrlMap(allRoutes);
+
+        // writeFileSync(path.resolve(root(), 'routes/typings/socket-route-typings.ts'), builtParamRouteTypes + routeParamsMap + routeUrlMap + '\n');
+        writeFileSync(path.resolve(root(), 'routes/typings/socket-route-typings.ts'), this.#routeTypeExporter.buildSocketResponseTypeMap(allRoutes, this.#routeTypeExporter.routeTypings) + '\n');
         writeFileSync(path.resolve(root(), 'routes/typings/socket-response-typings.d.ts'), builtRouteResponseTypings);
 
         const sourceDir = path.join(path.resolve(root(), 'routes/typings'));

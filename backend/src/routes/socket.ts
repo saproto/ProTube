@@ -27,6 +27,14 @@ const socket: SocketRoute[] = [{
     routes: [
         ['homeevent', dashboardSocket.testRoute]
     ]
+}, {
+    name: 'socket2',
+    namespace: '/socket2',
+    preConnectionMiddlewares: [],
+    postConnectionMiddlewares: [],
+    routes: [
+        ['homeevent2', dashboardSocket.testRoute2]
+    ]
 }];
 
 export default socket;

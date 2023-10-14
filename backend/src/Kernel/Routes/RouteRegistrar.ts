@@ -124,8 +124,9 @@ export default class WebRoutes {
         }
 
         const routeParamsMap = this.#routeTypeExporter.buildRouteParamsMap(allRoutes);
+        const routeUrlMap = this.#routeTypeExporter.buildUrlMap(allRoutes);
 
-        writeFileSync(path.resolve(root(), 'routes/typings/route-typings.ts'), builtParamRouteTypes + routeParamsMap + '\n');
+        writeFileSync(path.resolve(root(), 'routes/typings/route-typings.ts'), builtParamRouteTypes + routeParamsMap + routeUrlMap + '\n');
         writeFileSync(path.resolve(root(), 'routes/typings/response-typings.d.ts'), builtRouteResponseTypings);
 
         const sourceDir = path.join(path.resolve(root(), 'routes/typings'));

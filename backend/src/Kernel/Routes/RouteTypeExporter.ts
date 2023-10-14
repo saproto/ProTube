@@ -35,6 +35,7 @@ export interface allRoutes {
 
 export default class RouteTypeExporter {
     routeTypings: routeTypings[] = [];
+    #debugRoutes = false;
 
     /**
      * Create the typescript typings for a schema
@@ -95,6 +96,12 @@ export default class RouteTypeExporter {
         generatedFile += routes.map((route) => `    '${route.fullName}': ${this.paramInterfaceName(route)}`).join('\n');
         generatedFile += '\n}\n';
 
+        return generatedFile;
+    }
+
+    buildUrlMap (routes: allRoutes[]): string {
+        let generatedFile = '';
+
         generatedFile += 'export const urlMappings: Record<keyof RouteParamsMap, string> = {\n';
         generatedFile += routes.map((route) => `    '${route.fullName}': '${route.url}',`).join('\n');
         generatedFile += '\n};\n';
@@ -122,6 +129,64 @@ export default class RouteTypeExporter {
             }
         }
 
+        return generatedFile;
+    }
+
+    buildSocketResponseTypeMap (routes: allRoutes[], routeTypings: routeTypings[]): string {
+        let generatedFile = 'export const responseMappings = {';
+
+        routeTypings.forEach((routeTyping) => {
+            generatedFile += this.buildSocketResponseTypes(routeTyping.exportedRoutes);
+        });
+        generatedFile += '}\n';
+
+        return generatedFile;
+    };
+
+    /**
+     * Create the typescript typings (namespaces) for the route responses
+     *
+     * @param routes - The routes to build the typings for
+     * @param prefix - The prefix to add to the routes
+     * @returns Typescript typings
+     */
+    buildSocketResponseTypes (routes: exportedRoutes, prefix = ''): string {
+        let generatedFile = '';
+
+        for (const route of routes.routes) {
+            if ('namespace' in route) {
+                generatedFile += this.buildRouteResponseTypes(route);
+            } else {
+                if (route.type !== '') {
+                    generatedFile += `'${route.fullName}': ${route.fullName}\n`;
+                }
+            }
+        }
+
+        return generatedFile;
+    }
+
+    /**
+     * Create the typescript typings (namespaces) for the route responses
+     *
+     * @param routes - The routes to build the typings for
+     * @param prefix - The prefix to add to the routes
+     * @returns Typescript typings
+     */
+    buildSocketRequestTypes (routes: exportedRoutes, prefix = ''): string {
+        let generatedFile = 'export const requestMappings = {';
+
+        for (const route of routes.routes) {
+            if ('namespace' in route) {
+                generatedFile += this.buildRouteResponseTypes(route);
+            } else {
+                if (route.type !== '') {
+                    generatedFile += `'${route.fullName}': ${route.type}\n`;
+                }
+            }
+        }
+
+        generatedFile += '}\n';
         return generatedFile;
     }
 
@@ -153,6 +218,8 @@ export default class RouteTypeExporter {
      * @param name - The name prefix of the routes
      */
     printRoutes (routes: exportedRoutes, name: string): void {
+        if (!this.#debugRoutes) return;
+
         writeFileSync(path.resolve(__dirname, `./${name}_types.json`), JSON.stringify(routes, null, 2));
     }
 
