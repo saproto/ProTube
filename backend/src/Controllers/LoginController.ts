@@ -1,10 +1,10 @@
 import z from 'zod';
 import c from '@app/Kernel/Services/Config';
 import { User } from '@app/Models/User';
-import { route } from '@app/Kernel/Routes/RouteRegistrar';
 import UserSchema from '@app/Schemas/UserSchema';
+import { webRoute } from '@app/Kernel/Routes/Web/Registrar';
 
-export const loginCallback = route({
+export const loginCallback = webRoute({
     schema: z.null(),
     handler: async (request, reply) => {
         const token = await request.server.saproto.getAccessTokenFromAuthorizationCodeFlow(request);
@@ -51,7 +51,7 @@ export const loginCallback = route({
     }
 });
 
-export const user = route({
+export const user = webRoute({
     schema: UserSchema,
     handler: async (request, reply) => {
         // if (request.user === undefined) {

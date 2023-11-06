@@ -17,7 +17,7 @@ export interface exportedRoutes {
     routes: Array<exportRoute | exportedRoutes>
 }
 
-interface routeParam {
+export interface routeParam {
     param: string
     optional: boolean
 }
@@ -132,11 +132,42 @@ export default class RouteTypeExporter {
         return generatedFile;
     }
 
-    buildSocketResponseTypeMap (routes: allRoutes[], routeTypings: routeTypings[]): string {
-        let generatedFile = 'export const responseMappings = {';
+    /**
+     * Create the typescript typings (namespaces) for the route responses
+     *
+     * @param routes - The routes to build the typings for
+     * @param prefix - The prefix to add to the routes
+     * @returns Typescript typings
+     */
+    buildSocketRouteCallbackTypes (routes: exportedRoutes, prefix = ''): string {
+        let generatedFile = '';
+
+        generatedFile += `declare namespace ${routes.namespace} {\n`;
+
+        for (const route of routes.routes) {
+            if ('namespace' in route) {
+                generatedFile += this.buildSocketRouteCallbackTypes(route);
+            } else {
+                if (route.type !== '') {
+                    generatedFile += `export ${route.type}\n`;
+                }
+                if (route.bodyType !== '') {
+                    generatedFile += `declare namespace ${route.name} { \n`;
+                    generatedFile += `export ${route.bodyType}\n`;
+                    generatedFile += '}\n';
+                }
+            }
+        }
+
+        generatedFile += '}\n';
+        return generatedFile;
+    }
+
+    buildSocketToServerCallbackTypeMap (routes: allRoutes[], routeTypings: routeTypings[]): string {
+        let generatedFile = 'export const socketToServerCallbackMap = {';
 
         routeTypings.forEach((routeTyping) => {
-            generatedFile += this.buildSocketResponseTypes(routeTyping.exportedRoutes);
+            generatedFile += this.buildSocketToServerCallbackTypes(routeTyping.exportedRoutes);
         });
         generatedFile += '}\n';
 
@@ -150,12 +181,12 @@ export default class RouteTypeExporter {
      * @param prefix - The prefix to add to the routes
      * @returns Typescript typings
      */
-    buildSocketResponseTypes (routes: exportedRoutes, prefix = ''): string {
+    buildSocketToServerCallbackTypes (routes: exportedRoutes, prefix = ''): string {
         let generatedFile = '';
 
         for (const route of routes.routes) {
             if ('namespace' in route) {
-                generatedFile += this.buildRouteResponseTypes(route);
+                generatedFile += this.buildSocketToServerCallbackTypes(route);
             } else {
                 if (route.type !== '') {
                     generatedFile += `'${route.fullName}': ${route.fullName}\n`;
@@ -174,11 +205,12 @@ export default class RouteTypeExporter {
      * @returns Typescript typings
      */
     buildSocketRequestTypes (routes: exportedRoutes, prefix = ''): string {
-        let generatedFile = 'export const requestMappings = {';
+        let generatedFile = 'export const socketToServerRequestMap = {';
 
         for (const route of routes.routes) {
             if ('namespace' in route) {
-                generatedFile += this.buildRouteResponseTypes(route);
+                // generatedFile += this.buildRouteResponseTypes(route);
+                continue;
             } else {
                 if (route.type !== '') {
                     generatedFile += `'${route.fullName}': ${route.type}\n`;

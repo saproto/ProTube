@@ -1,4 +1,4 @@
-import { type RouteParamsMap, urlMappings } from '@routes/typings/route-typings';
+import { type RouteParamsMap, urlMappings } from '@routes/typings/routes';
 
 type RouteTag = keyof RouteParamsMap;
 

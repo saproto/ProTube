@@ -2,7 +2,7 @@
 import * as UserController from '@app/Controllers/UserController';
 import UserPlugin from '@app/Middlewares/User';
 import AdminPlugin from '@app/Middlewares/Admin';
-import { type WebRoute } from '@app/Kernel/Routes/RouteRegistrar';
+import { type WebRoute } from '@app/Kernel/Routes/Web/Registrar';
 
 const web: WebRoute = {
     prefix: '/api',
@@ -15,13 +15,13 @@ const web: WebRoute = {
             middlewares: [AdminPlugin],
             name: '',
             routes: [
-                ['GET', 'admin', '/admin', UserController.adminInfor],
+                ['GET', 'admin', '/admin', UserController.adminInfo],
                 {
                     prefix: '/test',
                     middlewares: [],
                     name: 'prefix',
                     routes: [
-                        ['GET', 'admin', '/admin2', UserController.adminInfor]
+                        ['GET', 'admin', '/admin2', UserController.adminInfo]
                     ]
                 }
             ]

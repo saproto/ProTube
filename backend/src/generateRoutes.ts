@@ -11,19 +11,25 @@ if (!existsSync(path.resolve(root(), 'routes/typings'))) {
 closeSync(openSync(path.resolve(root(), 'routes/typings/route-typings.ts'), 'w'));
 
 import WebRoutes from '@routes/web';
-import ApiRoutes from '@routes/guest';
-import SocketRoutes from '@routes/socket';
-import RouteRegistrar from '@app/Kernel/Routes/RouteRegistrar';
-import SocketRegistrar from '@app/Kernel/Routes/SocketRegistrar';
+// // import ApiRoutes from '@routes/guest';
+// // import SocketRoutes from '@routes/socket';
+// import RouteRegistrar from '@app/Kernel/Routes/RouteRegistrar';
+// // import SocketRegistrar from '@app/Kernel/Routes/SocketRegistrar';
 
-const registrar = new RouteRegistrar();
-const socketRegistrar = new SocketRegistrar();
+// const registrar = new RouteRegistrar();
+// // const socketRegistrar = new SocketRegistrar();
 
-registrar.onlyLoadRoutes(WebRoutes, WebRoutes.name);
-registrar.onlyLoadRoutes(ApiRoutes, ApiRoutes.name);
-socketRegistrar.onlyLoadRoutes(SocketRoutes, 'socket.');
+// registrar.onlyLoadRoutes(WebRoutes, WebRoutes.name);
+// // registrar.onlyLoadRoutes(ApiRoutes, ApiRoutes.name);
+// // socketRegistrar.onlyLoadRoutes(SocketRoutes, 'socket.');
 
-registrar.exportRouteTypings();
-socketRegistrar.exportRouteTypings();
+// registrar.exportRouteTypings();
+// socketRegistrar.exportRouteTypings();
+import TypescriptExporter from './Kernel/Routes/Web/TypescriptExporter';
+
+const exporter = new TypescriptExporter();
+exporter.load(WebRoutes);
+
+exporter.export();
 
 console.log('Built routes!');

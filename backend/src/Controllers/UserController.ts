@@ -1,15 +1,15 @@
-import { route } from '@app/Kernel/Routes/RouteRegistrar';
+import { webRoute } from '@app/Kernel/Routes/Web/Registrar';
 import UserSchema from '@app/Schemas/UserSchema';
 import z from 'zod';
 
-export const userInfo = route({
+export const userInfo = webRoute({
     schema: UserSchema,
     handler: async (request, reply) => {
         await reply.send(request.user);
     }
 });
 
-export const adminInfor = route({
+export const adminInfo = webRoute({
     schema: z.object({
         incr: z.number()
     }),

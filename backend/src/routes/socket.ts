@@ -25,7 +25,7 @@ const socket: SocketRoute[] = [{
         };
     }, sessionRefreshMiddleware],
     routes: [
-        ['homeevent', dashboardSocket.testRoute]
+        ['listen for', 'homeevent', dashboardSocket.testRoute]
     ]
 }, {
     name: 'socket2',
@@ -33,7 +33,9 @@ const socket: SocketRoute[] = [{
     preConnectionMiddlewares: [],
     postConnectionMiddlewares: [],
     routes: [
-        ['homeevent2', dashboardSocket.testRoute2]
+        ['listen for', 'homeevent2', dashboardSocket.testRoute2],
+        // ['emit event', 'someEvent', dashboardSocket.someEmit]
+        ['emit event', 'homeevent', dashboardSocket.someEmit]
     ]
 }];
 

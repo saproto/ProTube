@@ -20,13 +20,13 @@ interface socketEmitInterface<
 
 export function socketEmit<T extends keyof responseMappings>(socket: Socket, eventName: T): socketEmitInterface<T, T> {
     return {
-        emit: () => {
-            socket.emit(eventName);
+        emit: (...args) => {
+            socket.emit(eventName, args);
         },
     };
 }
 
-export function socketEvent
+export function serverEvent<T extends keyof>(eventName: T)
 
 const socket = io();
 const someDefinedEvent = socketEmit(socket, 'socket.devsocket.homeevent');

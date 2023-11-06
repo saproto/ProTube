@@ -13,7 +13,7 @@ export type postConnectionSocketMiddleware = (socket: Socket) => (event: any, ne
 
 type url = `/${string}`;
 
-type RouteDefinition = [string, socketRouteInterface<any, any>];
+type RouteDefinition = ['listen for', string, socketEventInterface<any, any>] | ['emit event', string, socketEmitInterface<any, any>];
 
 export interface SocketRoute {
     namespace: url
@@ -25,7 +25,7 @@ export interface SocketRoute {
     routes: RouteDefinition[]
 }
 
-interface socketRouteInterface<Data extends ZodTypeAny, Callback extends ZodTypeAny> {
+interface socketEventInterface<Data extends ZodTypeAny, Callback extends ZodTypeAny> {
     schema?: ZodTypeAny
     bodySchema?: ZodTypeAny
     handler: (socket: Socket,
@@ -43,7 +43,7 @@ interface socketRouteInterface<Data extends ZodTypeAny, Callback extends ZodType
     ) => Promise<void> | void
 }
 
-export function socketRoute<Data extends ZodTypeAny = Zod.ZodNever, Callback extends ZodTypeAny = Zod.ZodNever> (
+export function onSocketEvent<Data extends ZodTypeAny = Zod.ZodNever, Callback extends ZodTypeAny = Zod.ZodNever> (
     input: {
         schema?: Data
         callbackSchema?: Callback
@@ -60,11 +60,41 @@ export function socketRoute<Data extends ZodTypeAny = Zod.ZodNever, Callback ext
                         : [data: z.infer<Data>, callback: (cb: z.infer<Callback>) => void]
                 )
         ) => Promise<void> | void
-    }): socketRouteInterface<Data, Callback> {
+    }): socketEventInterface<Data, Callback> {
     return {
         schema: input.schema,
         bodySchema: input.callbackSchema,
         handler: input.handler
+    };
+}
+
+interface socketEmitInterface<Data extends ZodTypeAny, EventName extends string> {
+    emit: (
+        socket: Socket,
+        ...args: Data extends Zod.ZodNever
+            ? EventName extends string ? [ ] : [ ]
+            : [ data: z.infer<Data> ]
+    ) => void
+    schema: Data
+}
+
+export function socketEmit<Data extends ZodTypeAny = Zod.ZodNever, EventName extends string = any> (
+    input: {
+        name: EventName
+        schema: Data
+    }
+): socketEmitInterface<Data, EventName> {
+    return {
+        emit: (socket, ...args: Data extends Zod.ZodNever
+            ? [ ]
+            : [ data: z.infer<Data> ]) => {
+            if (args.length === 1) {
+                socket.emit(input.name, args[0]);
+                return;
+            }
+            socket.emit(input.name);
+        },
+        schema: input.schema
     };
 }
 
@@ -99,7 +129,7 @@ export default class SocketRegistrar {
      */
     onlyLoadRoutes (routes: SocketRoute[], name: string): void {
         for (const route of routes) {
-            const exportedRoutes = this.#formatExportedRoutes(route, name);
+            const exportedRoutes = this.#formatExportedRoutes(route, name, 'callback');
 
             const routeTyping: routeTypings = {
                 name: name + route.name,
@@ -157,7 +187,7 @@ export default class SocketRegistrar {
 
         for (const typings of this.#routeTypeExporter.routeTypings) {
             allRoutes.push(...typings.allRoutes);
-            builtRouteResponseTypings += this.#routeTypeExporter.buildRouteResponseTypes(typings.exportedRoutes, typings.name);
+            builtRouteResponseTypings += this.#routeTypeExporter.buildSocketRouteCallbackTypes(typings.exportedRoutes, typings.name);
             // builtParamRouteTypes += this.#routeTypeExporter.buildParamRouteTypes(typings.exportedRoutes);
             this.#routeTypeExporter.printRoutes(typings.exportedRoutes, typings.name);
         }
@@ -166,7 +196,7 @@ export default class SocketRegistrar {
         // const routeUrlMap = this.#routeTypeExporter.buildUrlMap(allRoutes);
 
         // writeFileSync(path.resolve(root(), 'routes/typings/socket-route-typings.ts'), builtParamRouteTypes + routeParamsMap + routeUrlMap + '\n');
-        writeFileSync(path.resolve(root(), 'routes/typings/socket-route-typings.ts'), this.#routeTypeExporter.buildSocketResponseTypeMap(allRoutes, this.#routeTypeExporter.routeTypings) + '\n');
+        writeFileSync(path.resolve(root(), 'routes/typings/socket-route-typings.ts'), this.#routeTypeExporter.buildSocketToServerCallbackTypeMap(allRoutes, this.#routeTypeExporter.routeTypings) + '\n');
         writeFileSync(path.resolve(root(), 'routes/typings/socket-response-typings.d.ts'), builtRouteResponseTypings);
 
         const sourceDir = path.join(path.resolve(root(), 'routes/typings'));
@@ -189,13 +219,13 @@ export default class SocketRegistrar {
 
         for (const route of socketRoute.routes) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const [eventName, handler] = route;
+            const [emitOrListen, eventName, handler] = route;
 
             const routeType: exportRoute = {
                 name: eventName,
                 fullName: routePrefix + socketRoute.name + '.' + eventName,
                 type: this.#routeTypeExporter.createTsTypes(eventName, handler.schema),
-                bodyType: this.#routeTypeExporter.createTsTypes('request', handler.bodySchema),
+                bodyType: emitOrListen === 'listen for' ? this.#routeTypeExporter.createTsTypes('callback', handler.bodySchema) : '',
                 url: socketRoute.namespace,
                 params: []
             };

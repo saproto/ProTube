@@ -81,7 +81,7 @@ export async function startWebServer (): Promise<void> {
     await registrar.register(server, GuestRoutes);
 
     console.log(server.printRoutes());
-    registrar.exportRouteTypings();
+    // registrar.exportRouteTypings();
 
     await server.ready();
 
