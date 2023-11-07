@@ -1,5 +1,6 @@
 import { type WebRoute } from '@app/Kernel/Routes/Web/Registrar';
-import * as typescriptGenerator from './TypescriptGenerator';
+// import * as typescriptGenerator from './TypescriptGenerator';
+import TypescriptGenerator from './TypescriptGenerator';
 import { writeFileSync } from 'fs';
 import path from 'path';
 import root from '@app/rootPath';
@@ -13,8 +14,8 @@ export interface routeParam {
 export interface formattedWebRoute {
     fullName: string
     name: string
-    type: string
-    bodyTypescript: string
+    responseTypescript: string
+    requestTypescript: string
     url: string
     params: routeParam[] | undefined
 }
@@ -37,6 +38,8 @@ export interface absoluteUrl {
 
 export default class TypescriptExporter {
     #routeTypings: routeTypings[] = [];
+    static #EXPORT_PATH = 'routes/typings';
+    static #FRONTEND_EXPORT_PATH = '../../frontend/src/utils/route-typings';
 
     /**
      * Load and prepare the typings for the routes
@@ -58,18 +61,25 @@ export default class TypescriptExporter {
     export (): void {
         const routeParameterInterfaces = this.#createRouteParameterInterfacesTypings();
         const routes = this.#createAbsoluteUrlTypings();
-        writeFileSync(path.resolve(root(), 'routes/typings/routes.ts'), routeParameterInterfaces + routes + '\n');
+        const routeRequestsNResponses = this.#createRequestNResponseTypings();
 
-        // const routeParamsMap = this.#routeTypeExporter.buildRouteParamsMap(allRoutes);
-        // const routeUrlMap = this.#routeTypeExporter.buildUrlMap(allRoutes);
+        writeFileSync(path.resolve(root(), `${TypescriptExporter.#EXPORT_PATH}/routes.ts`), routeParameterInterfaces + routes + '\n');
+        writeFileSync(path.resolve(root(), `${TypescriptExporter.#EXPORT_PATH}/route-requests-n-responses.d.ts`), routeRequestsNResponses);
 
-        // writeFileSync(path.resolve(root(), 'routes/typings/route-typings.ts'), builtParamRouteTypes + routeParamsMap + routeUrlMap + '\n');
-        // writeFileSync(path.resolve(root(), 'routes/typings/response-typings.d.ts'), builtRouteResponseTypings);
-
-        const sourceDir = path.join(path.resolve(root(), 'routes/typings'));
-        const targetDir = path.join(path.resolve(root(), '../../frontend/src/utils/route-typings'));
+        const sourceDir = path.join(path.resolve(root(), TypescriptExporter.#EXPORT_PATH));
+        const targetDir = path.join(path.resolve(root(), TypescriptExporter.#FRONTEND_EXPORT_PATH));
 
         copySync(sourceDir, targetDir, { overwrite: true });
+    }
+
+    #createRequestNResponseTypings (): string {
+        let typescript = '';
+
+        for (const typings of this.#routeTypings) {
+            typescript += TypescriptGenerator.createRequestNResponseTs(typings.formattedWebRoutes, typings.name);
+        }
+
+        return typescript;
     }
 
     #createAbsoluteUrlTypings (): string {
@@ -80,8 +90,8 @@ export default class TypescriptExporter {
             allAbsoluteUrls.push(...typings.allAbsoluteUrls);
         }
 
-        typescript += typescriptGenerator.createRouteParametersMappingTs(allAbsoluteUrls);
-        typescript += typescriptGenerator.createRouteUrlsTs(allAbsoluteUrls);
+        typescript += TypescriptGenerator.createRouteParametersMappingTs(allAbsoluteUrls);
+        typescript += TypescriptGenerator.createRouteUrlsTs(allAbsoluteUrls);
 
         return typescript;
     }
@@ -90,7 +100,7 @@ export default class TypescriptExporter {
         let typescript = '';
 
         for (const typings of this.#routeTypings) {
-            typescript += typescriptGenerator.createRouteParametersInterfacesTs(typings.formattedWebRoutes);
+            typescript += TypescriptGenerator.createRouteParametersInterfacesTs(typings.formattedWebRoutes);
         }
 
         return typescript;
@@ -143,8 +153,8 @@ export default class TypescriptExporter {
                 const routeType: formattedWebRoute = {
                     name,
                     fullName: fullNamespace + '.' + name,
-                    type: typescriptGenerator.createTsTypes(name, newRoute.schema),
-                    bodyTypescript: typescriptGenerator.createTsTypes('request', newRoute.bodySchema),
+                    responseTypescript: TypescriptGenerator.createTsTypes(name, newRoute.schema),
+                    requestTypescript: TypescriptGenerator.createTsTypes('request', newRoute.bodySchema),
                     url: routePrefix + routes.prefix + url,
                     params: this.#findRouteParams(url)
                 };
@@ -179,16 +189,4 @@ export default class TypescriptExporter {
 
         return params;
     }
-
-    // /**
-    //  * Print all routes to a json file for debugging
-    //  *
-    //  * @param routes - The routes to print
-    //  * @param name - The name prefix of the routes
-    //  */
-    // #debugRoutes (routes: formattedWebRoutes, name: string): void {
-    //     if (!this.#debugRoutes) return;
-
-    //     writeFileSync(path.resolve(__dirname, `./${name}_types.json`), JSON.stringify(routes, null, 2));
-    // }
 }

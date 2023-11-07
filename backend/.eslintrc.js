@@ -15,6 +15,7 @@ module.exports = {
         quotes: ['error', 'single'],
         '@typescript-eslint/indent': ['error', 4],
         semi: ['error', 'always'],
-        '@typescript-eslint/semi': ['error', 'always']
+        '@typescript-eslint/semi': ['error', 'always'],
+        '@typescript-eslint/no-extraneous-class': 'off'
     }
 };
