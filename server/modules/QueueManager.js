@@ -1,3 +1,4 @@
+const { isEmpty } = require("lodash");
 const { format_hh_mm_ss } = require("../utils/time-formatter");
 
 let queue = [];
@@ -119,13 +120,20 @@ function findDoppelganger(video) {
 
 // This orders the queue on a round-robin style considering first come first serve
 function organizeQueue() {
+  let oldQueue = queue;
+
+  // insert the current video at the front of the queue
+  if (!isEmpty(currentVideo)) {
+    oldQueue.unshift(currentVideo);
+  }
+
   // get all ids in the queue on which to order
-  const allIds = new Set(queue.map((item) => item.user.id));
+  const allIds = new Set(oldQueue.map((item) => item.user.id));
   let videosPerUser = [];
   // create a 2d array for all videos per user [[videos of user a], [videos of user b]]
   allIds.forEach((userId) => {
     videosPerUser.push(
-      queue.filter((element) => {
+      oldQueue.filter((element) => {
         return element.user.id == userId;
       })
     );
@@ -154,6 +162,12 @@ function organizeQueue() {
       });
     }
   }
+
+  // The currentvideo wasn't empty and was added for the sorting algorithm. Remove it again
+  if (!isEmpty(currentVideo)) {
+    newQueue.shift();
+  }
+
   queue = newQueue;
   eventBus.emit("queue-update");
 }
