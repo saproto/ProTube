@@ -113,7 +113,7 @@ const playerID = "player-" + Math.random();
 const totalDuration = ref();
 const queueProgress = ref(0);
 const queue = ref([]);
-const buffering=ref(false)
+const buffering = ref(false);
 let player;
 const playerState = ref({
   playerMode: enums.MODES.IDLE,
@@ -208,22 +208,23 @@ socket.on("player-update", (newState) => {
 });
 
 //the seconds the player skips when the player is off by more than the delta
-const timeToWait=2;
+const timeToWait = 2;
 socket.on("new-video-timestamp", async (newStamp) => {
   totalDuration.value = newStamp.totalDuration;
   queueProgress.value =
     (newStamp.timestamp / playerState.value.video.duration) * 100;
 
-  const playerTime= await player.getCurrentTime();
-  if (Math.abs((playerTime) - newStamp.timestamp) > 0.1 && !buffering.value) {
-    buffering.value=true
-    console.log(playerTime, newStamp.timestamp)
+  const playerTime = await player.getCurrentTime();
+  if (Math.abs(playerTime - newStamp.timestamp) > 0.1 && !buffering.value) {
+    buffering.value = true;
+    console.log(playerTime, newStamp.timestamp);
     player.pauseVideo();
-    setTimeout(async ()=>{player.playVideo();
-      buffering.value=false;
-      }, timeToWait*1000)
+    setTimeout(async () => {
+      player.playVideo();
+      buffering.value = false;
+    }, timeToWait * 1000);
 
-    player.seekTo(newStamp.timestamp+timeToWait, true);
+    player.seekTo(newStamp.timestamp + timeToWait, true);
 
     if ((await player.getPlayerState()) === 2) player.playVideo();
   }
