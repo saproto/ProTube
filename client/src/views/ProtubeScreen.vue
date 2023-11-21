@@ -225,6 +225,7 @@ socket.on("new-video-timestamp", async (newStamp) => {
       buffering.value = false;
     }, timeToWait * 1000)
 
+
     player.seekTo(newStamp.timestamp + timeToWait, true);
 
     if ((await player.getPlayerState()) === 2) player.playVideo();
