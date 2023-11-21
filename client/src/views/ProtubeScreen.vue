@@ -186,17 +186,17 @@ onMounted(() => {
       emit("youtube-media-error", event.data);
     });
 
-  // let startup=true
+  let startup=true
 
   player.on('stateChange', (event) => {
-    // if(!startup){
-    //   return
-    // }
+    if(!startup){
+      return
+    }
     if(event.data===3){
       newTimeSkip=Date.now()
     }else if(event.data===1){
       newTimeSkip=(Date.now() - newTimeSkip)/1000 + 0.1
-      // startup=false
+      startup=false
     }
   });
 });
