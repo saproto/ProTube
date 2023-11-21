@@ -143,8 +143,8 @@ const props = defineProps({
   },
 });
 
-const timeSkip = props.screenCode === -1 ? 4 : 0.1;
-
+// const timeSkip = props.screenCode === -1 ? 4 : 0.1;
+let newTimeSkip=0;
 // Compute the queue with the currently playing video at the front
 const queueWithCurrent = computed(() => {
   let currentVideo = playerState.value.video;
@@ -170,20 +170,34 @@ onBeforeMount(() => {
 });
 
 onMounted(() => {
-  player = YoutubePlayer(playerID, {
-    host: "https://www.youtube-nocookie.com",
-    videoId: "",
-    playerVars: {
-      autoplay: 1,
-      controls: 0,
-      modestbranding: 0,
-      loop: 0,
-    },
-  });
+    player = YoutubePlayer(playerID, {
+      host: "https://www.youtube-nocookie.com",
+      videoId: "",
+      playerVars: {
+        autoplay: 1,
+        controls: 0,
+        modestbranding: 0,
+        loop: 0,
+      },
+    });
 
-  // the iframe api player generates any error (unplayable media)
-  player.on("error", (event) => {
-    emit("youtube-media-error", event.data);
+    // the iframe api player generates any error (unplayable media)
+    player.on("error", (event) => {
+      emit("youtube-media-error", event.data);
+    });
+
+  // let startup=true
+
+  player.on('stateChange', (event) => {
+    // if(!startup){
+    //   return
+    // }
+    if(event.data===3){
+      newTimeSkip=Date.now()
+    }else if(event.data===1){
+      newTimeSkip=(Date.now() - newTimeSkip)/1000 + 0.1
+      // startup=false
+    }
   });
 });
 
@@ -210,15 +224,14 @@ socket.on("player-update", (newState) => {
 });
 
 //the seconds the player skips when the player is off by more than the delta
-const timeToWait = 2;
 socket.on("new-video-timestamp", async (newStamp) => {
+  const playerTime = await player.getCurrentTime();
   totalDuration.value = newStamp.totalDuration;
   queueProgress.value =
     (newStamp.timestamp / playerState.value.video.duration) * 100;
 
-  const playerTime = await player.getCurrentTime();
   if (
-    Math.abs(playerTime - newStamp.timestamp) > timeSkip &&
+    Math.abs(playerTime - newStamp.timestamp) > 0.1 &&
     !buffering.value
   ) {
     buffering.value = true;
@@ -226,9 +239,9 @@ socket.on("new-video-timestamp", async (newStamp) => {
     setTimeout(async () => {
       player.playVideo();
       buffering.value = false;
-    }, timeToWait * 1000);
+    }, newTimeSkip * 1000);
 
-    player.seekTo(newStamp.timestamp + timeToWait, true);
+    player.seekTo(newStamp.timestamp + newTimeSkip, true);
 
     if ((await player.getPlayerState()) === 2) player.playVideo();
   }
