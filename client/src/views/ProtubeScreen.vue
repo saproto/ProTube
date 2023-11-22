@@ -113,7 +113,6 @@ const playerID = "player-" + Math.random();
 const totalDuration = ref();
 const queueProgress = ref(0);
 const queue = ref([]);
-const buffering = ref(false);
 let player;
 const playerState = ref({
   playerMode: enums.MODES.IDLE,
@@ -143,8 +142,12 @@ const props = defineProps({
   },
 });
 
-// const timeSkip = props.screenCode === -1 ? 4 : 0.1;
-let newTimeSkip=0;
+const allowedDelta = props.screenCode === -1 ? 2 : 0.12;
+let YTPlayerState=-1;
+let bufferTime = -1;
+let firstTime=-1;
+
+
 // Compute the queue with the currently playing video at the front
 const queueWithCurrent = computed(() => {
   let currentVideo = playerState.value.video;
@@ -186,19 +189,17 @@ onMounted(() => {
       emit("youtube-media-error", event.data);
     });
 
-  let startup=true
-
   player.on('stateChange', (event) => {
-    if(!startup){
+    if(event.data===-1){
       return
     }
-    if(event.data===3){
-      newTimeSkip=Date.now()
-    }else if(event.data===1){
-      newTimeSkip=(Date.now() - newTimeSkip)/1000 + 0.1
-      startup=false
+
+    if(event.data===5){
+      player.playVideo();
+      bufferTime=(Date.now()-firstTime)/1000;
     }
-  });
+    YTPlayerState = event.data
+  })
 });
 
 watch(
@@ -216,7 +217,8 @@ onBeforeUnmount(() => {
 socket.on("player-update", (newState) => {
   if (newState.playerType === enums.TYPES.VIDEO) {
     if (newState.playerMode === enums.MODES.PLAYING) {
-      player.loadVideoById(newState.video.id, newState.timestamp);
+      player.cueVideoById(newState.video.id, newState.timestamp)
+      firstTime=Date.now()
     } else player.pauseVideo();
   } else if (playerState.value.playerType === enums.TYPES.VIDEO)
     player.stopVideo();
@@ -226,24 +228,26 @@ socket.on("player-update", (newState) => {
 //the seconds the player skips when the player is off by more than the delta
 socket.on("new-video-timestamp", async (newStamp) => {
   const playerTime = await player.getCurrentTime();
+  //if the player is buffering or we can not get a playertime do nothing
+  if(Number.isNaN(playerTime) || YTPlayerState === 3){
+    return;
+  }
+  let delta=newStamp.timestamp - playerTime;
   totalDuration.value = newStamp.totalDuration;
   queueProgress.value =
     (newStamp.timestamp / playerState.value.video.duration) * 100;
-
-  if (
-    Math.abs(playerTime - newStamp.timestamp) > 0.1 &&
-    !buffering.value
-  ) {
-    buffering.value = true;
-    player.pauseVideo();
-    setTimeout(async () => {
-      player.playVideo();
-      buffering.value = false;
-    }, newTimeSkip * 1000);
-
-    player.seekTo(newStamp.timestamp + newTimeSkip, true);
-
-    if ((await player.getPlayerState()) === 2) player.playVideo();
+  if(Math.abs(delta)> allowedDelta) {
+    if (Math.abs(delta) > bufferTime) {
+      player.pauseVideo()
+      setTimeout(async () => {
+        player.playVideo();
+      }, bufferTime * 1000);
+      player.seekTo(newStamp.timestamp + bufferTime, true);
+    } else {
+      player.seekTo(newStamp.timestamp, true).then(() => {
+        player.playVideo();
+      });
+    }
   }
 });
 
