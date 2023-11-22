@@ -146,7 +146,7 @@ const allowedDelta = props.screenCode === -1 ? 2 : 0.12;
 let YTPlayerState=-1;
 let bufferTime = -1;
 let firstTime=-1;
-
+let maySync = true;
 
 // Compute the queue with the currently playing video at the front
 const queueWithCurrent = computed(() => {
@@ -193,7 +193,6 @@ onMounted(() => {
     if(event.data===-1){
       return
     }
-
     if(event.data===5){
       player.playVideo();
       bufferTime=(Date.now()-firstTime)/1000;
@@ -219,6 +218,7 @@ socket.on("player-update", (newState) => {
     if (newState.playerMode === enums.MODES.PLAYING) {
       player.cueVideoById(newState.video.id, newState.timestamp)
       firstTime=Date.now()
+      maySync = true;
     } else player.pauseVideo();
   } else if (playerState.value.playerType === enums.TYPES.VIDEO)
     player.stopVideo();
@@ -236,13 +236,19 @@ socket.on("new-video-timestamp", async (newStamp) => {
   totalDuration.value = newStamp.totalDuration;
   queueProgress.value =
     (newStamp.timestamp / playerState.value.video.duration) * 100;
-  if(Math.abs(delta)> allowedDelta) {
-    if (Math.abs(delta) > bufferTime) {
-      player.pauseVideo()
+
+  if(Math.abs(delta) <= allowedDelta){
+    maySync=false
+  }
+
+  if((Math.abs(delta) > allowedDelta && maySync) || Math.abs(delta) > allowedDelta * 10) {
+    if (Math.abs(delta) > bufferTime * 2) {
       setTimeout(async () => {
         player.playVideo();
-      }, bufferTime * 1000);
-      player.seekTo(newStamp.timestamp + bufferTime, true);
+      }, bufferTime * 2000);
+      player.pauseVideo().then(()=>{
+        player.seekTo(newStamp.timestamp + bufferTime * 2, true);
+      });
     } else {
       player.seekTo(newStamp.timestamp, true).then(() => {
         player.playVideo();
