@@ -17,7 +17,10 @@ this.protubeApi.post("/updateadmin", async function (req, res) {
   );
 
   // Check if the required data is present and parse it
-  if (!Object.keys(req.body).includes('user_id') || !Object.keys(req.body).includes('admin')) {
+  if (
+    !Object.keys(req.body).includes("user_id") ||
+    !Object.keys(req.body).includes("admin")
+  ) {
     logger.apiInfo("Request had incomplete body");
     return res.send({ success: enums.FAIL, message: "Incomplete body" });
   }
