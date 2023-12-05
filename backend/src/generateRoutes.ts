@@ -1,19 +1,20 @@
 /* eslint-disable import/first */
 // We can't run this file if the file doesn't exist
+// import 'module-alias/register';
 import { closeSync, existsSync, mkdirSync, openSync } from 'fs';
 import path from 'path';
-import root from '@app/rootPath';
+import root from '#App/rootPath.js';
 
-if (!existsSync(path.resolve(root(), 'routes/typings'))) {
-    mkdirSync(path.resolve(root(), 'routes/typings'), { recursive: true });
+if (!existsSync(path.resolve(root(), 'src/routes/typings'))) {
+    mkdirSync(path.resolve(root(), 'src/routes/typings'), { recursive: true });
 }
 
-closeSync(openSync(path.resolve(root(), 'routes/typings/route-typings.ts'), 'w'));
+closeSync(openSync(path.resolve(root(), 'src/routes/typings/route-typings.ts'), 'w'));
 
-import WebRoutes from '@routes/web';
+// import WebRoutes from '#Routes/web.js';
 // // import ApiRoutes from '@routes/guest';
 // // import SocketRoutes from '@routes/socket';
-// import RouteRegistrar from '@app/Kernel/Routes/RouteRegistrar';
+// import RouteRegistrar from '#Kernel/Routes/RouteRegistrar';
 // // import SocketRegistrar from '@app/Kernel/Routes/SocketRegistrar';
 
 // const registrar = new RouteRegistrar();
@@ -25,11 +26,11 @@ import WebRoutes from '@routes/web';
 
 // registrar.exportRouteTypings();
 // socketRegistrar.exportRouteTypings();
-import TypescriptExporter from './Kernel/Routes/Web/TypescriptExporter';
+// import TypescriptExporter from '#Kernel/Routes/Web/TypescriptExporter.js';
 
-const exporter = new TypescriptExporter();
-exporter.load(WebRoutes);
+// const exporter = new TypescriptExporter();
+// exporter.load(WebRoutes);
 
-exporter.export();
+// exporter.export();
 
-console.log('Built routes!');
+// console.log('Built routes!');

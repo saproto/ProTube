@@ -1,32 +1,20 @@
 {
   "compilerOptions": {
     "baseUrl": "./src",
-    "module": "CommonJS",
-    "target": "ES2022",
     "outDir": "./dist",
+    "rootDir": ".",
     "paths": {
-      "@Controllers/*": ["Controllers/*"],
-      "@routes/*": ["routes/*"],
-      "@Services/*": ["Services/*"],
-      // "@serviceproviders/*": ["serviceproviders/*"],
-      "@utils/*": ["utils/*"],
-      // "@middlewares/*": ["middlewares/*"],
-      // "@validators/*": ["validators/*"],
-      // "@exceptions/*": ["exceptions/*"],
-      "@app/*": ["*"],
-      // "@seeders/*": ["seeders/*"],
-      "@Kernel/*": ["Kernel/*"],
-      "@Models/*": ["Models/*"],
-      "config": ["Kernel/Config.ts"],
-    },
-    "strict": true,
-    "strictNullChecks": true,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "strictPropertyInitialization": false,
-    "skipLibCheck": true,
-    "emitDecoratorMetadata": true,
+      "#Controllers/*": ["Controllers/*"],
+      "#Routes/*": ["routes/*"],
+      "#Services/*": ["Services/*"],
+      "#Utils/*": ["utils/*"],
+      "#App/*": ["*"],
+      "#Kernel/*": ["Kernel/*"],
+      "#Models/*": ["Models/*"],
+      "#Config": ["Kernel/Config.ts"]
+    }
   },
+  "extends": "@tsconfig/node20/tsconfig.json",
   "include": ["src/**/*.ts", "src/**/*.d.ts", ".eslintrc.js"],
   "plugins": [
     {
@@ -35,6 +23,8 @@
     }
   ],
   "ts-node": {
-    "files": true
+    "files": true,
+    "transpileOnly": true,
+    "esm": true
   }
 }
