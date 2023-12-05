@@ -15,13 +15,17 @@ this.protubeApi.post("/updateadmin", async function (req, res) {
   logger.apiInfo(
     `Attempt from ${req.hostname} to update the admin status of a user`
   );
+
   // Check if the required data is present and parse it
-  if (!req.body?.user_id || !req.body?.admin) {
+  if (
+    !Object.keys(req.body).includes("user_id") ||
+    !Object.keys(req.body).includes("admin")
+  ) {
     logger.apiInfo("Request had incomplete body");
     return res.send({ success: enums.FAIL, message: "Incomplete body" });
   }
   const userID = parseInt(req.body.user_id);
-  const isAdmin = parseInt(req.body.admin) === 1;
+  const isAdmin = +req.body.admin === 1;
 
   // finding and updating the users admin status in the database
   const user = await User.findByPk(userID);
@@ -61,6 +65,7 @@ this.protubeApi.post("/updateadmin", async function (req, res) {
 
 // Endpoint to skip a song
 this.protubeApi.post("/skipsong", function (req, res) {
+  logger.apiInfo(`Attempt from ${req.hostname} to skip a song`);
   const wasPlaying = getPlayerMode() !== enums.MODES.IDLE;
   try {
     playNextVideo();
