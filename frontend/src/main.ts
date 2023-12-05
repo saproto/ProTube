@@ -7,3 +7,4 @@ import router from '@router/index';
 const pinia = createPinia();
 
 createApp(App).use(pinia).use(router).mount('#app');
+const f = '' as socket.nsp1.soemEmit.soemEmit;

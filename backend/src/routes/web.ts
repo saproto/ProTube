@@ -9,7 +9,7 @@ const web: WebRoute = {
     middlewares: [UserPlugin],
     name: 'http',
     routes: [
-        ['POST', 'user', '/user', UserController.userInfo],
+        ['GET', 'user', '/user', UserController.userInfo],
         {
             prefix: '',
             middlewares: [AdminPlugin],

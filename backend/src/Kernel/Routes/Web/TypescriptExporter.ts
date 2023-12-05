@@ -76,7 +76,7 @@ export default class TypescriptExporter {
         let typescript = '';
 
         for (const typings of this.#routeTypings) {
-            typescript += TypescriptGenerator.createRequestNResponseTs(typings.formattedWebRoutes, typings.name);
+            typescript += TypescriptGenerator.createRequestNResponseTs(typings.formattedWebRoutes);
         }
 
         return typescript;
@@ -119,7 +119,6 @@ export default class TypescriptExporter {
             if ('namespace' in route) {
                 absoluteUrls.push(...this.#makeWebRouteAbsoluteUrls(route));
             } else {
-                console.log(route.fullName);
                 absoluteUrls.push({
                     url: route.url,
                     fullName: route.fullName

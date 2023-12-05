@@ -19,6 +19,7 @@ export const useUserStore = defineStore('user', () => {
         redirect: 'manual',
     }).then(async (response) => {
         console.log('logging in...');
+        console.log(response);
         if (response.type === 'opaqueredirect') {
             window.location.href = '/auth/login';
             return;
@@ -27,6 +28,8 @@ export const useUserStore = defineStore('user', () => {
             user.value.authenticated = true;
             user.value.name = data.name;
             user.value.admin = data.admin;
+            console.log('logged in');
+            console.log(user.value);
             userFetched(true);
         }
     });

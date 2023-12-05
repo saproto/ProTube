@@ -74,7 +74,7 @@ export default class TypescriptGenerator {
      * @param prefix - The prefix to add to the routes
      * @returns Typescript typings
      */
-    static createRequestNResponseTs (routes: formattedWebRoutes, prefix = ''): string {
+    static createRequestNResponseTs (routes: formattedWebRoutes): string {
         let generatedFile = '';
 
         generatedFile += `declare namespace ${routes.namespace} {\n`;

@@ -1,7 +1,6 @@
 import WebRoutes from '@routes/web';
 import GuestRoutes from '@routes/guest';
 import SocketRoutes from '@routes/socket';
-import RouteRegistrar from '@app/Kernel/Routes/RouteRegistrar';
 import fastify from 'fastify';
 import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import fastifySwagger from '@fastify/swagger';
@@ -18,6 +17,9 @@ import RedisStore from '@mgcrea/fastify-session-redis-store';
 import c from '@app/Kernel/Services/Config';
 import fastifySocketSession from 'fastify-socketio-session';
 import SocketRegistrar from './Routes/SocketRegistrar';
+import WebRouteRegistrar from './Routes/Web/Registrar';
+import socketRouteRegistrar from './Routes/Socket/Registrar';
+import SocketRouteRegistrar from './Routes/Socket/Registrar';
 
 const server = fastify();
 
@@ -76,32 +78,17 @@ export async function startWebServer (): Promise<void> {
 
     await registerAuthentication(server);
 
-    const registrar = new RouteRegistrar();
-    await registrar.register(server, WebRoutes);
-    await registrar.register(server, GuestRoutes);
+    const webRegistrar = new WebRouteRegistrar();
+    await webRegistrar.register(server, WebRoutes);
+    await webRegistrar.register(server, GuestRoutes);
 
     console.log(server.printRoutes());
     // registrar.exportRouteTypings();
 
     await server.ready();
 
-    const socketRegistrar = new SocketRegistrar();
+    const socketRegistrar = new SocketRouteRegistrar();
     await socketRegistrar.register(server, SocketRoutes);
-
-    // server.io.of('/dev-socket').on('connection', (socket) => {
-    //     console.log('new connection');
-
-    //     // each pong will increment the session value with 1 and save it
-    //     socket.on('pong', async () => {
-    //         console.log('pong');
-    //         // socket.use(sessionRefreshMiddleware(socket));
-
-    //         const incr = socket.request.session.get('incremental') ?? 1;
-    //         socket.request.session.set('incremental', parseInt(incr as string) + 1);
-
-    //         await socket.request.session.save();
-    //     });
-    // });
 
     server.listen({ port: c.server.port }, (err, address) => {
         if (err != null) throw err;

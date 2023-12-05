@@ -66,7 +66,7 @@ export function webRoute<T extends ZodTypeAny = ZodTypeAny, U extends ZodTypeAny
     };
 }
 
-export default class WebRoutes {
+export default class WebRouteRegistrar {
     /**
      * Register the routes from the routes file with fastify and build its typings
      *

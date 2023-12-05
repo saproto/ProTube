@@ -1,36 +1,27 @@
 /* eslint-disable import/first */
 // We can't run this file if the file doesn't exist
-// import 'module-alias/register';
-import { closeSync, existsSync, mkdirSync, openSync } from 'fs';
+import { existsSync, mkdirSync } from 'fs';
 import path from 'path';
-import root from '#App/rootPath.js';
+import root from '@app/rootPath';
 
-if (!existsSync(path.resolve(root(), 'src/routes/typings'))) {
-    mkdirSync(path.resolve(root(), 'src/routes/typings'), { recursive: true });
+if (!existsSync(path.resolve(root(), 'routes/typings'))) {
+    mkdirSync(path.resolve(root(), 'routes/typings'), { recursive: true });
 }
 
-closeSync(openSync(path.resolve(root(), 'src/routes/typings/route-typings.ts'), 'w'));
+import WebRoutes from '@routes/web';
+import GuestRoutes from '@routes/guest';
+import SocketRoutes from '@routes/socket';
+import TypescriptExporter from './Kernel/Routes/Web/TypescriptExporter';
+// eslint-disable-next-line import/no-named-default
+import { default as SocketTypescriptExporter } from './Kernel/Routes/Socket/TypescriptExporter';
 
-// import WebRoutes from '#Routes/web.js';
-// // import ApiRoutes from '@routes/guest';
-// // import SocketRoutes from '@routes/socket';
-// import RouteRegistrar from '#Kernel/Routes/RouteRegistrar';
-// // import SocketRegistrar from '@app/Kernel/Routes/SocketRegistrar';
+const exporter = new TypescriptExporter();
+exporter.load(WebRoutes);
+exporter.load(GuestRoutes);
+exporter.export();
 
-// const registrar = new RouteRegistrar();
-// // const socketRegistrar = new SocketRegistrar();
+const socketExporter = new SocketTypescriptExporter();
+socketExporter.load(SocketRoutes);
+socketExporter.export();
 
-// registrar.onlyLoadRoutes(WebRoutes, WebRoutes.name);
-// // registrar.onlyLoadRoutes(ApiRoutes, ApiRoutes.name);
-// // socketRegistrar.onlyLoadRoutes(SocketRoutes, 'socket.');
-
-// registrar.exportRouteTypings();
-// socketRegistrar.exportRouteTypings();
-// import TypescriptExporter from '#Kernel/Routes/Web/TypescriptExporter.js';
-
-// const exporter = new TypescriptExporter();
-// exporter.load(WebRoutes);
-
-// exporter.export();
-
-// console.log('Built routes!');
+console.log('Built routes!');

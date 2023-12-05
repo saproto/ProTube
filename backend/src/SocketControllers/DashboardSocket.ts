@@ -1,4 +1,4 @@
-import { onSocketEvent, socketEmit } from '@app/Kernel/Routes/SocketRegistrar';
+import { onSocketEvent, socketEmit } from '@app/Kernel/Routes/Socket/Registrar';
 import z from 'zod';
 
 export const testRoute = onSocketEvent({
@@ -19,7 +19,7 @@ export const testRoute2 = onSocketEvent({
 });
 
 export const someEmit = socketEmit({
-    name: 'homeevent',
+    name: 'someEmit', // not used
     // schema: z.object({
     //     name: z.string()
     // })

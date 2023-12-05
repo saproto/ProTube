@@ -54,10 +54,10 @@ export const loginCallback = webRoute({
 export const user = webRoute({
     schema: UserSchema,
     handler: async (request, reply) => {
-        // if (request.user === undefined) {
-        //     await reply.redirect('/auth/login');
-        //     return;
-        // }
+        if (request.user === undefined) {
+            await reply.redirect('/auth/login');
+            return;
+        }
         await reply.send(request.user);
     }
 });

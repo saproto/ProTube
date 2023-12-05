@@ -164,7 +164,7 @@ export default class RouteTypeExporter {
     }
 
     buildSocketToServerCallbackTypeMap (routes: allRoutes[], routeTypings: routeTypings[]): string {
-        let generatedFile = 'export const socketToServerCallbackMap = {';
+        let generatedFile = 'export const callbackMap = {';
 
         routeTypings.forEach((routeTyping) => {
             generatedFile += this.buildSocketToServerCallbackTypes(routeTyping.exportedRoutes);

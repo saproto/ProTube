@@ -1,7 +1,7 @@
-import { type SocketRoute } from '@app/Kernel/Routes/SocketRegistrar';
 import * as dashboardSocket from '@app/SocketControllers/DashboardSocket';
 import { sessionRefreshMiddleware } from 'fastify-socketio-session';
 import loadUser from '@app/SocketMiddlewares/User';
+import { type SocketRoute } from '@app/Kernel/Routes/Socket/Registrar';
 
 const socket: SocketRoute[] = [{
     name: 'devsocket',
@@ -25,17 +25,17 @@ const socket: SocketRoute[] = [{
         };
     }, sessionRefreshMiddleware],
     routes: [
-        ['listen for', 'homeevent', dashboardSocket.testRoute]
+        ['listen for', 'testRoute', dashboardSocket.testRoute]
     ]
 }, {
-    name: 'socket2',
+    name: 'nsp1',
     namespace: '/socket2',
     preConnectionMiddlewares: [],
     postConnectionMiddlewares: [],
     routes: [
-        ['listen for', 'homeevent2', dashboardSocket.testRoute2],
+        ['listen for', 'testRoute2', dashboardSocket.testRoute2],
         // ['emit event', 'someEvent', dashboardSocket.someEmit]
-        ['emit event', 'homeevent', dashboardSocket.someEmit]
+        ['emit event', 'soemEmit', dashboardSocket.someEmit]
     ]
 }];
 
