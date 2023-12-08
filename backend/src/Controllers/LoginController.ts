@@ -1,8 +1,8 @@
 import z from 'zod';
-import c from '@app/Kernel/Services/Config';
-import { User } from '@app/Models/User';
-import UserSchema from '@app/Schemas/UserSchema';
-import { webRoute } from '@app/Kernel/Routes/Web/Registrar';
+import c from '#Kernel/Services/Config.js';
+import { User } from '#Models/User.js';
+import UserSchema from '#Schemas/UserSchema.js';
+import { webRoute } from '#Kernel/Routes/Web/Registrar.js';
 
 export const loginCallback = webRoute({
     schema: z.null(),

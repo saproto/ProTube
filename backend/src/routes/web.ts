@@ -1,8 +1,8 @@
 // import * as RoomController from '@app/Controllers/DemoController';
-import * as UserController from '@app/Controllers/UserController';
-import UserPlugin from '@app/Middlewares/User';
-import AdminPlugin from '@app/Middlewares/Admin';
-import { type WebRoute } from '@app/Kernel/Routes/Web/Registrar';
+import * as UserController from '#Controllers/UserController.js';
+import UserPlugin from '#Middlewares/User.js';
+import AdminPlugin from '#Middlewares/Admin.js';
+import { type WebRoute } from '#Kernel/Routes/Web/Registrar.js';
 
 const web: WebRoute = {
     prefix: '/api',

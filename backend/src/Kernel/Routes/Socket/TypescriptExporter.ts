@@ -1,6 +1,6 @@
-import root from '@app/rootPath';
-import { type SocketRoute } from './Registrar';
-import TypescriptGenerator from './TypescriptGenerator';
+import root from '#App/rootPath.js';
+import { type SocketRoute } from '#Kernel/Routes/Socket/Registrar.js';
+import TypescriptGenerator from '#Kernel/Routes/Socket/TypescriptGenerator.js';
 import { writeFileSync } from 'fs';
 import path from 'path';
 

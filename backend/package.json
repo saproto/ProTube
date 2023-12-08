@@ -17,12 +17,15 @@
       "production": "./dist/*"
     },
     "#Routes/*": "#App/routes/*",
-    "#Controllers/*": "#App/controllers/*",
-    "#Models/*": "#App/models/*",
-    "#Services/*": "#App/services/*",
-    "#Utils/*": "#App/utils/*",
-    "#Config": "#Kernel/config",
-    "#Kernel/*": "#App/kernel/*"
+    "#Controllers/*": "#App/Controllers/*",
+    "#Models/*": "#App/Models/*",
+    "#Services/*": "#App/Services/*",
+    "#Schemas/*": "#App/Schemas/*",
+    "#Config": "#Kernel/Services/Config.js",
+    "#Kernel/*": "#App/Kernel/*",
+    "#SocketControllers/*": "#App/SocketControllers/*",
+    "#Middlewares/*": "#App/Middlewares/*",
+    "#SocketMiddlewares/*": "#App/SocketMiddlewares/*"
   },
   "description": "",
   "dependencies": {

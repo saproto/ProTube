@@ -1,6 +1,6 @@
 import { createTypeAlias, printNode, zodToTs } from 'zod-to-ts';
 import { type ZodTypeAny } from 'zod';
-import { type formattedSocketRoutes } from './TypescriptExporter';
+import { type formattedSocketRoutes } from '#Kernel/Routes/Socket/TypescriptExporter.js';
 
 export default class TypescriptGenerator {
     /**

@@ -1,5 +1,5 @@
-import * as LoginController from '@Controllers/LoginController';
-import { type WebRoute } from '@app/Kernel/Routes/Web/Registrar';
+import * as LoginController from '#Controllers/LoginController.js';
+import { type WebRoute } from '#Kernel/Routes/Web/Registrar.js';
 
 const guest: WebRoute = {
     prefix: '',

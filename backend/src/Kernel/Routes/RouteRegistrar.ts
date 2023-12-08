@@ -4,9 +4,9 @@ import { writeFileSync } from 'fs';
 import path from 'path';
 import { type ZodTypeAny } from 'zod';
 import type z from 'zod';
-import root from '@app/rootPath';
+import root from '#App/rootPath.js';
 import { copySync } from 'fs-extra';
-import RouteTypeExporter, { type allRoutes, type exportRoute, type exportedRoutes, type routeTypings } from '@app/Kernel/Routes/RouteTypeExporter';
+import RouteTypeExporter, { type allRoutes, type exportRoute, type exportedRoutes, type routeTypings } from '#App/Kernel/Routes/RouteTypeExporter.js';
 
 type url = `/${string}` | '';
 

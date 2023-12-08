@@ -1,7 +1,7 @@
-import c from '@app/Kernel/Services/Config';
+import c from '#Config';
 import mysql2 from 'mysql2';
 import { Sequelize } from 'sequelize';
-import { loadUser } from '@Models/User';
+import { loadUser } from '#Models/User.js';
 
 const sequelize = new Sequelize(
     c.db.database,

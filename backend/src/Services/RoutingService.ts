@@ -1,4 +1,4 @@
-import { type RouteParamsMap, urlMappings } from '@routes/typings/routes';
+import { type RouteParamsMap, urlMappings } from '#Routes/typings/route-typings.js';
 
 type RouteTag = keyof RouteParamsMap;
 

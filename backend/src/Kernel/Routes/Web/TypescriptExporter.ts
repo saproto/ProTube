@@ -1,9 +1,9 @@
-import { type WebRoute } from '@app/Kernel/Routes/Web/Registrar';
+import { type WebRoute } from '#App/Kernel/Routes/Web/Registrar.js';
 // import * as typescriptGenerator from './TypescriptGenerator';
-import TypescriptGenerator from './TypescriptGenerator';
+import TypescriptGenerator from './TypescriptGenerator.js';
 import { writeFileSync } from 'fs';
 import path from 'path';
-import root from '@app/rootPath';
+import root from '#App/rootPath.js';
 import { copySync } from 'fs-extra';
 
 export interface routeParam {

@@ -12,5 +12,5 @@ const __dirname = path.dirname(__filename);
  * @returns {string} The root path of the project
  */
 export default function root (): string {
-    return path.dirname(__dirname);;
+    return __dirname;
 }

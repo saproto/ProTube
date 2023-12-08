@@ -1,4 +1,4 @@
-import { onSocketEvent, socketEmit } from '@app/Kernel/Routes/Socket/Registrar';
+import { onSocketEvent, socketEmit } from '#Kernel/Routes/Socket/Registrar.js';
 import z from 'zod';
 
 export const testRoute = onSocketEvent({

@@ -1,4 +1,4 @@
-import { User } from '@app/Models/User';
+import { User } from '#Models/User.js';
 import { type FastifyInstance } from 'fastify';
 import fastifyPlugin from 'fastify-plugin';
 

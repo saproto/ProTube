@@ -3,10 +3,10 @@ import { copySync } from 'fs-extra';
 import { type Socket, type Server } from 'socket.io';
 import type z from 'zod';
 import { type ZodTypeAny } from 'zod';
-import RouteTypeExporter, { type exportedRoutes, type allRoutes, type routeTypings, type exportRoute } from '@app/Kernel/Routes/RouteTypeExporter';
+import RouteTypeExporter, { type exportedRoutes, type allRoutes, type routeTypings, type exportRoute } from '#App/Kernel/Routes/RouteTypeExporter.js';
 import { writeFileSync } from 'fs';
 import path from 'path';
-import root from '@app/rootPath';
+import root from '#App/rootPath.js';
 
 export type preConnectionSocketMiddleware = (socket: Socket, next: (err?: Error) => void) => void;
 export type postConnectionSocketMiddleware = (socket: Socket) => (event: any, next: (err?: Error) => void) => void;

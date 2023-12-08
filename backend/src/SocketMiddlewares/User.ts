@@ -1,5 +1,5 @@
-import { type preConnectionSocketMiddleware } from '@app/Kernel/Routes/SocketRegistrar';
-import { User } from '@app/Models/User';
+import { type preConnectionSocketMiddleware } from '#Kernel/Routes/SocketRegistrar.js';
+import { User } from '#Models/User.js';
 
 declare module 'http' {
     interface IncomingMessage {

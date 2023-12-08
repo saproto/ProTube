@@ -1,6 +1,6 @@
 import { createTypeAlias, printNode, zodToTs } from 'zod-to-ts';
 import { type ZodTypeAny } from 'zod';
-import { type formattedWebRoutes, type absoluteUrl, type formattedWebRoute } from './TypescriptExporter';
+import { type formattedWebRoutes, type absoluteUrl, type formattedWebRoute } from '#Kernel/Routes/Web/TypescriptExporter.js';
 
 export default class TypescriptGenerator {
     /**

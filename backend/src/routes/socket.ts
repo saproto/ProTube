@@ -1,7 +1,7 @@
-import * as dashboardSocket from '@app/SocketControllers/DashboardSocket';
+import * as dashboardSocket from '#SocketControllers/DashboardSocket.js';
 import { sessionRefreshMiddleware } from 'fastify-socketio-session';
-import loadUser from '@app/SocketMiddlewares/User';
-import { type SocketRoute } from '@app/Kernel/Routes/Socket/Registrar';
+import loadUser from '#SocketMiddlewares/User.js';
+import { type SocketRoute } from '#Kernel/Routes/Socket/Registrar.js';
 
 const socket: SocketRoute[] = [{
     name: 'devsocket',

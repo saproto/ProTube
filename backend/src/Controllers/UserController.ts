@@ -1,5 +1,5 @@
-import { webRoute } from '@app/Kernel/Routes/Web/Registrar';
-import UserSchema from '@app/Schemas/UserSchema';
+import { webRoute } from '#Kernel/Routes/Web/Registrar.js';
+import UserSchema from '#Schemas/UserSchema.js';
 import z from 'zod';
 
 export const userInfo = webRoute({

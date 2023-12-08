@@ -7,11 +7,14 @@
       "#Controllers/*": ["Controllers/*"],
       "#Routes/*": ["routes/*"],
       "#Services/*": ["Services/*"],
-      "#Utils/*": ["utils/*"],
       "#App/*": ["*"],
       "#Kernel/*": ["Kernel/*"],
       "#Models/*": ["Models/*"],
-      "#Config": ["Kernel/Config.ts"]
+      "#Config": ["Kernel/Config.ts"],
+      "#Schemas": ["Schemas/*"],
+      "#SocketControllers": ["SocketControllers/*"],
+      "#Middlewares": ["Middlewares/*"],
+      "#SocketMiddlewares": ["SocketMiddlewares/*"]
     }
   },
   "extends": "@tsconfig/node20/tsconfig.json",
