@@ -6,6 +6,7 @@
     "test": "jest ./tests",
     "build": "tsc ./src/main.ts",
     "dev": "npm run routes:generate && node --es-module-specifier-resolution=node --import ./bootstrap.js src/main.ts",
+    "debug": "node --es-module-specifier-resolution=node --import ./bootstrap.js src/test.ts",
     "routes:generate": "node --es-module-specifier-resolution=node --import ./bootstrap.js src/generateRoutes.ts"
   },
   "author": "",
@@ -16,16 +17,46 @@
       "default": "./src/*",
       "production": "./dist/*"
     },
-    "#Routes/*": "#App/routes/*",
-    "#Controllers/*": "#App/Controllers/*",
-    "#Models/*": "#App/Models/*",
-    "#Services/*": "#App/Services/*",
-    "#Schemas/*": "#App/Schemas/*",
-    "#Config": "#Kernel/Services/Config.js",
-    "#Kernel/*": "#App/Kernel/*",
-    "#SocketControllers/*": "#App/SocketControllers/*",
-    "#Middlewares/*": "#App/Middlewares/*",
-    "#SocketMiddlewares/*": "#App/SocketMiddlewares/*"
+    "#Routes/*": {
+      "default": "./src/Routes/*",
+      "production": "./dist/Routes/*"
+    },
+    "#Controllers/*": {
+      "default": "./src/Controllers/*",
+      "production": "./dist/Controllers/*"
+    },
+    "#Models/*": {
+      "default": "./src/Models/*",
+      "production": "./dist/Models/*"
+    },
+    "#Services/*": {
+      "default": "./src/Services/*",
+      "production": "./dist/Services/*"
+    },
+    "#Schemas/*": {
+      "default": "./src/Schemas/*",
+      "production": "./dist/Schemas/*"
+    },
+    "#Config": {
+      "default": "./src/Kernel/Services/Config.js",
+      "production": "./dist/Kernel/Services/Config.js"
+    },
+    "#Kernel/*": {
+      "default": "./src/Kernel/*",
+      "production": "./dist/Kernel/*"
+    },
+    "#SocketControllers/*": {
+      "default": "./src/SocketControllers/*",
+      "production": "./dist/SocketControllers/*"
+    },
+    "#Middlewares/*": {
+      "default": "./src/Middlewares/*",
+      "production": "./dist/Middlewares/*"
+    },
+    "#SocketMiddlewares/*": {
+      "default": "./src/SocketMiddlewares/*",
+      "production": "./dist/SocketMiddlewares/*"
+    }
   },
   "description": "",
   "dependencies": {

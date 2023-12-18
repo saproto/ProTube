@@ -1,4 +1,4 @@
-import { type socketMiddleware } from '#Kernel/Routes/SocketRegistrar.js';
+import { type socketMiddleware } from '#Kernel/Routes/Socket/Registrar.js';
 
 const AdminSocket: socketMiddleware = (socket, next) => {
     const user = socket.request.user;

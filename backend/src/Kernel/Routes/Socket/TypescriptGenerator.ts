@@ -1,6 +1,6 @@
 import { createTypeAlias, printNode, zodToTs } from 'zod-to-ts';
 import { type ZodTypeAny } from 'zod';
-import { type formattedSocketRoutes } from '#Kernel/Routes/Socket/TypescriptExporter.js';
+import { type routeTypings, type formattedSocketRoutes } from '#Kernel/Routes/Socket/TypescriptExporter.js';
 
 export default class TypescriptGenerator {
     /**
@@ -19,7 +19,6 @@ export default class TypescriptGenerator {
     }
 
     static createSocketCallbackMappingsTs (routes: formattedSocketRoutes): string {
-        console.log(`Doing sth for ${routes.namespace}`);
         let generatedFile = '';
 
         generatedFile += `declare namespace ${routes.namespace} {\n`;
@@ -42,4 +41,73 @@ export default class TypescriptGenerator {
         generatedFile += '}\n';
         return generatedFile;
     };
+
+    /**
+     * Generate the typescript type mappings for the route urls and their namespace
+     *
+     * @param routes The routes for which to generate the typings
+     * @returns Typescript typings for the routes
+     */
+    static createNamespacesUrlMappingTs (routes: routeTypings[]): string {
+        let generatedFile = 'export enum namespaceUrlMappings {\n';
+
+        for (const routeGroup of routes) {
+            generatedFile += `'${routeGroup.formattedSocketRoutes.namespace}' = '${routeGroup.allAbsoluteUrls[0].url}',\n`;
+        }
+
+        generatedFile += '\n};\n';
+
+        return generatedFile;
+    }
+
+    /**
+     * Generate the typescript type mappings for the route names and their event names inside the namespace
+     *
+     * @param routes The routes for which to generate the typings
+     * @returns Typescript typings for the routes
+     */
+    static createNamespacesPathMappingTs (routes: routeTypings[]): string {
+        let generatedFile = 'export const namespacePathMappings: Record<keyof clientEmits | keyof serverEmits, string> = {\n';
+
+        for (const routeGroup of routes) {
+            for (const route of routeGroup.formattedSocketRoutes.routes) {
+                if ('namespace' in route) continue;
+
+                generatedFile += `'${route.fullName}': '${route.name}',\n`;
+            }
+        }
+
+        generatedFile += '\n};\n';
+
+        return generatedFile;
+    }
+
+    /**
+     * Genertae the typescript mappings between each event (server or client side) and their request/response types
+     *
+     * @param routes The routes for which to generate the typings
+     * @returns Typescript typings for the routes
+     */
+    static createEventNamesTs (routes: routeTypings[]): string {
+        let serverEvents = 'export interface serverEmits {\n';
+        let clientEvents = 'export interface clientEmits {\n';
+
+        for (const routeGroup of routes) {
+            for (const route of routeGroup.formattedSocketRoutes.routes) {
+                if ('namespace' in route) continue;
+
+                const $ts = `'${route.fullName}': {\nreq: ${route.requestTypescript !== '' ? route.fullName : 'undefined'},\nres: ${route.callbackTypescript !== '' ? `${route.fullName}.callback` : 'never'},\n},\n`;
+
+                if (route.eventSource === 'server') {
+                    serverEvents += $ts;
+                } else {
+                    clientEvents += $ts;
+                }
+            }
+        }
+        serverEvents += '}\n';
+        clientEvents += '}\n';
+
+        return serverEvents + '\n' + clientEvents;
+    }
 }

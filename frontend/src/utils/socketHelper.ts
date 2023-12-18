@@ -1,57 +1,55 @@
-import { Socket, io } from 'socket.io-client';
-import { requestMappings, responseMappings } from './route-typings/socket-route-typings';
+import { Socket } from 'socket.io-client';
+import { clientEmits, namespacePathMappings, namespaceUrlMappings, serverEmits } from './route-typings/socket-routes';
 
-interface socketEmitInterface<
-    EventResponseData extends keyof responseMappings,
-    EventRequestData extends keyof requestMappings
-> {
-    emit: (
-        ...args: EventRequestData extends undefined
-            ? [
-                  EventResponseData extends undefined
-                      ? [callback: () => Promise<void> | void]
-                      : [callback: (data: responseMappings[EventResponseData]) => void]
-              ]
-            : EventResponseData extends undefined
-            ? [data: requestMappings[EventRequestData], callback: () => Promise<void> | void]
-            : [data: requestMappings[EventRequestData], callback: (data: responseMappings[EventResponseData]) => void]
-    ) => void;
+// Define a helper type to extract req type based on a key
+type TypeForKey<T, K extends keyof T, S extends 'req' | 'res'> = K extends keyof T
+    ? S extends keyof T[K]
+        ? T[K][S]
+        : null
+    : null;
+
+type CallbackFunction<T> = (result: T) => void | Promise<void>;
+
+/**
+ * Emit an event to the server
+ */
+export function emit<K extends keyof clientEmits>(
+    socket: Socket,
+    key: K,
+    req: TypeForKey<clientEmits, K, 'req'>,
+    ...args: TypeForKey<clientEmits, K, 'res'> extends null | never | undefined
+        ? []
+        : [res: CallbackFunction<TypeForKey<clientEmits, K, 'res'>>]
+): void {
+    socket.emit(namespacePathMappings[key], req, ...args);
 }
 
-export function socketEmit<T extends keyof responseMappings>(socket: Socket, eventName: T): socketEmitInterface<T, T> {
-    return {
-        emit: (...args) => {
-            socket.emit(eventName, args);
-        },
-    };
+/**
+ * Listen for an event from the server
+ *
+ * @param socket Listener socket
+ * @param key Event name
+ * @param req The request body
+ * @param args The response callback
+ */
+export function onEvent<K extends keyof serverEmits>(
+    socket: Socket,
+    key: K,
+    req: TypeForKey<serverEmits, K, 'req'>,
+    ...args: TypeForKey<serverEmits, K, 'res'> extends null | never | undefined
+        ? []
+        : [res: CallbackFunction<TypeForKey<serverEmits, K, 'res'>>]
+): void {
+    // @ts-expect-error idk why it throws an error
+    socket.on(namespacePathMappings[key], req, ...args);
 }
 
-export function serverEvent<T extends keyof>(eventName: T)
-
-const socket = io();
-const someDefinedEvent = socketEmit(socket, 'socket.devsocket.homeevent');
-someDefinedEvent.emit({ name: 'test' }, async (data) => {
-    console.log(data);
-});
-
-// interface socketEmitInterface<
-//     EventName extends keyof responseMappings,
-//     EventResponseData extends keyof responseMappings,
-//     EventRequestData extends keyof requestMappings
-// > {
-//     socket: Socket;
-//     eventName: EventName;
-//     callback: (...args: EventResponseData extends undefined ? [] : [data: responseMappings[EventResponseData]]) => void;
-// }
-
-// export function socketEmit<T extends keyof responseMappings>(
-//     socket: Socket,
-//     eventName: T,
-//     ...args: T extends undefined ? [] : [callback: (data: responseMappings[T]) => void]
-// ): socketEmitInterface<T, T, T> {
-//     return {
-//         socket,
-//         eventName,
-//         callback: (...args) => {},
-//     };
-// }
+/**
+ * Retrieve the url for a namespace
+ *
+ * @param namespace The namespace of which to retrieve the url/prefix
+ * @returns string
+ */
+export function namespace(namespace: keyof typeof namespaceUrlMappings): string {
+    return namespaceUrlMappings[namespace];
+}

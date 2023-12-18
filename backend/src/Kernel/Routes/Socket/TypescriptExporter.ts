@@ -3,6 +3,8 @@ import { type SocketRoute } from '#Kernel/Routes/Socket/Registrar.js';
 import TypescriptGenerator from '#Kernel/Routes/Socket/TypescriptGenerator.js';
 import { writeFileSync } from 'fs';
 import path from 'path';
+import pkg from 'fs-extra';
+const { copySync } = pkg;
 
 export interface formattedSocketRoute {
     fullName: string
@@ -10,6 +12,7 @@ export interface formattedSocketRoute {
     callbackTypescript: string
     requestTypescript: string
     url: string
+    eventSource: 'client' | 'server'
 }
 
 export interface formattedSocketRoutes {
@@ -51,18 +54,21 @@ export default class TypescriptExporter {
 
     export (): void {
         const routeCallbacks = this.#createRouteCallbackTypings();
-        // const routeParameterInterfaces = this.#createRouteParameterInterfacesTypings();
-        // const routes = this.#createAbsoluteUrlTypings();
-        // const routeRequestsNResponses = this.#createRequestNResponseTypings();
+        // const namespaceUrls = this.#createNamespaceUrlTypings();
+        const namespaceUrls = this.#createNamespaceUrlTypings();
+        const pathNamespaces = this.#createNamespacePathTypings();
+        const eventmappings = this.#createEmitsRouteMappingTypings();
+        // const clientEmits = this.#createClientEmitsTypings();
+        // const events = this.#createEmitsNameTypings();
 
-        writeFileSync(path.resolve(root(), `${TypescriptExporter.#EXPORT_PATH}/socket-requests-n-callbacks.d.ts`), routeCallbacks + '\n');
+        writeFileSync(path.resolve(root(), `${TypescriptExporter.#EXPORT_PATH}/socket-events-n-callbacks.d.ts`), routeCallbacks + '\n');
         writeFileSync(path.resolve(root(), `${TypescriptExporter.#EXPORT_PATH}/debug.json`), JSON.stringify(this.#routeTypings, null, 4));
-        // writeFileSync(path.resolve(root(), `${TypescriptExporter.#EXPORT_PATH}/route-requests-n-responses.d.ts`), routeRequestsNResponses);
+        writeFileSync(path.resolve(root(), `${TypescriptExporter.#EXPORT_PATH}/socket-routes.ts`), namespaceUrls + pathNamespaces + eventmappings);
 
-        // const sourceDir = path.join(path.resolve(root(), TypescriptExporter.#EXPORT_PATH));
-        // const targetDir = path.join(path.resolve(root(), TypescriptExporter.#FRONTEND_EXPORT_PATH));
+        const sourceDir = path.join(path.resolve(root(), TypescriptExporter.#EXPORT_PATH));
+        const targetDir = path.join(path.resolve(root(), TypescriptExporter.#FRONTEND_EXPORT_PATH));
 
-        // copySync(sourceDir, targetDir, { overwrite: true });
+        copySync(sourceDir, targetDir, { overwrite: true });
     }
 
     #createRouteCallbackTypings (): string {
@@ -98,6 +104,34 @@ export default class TypescriptExporter {
     }
 
     /**
+     * Return mappings of the route names and the corresponding request
+     * /response types
+     *
+     * @returns Generated typescript
+     */
+    #createEmitsRouteMappingTypings (): string {
+        return TypescriptGenerator.createEventNamesTs(this.#routeTypings);
+    }
+
+    /**
+     * Return mappings of the route names to the namespace urls
+     *
+     * @returns Generated typescript
+     */
+    #createNamespaceUrlTypings (): string {
+        return TypescriptGenerator.createNamespacesUrlMappingTs(this.#routeTypings);
+    }
+
+    /**
+     * Return mappings of the route names to the event names
+     *
+     * @returns Generated typescirpt
+     */
+    #createNamespacePathTypings (): string {
+        return TypescriptGenerator.createNamespacesPathMappingTs(this.#routeTypings);
+    }
+
+    /**
      * Recursively the definedRoutes into a more convenient format
      *
      * @param routes - The defined routes
@@ -118,6 +152,7 @@ export default class TypescriptExporter {
                 fullName: routePrefix + socketRoute.name + '.' + eventName,
                 requestTypescript: TypescriptGenerator.createTsTypes(eventName, handler.schema),
                 callbackTypescript: emitOrListen === 'listen for' ? TypescriptGenerator.createTsTypes('callback', handler.callbackSchema) : '',
+                eventSource: emitOrListen === 'listen for' ? 'client' : 'server',
                 url: socketRoute.namespace
             };
 

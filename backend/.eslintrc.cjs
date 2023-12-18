@@ -1,8 +1,4 @@
 module.exports = {
-    env: {
-        browser: true,
-        es2021: true
-    },
     extends: ['prettier', 'standard-with-typescript'],
     parserOptions: {
         ecmaVersion: 2022,
@@ -10,12 +6,14 @@ module.exports = {
         project: 'tsconfig.json',
         tsconfigRootDir: __dirname
     },
+    ignorePatterns: ['**/*.js'],
     rules: {
         indent: ['error', 4],
         quotes: ['error', 'single'],
         '@typescript-eslint/indent': ['error', 4],
         semi: ['error', 'always'],
         '@typescript-eslint/semi': ['error', 'always'],
-        '@typescript-eslint/no-extraneous-class': 'off'
+        '@typescript-eslint/no-extraneous-class': 'off',
+        'import/no-named-default': 'off'
     }
 };
