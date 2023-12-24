@@ -64,6 +64,7 @@ export default class TypescriptExporter {
         const routeRequestsNResponses = this.#createRequestNResponseTypings();
 
         writeFileSync(path.resolve(root(), `${TypescriptExporter.#EXPORT_PATH}/routes.ts`), routeParameterInterfaces + routes + '\n');
+        writeFileSync(path.resolve(root(), `${TypescriptExporter.#EXPORT_PATH}/debug-web.json`), JSON.stringify(this.#routeTypings, null, 4));
         writeFileSync(path.resolve(root(), `${TypescriptExporter.#EXPORT_PATH}/route-requests-n-responses.d.ts`), routeRequestsNResponses);
 
         const sourceDir = path.join(path.resolve(root(), TypescriptExporter.#EXPORT_PATH));
@@ -141,13 +142,14 @@ export default class TypescriptExporter {
             namespace,
             routes: []
         };
-        console.log(routePrefix);
 
         for (const route of routes.routes) {
             // it's an array, so its a route definition
             if (Array.isArray(route)) {
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const [method, name, url, newRoute] = route;
+
+                if (name === '') throw new Error('A route name must be set!');
 
                 const routeType: formattedWebRoute = {
                     name,
@@ -160,8 +162,9 @@ export default class TypescriptExporter {
 
                 formattedWebRoutes.routes.push(routeType);
             } else { // it's a route group with subroutes
-                // if the route has no name, use the namespace as name
-                const namespace = route.name === '' ? fullNamespace : fullNamespace + '.' + route.name;
+                if (route.name === '') throw new Error('A namespace name must be set!');
+
+                const namespace = fullNamespace + '.' + route.name;
                 formattedWebRoutes.routes.push(this.#formatWebRoutes(route, route.name, namespace, routePrefix + routes.prefix));
             }
         }

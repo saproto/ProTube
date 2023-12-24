@@ -31,6 +31,10 @@ interface appConfig {
     server: {
         port: number
     }
+    saproto_site: {
+        api_url: string
+        api_shared_secret: string
+    }
 }
 
 const config: appConfig = {
@@ -62,6 +66,10 @@ const config: appConfig = {
     },
     server: {
         port: parseInt(process.env.PORT ?? '8000')
+    },
+    saproto_site: {
+        api_url: process.env.SAPROTO_SITE_API_URL ?? 'http://saproto_sail:80/api/protube',
+        api_shared_secret: process.env.SAPROTO_SITE_API_SHARED_SECRET ?? '123'
     }
 };
 

@@ -3,59 +3,60 @@
   "version": "2.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest ./tests",
-    "build": "tsc ./src/main.ts",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest ./tests",
+    "build": "npm run routes:generate && tsc --build --verbose ./tsconfig.build.json",
     "dev": "npm run routes:generate && node --es-module-specifier-resolution=node --import ./bootstrap.js src/main.ts",
     "debug": "node --es-module-specifier-resolution=node --import ./bootstrap.js src/test.ts",
-    "routes:generate": "node --es-module-specifier-resolution=node --import ./bootstrap.js src/generateRoutes.ts"
+    "routes:generate": "node --es-module-specifier-resolution=node --import ./bootstrap.js src/generateRoutes.ts",
+    "production": "node --conditions=production ./dist/main.js"
   },
   "author": "",
   "license": "ISC",
   "type": "module",
   "imports": {
     "#App/*": {
-      "default": "./src/*",
-      "production": "./dist/*"
+      "production": "./dist/*",
+      "default": "./src/*"
     },
     "#Routes/*": {
-      "default": "./src/Routes/*",
-      "production": "./dist/Routes/*"
+      "production": "./dist/Routes/*",
+      "default": "./src/Routes/*"
     },
     "#Controllers/*": {
-      "default": "./src/Controllers/*",
-      "production": "./dist/Controllers/*"
+      "production": "./dist/Controllers/*",
+      "default": "./src/Controllers/*"
     },
     "#Models/*": {
-      "default": "./src/Models/*",
-      "production": "./dist/Models/*"
+      "production": "./dist/Models/*",
+      "default": "./src/Models/*"
     },
     "#Services/*": {
-      "default": "./src/Services/*",
-      "production": "./dist/Services/*"
+      "production": "./dist/Services/*",
+      "default": "./src/Services/*"
     },
     "#Schemas/*": {
-      "default": "./src/Schemas/*",
-      "production": "./dist/Schemas/*"
+      "production": "./dist/Schemas/*",
+      "default": "./src/Schemas/*"
     },
-    "#Config": {
-      "default": "./src/Kernel/Services/Config.js",
-      "production": "./dist/Kernel/Services/Config.js"
+    "#Config.js": {
+      "production": "./dist/Kernel/Services/Config.js",
+      "default": "./src/Kernel/Services/Config.js"
     },
     "#Kernel/*": {
-      "default": "./src/Kernel/*",
-      "production": "./dist/Kernel/*"
+      "production": "./dist/Kernel/*",
+      "default": "./src/Kernel/*"
     },
     "#SocketControllers/*": {
-      "default": "./src/SocketControllers/*",
-      "production": "./dist/SocketControllers/*"
+      "production": "./dist/SocketControllers/*",
+      "default": "./src/SocketControllers/*"
     },
     "#Middlewares/*": {
-      "default": "./src/Middlewares/*",
-      "production": "./dist/Middlewares/*"
+      "production": "./dist/Middlewares/*",
+      "default": "./src/Middlewares/*"
     },
     "#SocketMiddlewares/*": {
-      "default": "./src/SocketMiddlewares/*",
-      "production": "./dist/SocketMiddlewares/*"
+      "production": "./dist/SocketMiddlewares/*",
+      "default": "./src/SocketMiddlewares/*"
     }
   },
   "description": "",
@@ -93,6 +94,7 @@
   "devDependencies": {
     "@tsconfig/node20": "^20.1.2",
     "@types/fs-extra": "^11.0.1",
+    "@types/jest": "^29.5.11",
     "@types/node": "^20.4.1",
     "eslint": "^8.44.0",
     "eslint-config-prettier": "^8.8.0",
@@ -101,7 +103,10 @@
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^3.0.0",
+    "ts-jest": "^29.1.1",
+    "ts-jest-resolver": "^2.0.1",
     "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
     "types-fastify-socket.io": "^0.0.1"
   }
 }

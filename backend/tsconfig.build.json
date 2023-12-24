@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "outDir": "./dist",
-    "rootDir": ".",
+    "rootDir": "./src",
     "paths": {
       "#Controllers/*": ["Controllers/*"],
       "#Routes/*": ["Routes/*"],
@@ -18,7 +18,8 @@
     }
   },
   "extends": "@tsconfig/node20/tsconfig.json",
-  "include": ["src/**/*.ts", "src/**/*.d.ts", ".eslintrc.cjs", "tests/**/*.ts", "jest.config.cjs"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
+  "exclude": ["src/generateRoutes"],
   "plugins": [
     {
       "name": "tsconfig-paths",

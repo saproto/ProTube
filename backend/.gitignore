@@ -1,3 +1,4 @@
 src/Kernel/Routes/*.json
-src/routes/typings
+src/Routes/typings
 coverage
+dist

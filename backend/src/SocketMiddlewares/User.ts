@@ -1,4 +1,4 @@
-import { type preConnectionSocketMiddleware } from '#Kernel/Routes/SocketRegistrar.js';
+import { type preConnectionSocketMiddleware } from '#Kernel/Routes/Socket/Registrar.js';
 import { User } from '#Models/User.js';
 
 declare module 'http' {

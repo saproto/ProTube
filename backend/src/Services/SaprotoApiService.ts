@@ -1,23 +1,68 @@
-import axios, { type AxiosResponse } from 'axios';
+import axios, { type AxiosResponse, type AxiosInstance, type AxiosRequestConfig, type AxiosError } from 'axios';
+import c from '#Config.js';
 
-const BASE_URL = 'http://localhost:8080/api/protube/userdetails';
+type url = `/${string}`;
 
-async function Get (route: string, accessToken: string): Promise<AxiosResponse> {
-    return await axios.get(`${BASE_URL}`, {
-        headers: {
-            Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOWVhMjA3ZTQxMjgyNTdjZWQzZTIzNTkxZTUyZjNjMjY5MTJiYTgxMTZkYzk1OTIzNTM5NDMxOTFjMDRhNDA4OTRkY2ZjZGUwZDRjNGRlYmUiLCJpYXQiOjE2ODkxMDkzNzcuNjU5NTY5LCJuYmYiOjE2ODkxMDkzNzcuNjU5NTc0LCJleHAiOjE2ODk3MTQxNzcuNTk2MDQ1LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.KQB__d5kKgsI-wehKglrOhPsPzgV3-Rz-W4PiWXvHnrB9g7sLAD8GWNIVMSV_uKkIEST83gi_RH-yGCS02KaBdGjSHB7PfKyG6YlmY4Qg2il7EtYeiQYpZuFEs7TVTp_xmXgKEj6IMG_tC70YmKS8EoyY88WuQUfq_53nXia9jdEb5CRRBc63IYmhtpriVAhvnf-VZrkOqep3ri-kFchtPu0u7UcIB6Llw0HMDzzgv0sg6mFBH1VKU_OsheiiF6UxvcJQcS8eCnEKHYcTwkf-kRBvlc_EmC1cnOup39Y-7KPLoc0bpvYpCpF4PgJ07KLf8Kz1W9EhikF6TcY3C1Np0rnXazDbH4STpVnWX6EBUrjSdHidSBrSz7YLnbx486ewc7KNkiyiEVo_-2Dz1JOpg8RHnrZRlHuK1id12InDP2QsfUO9GtUTq8mKGxI-KoX5r4VRE6B5FR-XLxlXhb9uG5E1ISr1YlnGwdFo-ELMmPy4wZ7ErBvObjinr8iAOjtpzbhGAZCTfElsKaXiaF4_VSUuBk-oGsm26A-9PNvhdRyEzqju-BdJhjBCPG7KgGeX4VWFFUpGEmWmCeE8sFt_JPd2cCRydEshfI8h-gU-X3UnI3pj9YLYb6PcMUelEipWofcT2UDXrhymLgrYg5Hs7MMy8FXa4USH8oPz5t-Dzo'
-        }
-    });
-}
-
-interface UserData {
-    id: number
+interface AuthenticatedUser {
+    authenticated: true
     name: string
     admin: boolean
+    id: number
 }
 
-export async function getUserDetails (accessToken: string): Promise<UserData> {
-    const response = await Get('userdetails', accessToken);
-    console.log(response.data);
-    return response.data as UserData;
+interface UnauthenticatedUser {
+    authenticated: false
+}
+
+type User = AuthenticatedUser | UnauthenticatedUser;
+
+export class SaprotoApiService {
+    #axios: AxiosInstance;
+
+    constructor (accessToken: string = c.saproto_site.api_shared_secret) {
+        this.#axios = axios.create({
+            baseURL: c.saproto_site.api_url,
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+    }
+
+    #assertResponse (response: AxiosResponse): Error {
+        if (response.status === 201) {
+            return new Error(`S.A. Proto API responded with status ${response.status}`);
+        }
+
+        if (response.status !== 200) {
+            return new Error(`S.A. Proto API responded with status code ${response.status}`);
+        }
+
+        return new Error(`S.A. Proto API responded with status ${response.status}`);
+    }
+
+    async #get (route: url, params?: AxiosRequestConfig['params']): Promise<any> {
+        const response = await this.#axios.get(route, { params });
+
+        return response.data;
+    }
+
+    async #post (route: url, data: any): Promise<any> {
+        const response = await this.#axios.post(route, data);
+
+        return response.data;
+    }
+
+    async getUserDetails (): Promise<User> {
+        try {
+            const response = await this.#get('/userdetails');
+            return response;
+        } catch (error: AxiosError | any) {
+            if (axios.isAxiosError(error)) {
+                console.log(error.toJSON());
+                throw error;
+            } else {
+                throw error;
+            }
+        }
+    }
 }

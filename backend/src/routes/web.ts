@@ -13,7 +13,7 @@ const web: WebRoute = {
         {
             prefix: '',
             middlewares: [AdminPlugin],
-            name: '',
+            name: 'admin',
             routes: [
                 ['GET', 'admin', '/admin', UserController.adminInfo],
                 {

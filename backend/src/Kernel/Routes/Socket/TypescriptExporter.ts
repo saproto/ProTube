@@ -54,15 +54,12 @@ export default class TypescriptExporter {
 
     export (): void {
         const routeCallbacks = this.#createRouteCallbackTypings();
-        // const namespaceUrls = this.#createNamespaceUrlTypings();
         const namespaceUrls = this.#createNamespaceUrlTypings();
         const pathNamespaces = this.#createNamespacePathTypings();
         const eventmappings = this.#createEmitsRouteMappingTypings();
-        // const clientEmits = this.#createClientEmitsTypings();
-        // const events = this.#createEmitsNameTypings();
 
         writeFileSync(path.resolve(root(), `${TypescriptExporter.#EXPORT_PATH}/socket-events-n-callbacks.d.ts`), routeCallbacks + '\n');
-        writeFileSync(path.resolve(root(), `${TypescriptExporter.#EXPORT_PATH}/debug.json`), JSON.stringify(this.#routeTypings, null, 4));
+        writeFileSync(path.resolve(root(), `${TypescriptExporter.#EXPORT_PATH}/debug-socket.json`), JSON.stringify(this.#routeTypings, null, 4));
         writeFileSync(path.resolve(root(), `${TypescriptExporter.#EXPORT_PATH}/socket-routes.ts`), namespaceUrls + pathNamespaces + eventmappings);
 
         const sourceDir = path.join(path.resolve(root(), TypescriptExporter.#EXPORT_PATH));

@@ -14,7 +14,7 @@ import fastifyCors from '@fastify/cors';
 import fastifySession from '@mgcrea/fastify-session';
 import socketioServer from 'fastify-socket.io';
 import RedisStore from '@mgcrea/fastify-session-redis-store';
-import c from '#Config';
+import c from '#Config.js';
 import fastifySocketSession from 'fastify-socketio-session';
 import WebRouteRegistrar from '#Kernel/Routes/Web/Registrar.js';
 import SocketRouteRegistrar from '#Kernel/Routes/Socket/Registrar.js';
@@ -66,6 +66,7 @@ export async function startWebServer (): Promise<void> {
         cookieName: c.session.name
     });
 
+    // @ts-expect-error idk why this is not working, but smh it does
     await server.register(socketioServer, {
         cors: {
             origin: 'http://localhost:3000',

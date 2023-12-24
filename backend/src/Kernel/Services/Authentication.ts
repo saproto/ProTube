@@ -1,5 +1,5 @@
 import { type FastifyInstance } from 'fastify';
-import c from '#Config';
+import c from '#Config.js';
 import oauthPlugin, { type OAuth2Namespace } from '@fastify/oauth2';
 import crypto from 'crypto';
 

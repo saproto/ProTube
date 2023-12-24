@@ -8,8 +8,8 @@ import SocketRoutes from '#Routes/socket.js';
 import TypescriptExporter from '#Kernel/Routes/Web/TypescriptExporter.js';
 import { default as SocketTypescriptExporter } from '#Kernel/Routes/Socket/TypescriptExporter.js';
 
-if (!existsSync(path.resolve(root(), 'routes/typings'))) {
-    mkdirSync(path.resolve(root(), 'routes/typings'), { recursive: true });
+if (!existsSync(path.resolve(root(), 'Routes/typings'))) {
+    mkdirSync(path.resolve(root(), 'Routes/typings'), { recursive: true });
 }
 
 const exporter = new TypescriptExporter();

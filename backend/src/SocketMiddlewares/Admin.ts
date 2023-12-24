@@ -1,6 +1,6 @@
-import { type socketMiddleware } from '#Kernel/Routes/Socket/Registrar.js';
+import { type preConnectionSocketMiddleware } from '#Kernel/Routes/Socket/Registrar.js';
 
-const AdminSocket: socketMiddleware = (socket, next) => {
+const AdminSocket: preConnectionSocketMiddleware = (socket, next) => {
     const user = socket.request.user;
     if (user === null) {
         next(new Error('User not found'));
