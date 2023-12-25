@@ -18,14 +18,15 @@ class TestJob implements BaseJob {
 
 describe('JobRunner test', () => {
     let runner = new JobRunner();
+    let job = new TestJob();
 
     afterEach(async () => {
         await runner.shutdown();
         runner = new JobRunner();
+        job = new TestJob();
     });
 
     it('should throw an error for an invalid schedule', async () => {
-        const job = new TestJob();
         job.schedule = 'invalid';
 
         runner.jobs = [job];
@@ -36,7 +37,6 @@ describe('JobRunner test', () => {
     });
 
     it('should throw an error for an invalid job description', async () => {
-        const job = new TestJob();
         job.description = '';
 
         runner.jobs = [job];
@@ -47,8 +47,6 @@ describe('JobRunner test', () => {
     });
 
     it('should execute this job (every second)', async () => {
-        const job = new TestJob();
-
         const MockFunction = jest.fn(async () => { });
 
         job.run = MockFunction;
@@ -61,8 +59,6 @@ describe('JobRunner test', () => {
     });
 
     it('should execute the error handler', async () => {
-        const job = new TestJob();
-
         const MockFunction = jest.fn(async () => { });
 
         job.run = () => { throw new Error('test error'); };
