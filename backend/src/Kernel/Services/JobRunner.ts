@@ -2,27 +2,51 @@ import { type BaseJob } from '#App/Jobs/BaseJob.js';
 import { CleanupJob } from '#App/Jobs/CleanupJob.js';
 import cron from 'node-cron';
 
-// All jobs which you want to define.
-const jobs: BaseJob[] = [
-    new CleanupJob()
-];
+export class JobRunner {
+    // All jobs which you want to define.
+    jobs: BaseJob[] = [
+        new CleanupJob()
+    ];
 
-export async function startJobRunner (): Promise<void> {
-    for (const job of jobs) {
-        const validCron = cron.validate(job.schedule);
+    /**
+     * A list of currently runninng tasks
+     */
+    #tasks: cron.ScheduledTask[] = [];
 
-        if (validCron === false) {
-            throw new Error(`Invalid cron schedule for job: ${job.description}`);
-        }
+    async startJobRunner (): Promise<void> {
+        for (const job of this.jobs) {
+            const validCron = cron.validate(job.schedule);
 
-        cron.schedule(job.schedule, async () => {
-            try {
-                console.log(`Running job: ${job.description}`);
-                await job.run();
-            } catch (error: Error | any) {
-                console.error(`Error in job: ${job.description}`);
-                await job.onError(error);
+            if (!validCron) {
+                throw new Error(`Invalid cron schedule for job: ${job.description}`);
             }
-        });
+
+            if (job.description === '') {
+                throw new Error('Job description cannot be empty');
+            }
+
+            const task = cron.schedule(job.schedule, () => {
+                (async () => {
+                    console.log(`Running job: ${job.description}`);
+                    await job.run();
+                })().catch(async (err) => {
+                    console.log(`Error in job: ${job.description}`);
+                    try {
+                        await job.onError(err);
+                    } catch (err) {}
+                });
+            });
+
+            this.#tasks.push(task);
+        }
+    }
+
+    /**
+     * Gracefully stop all running tasks
+     */
+    async shutdown (): Promise<void> {
+        for (const task of this.#tasks) {
+            task.stop();
+        }
     }
 }
