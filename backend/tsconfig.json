@@ -14,7 +14,8 @@
       "#Schemas": ["Schemas/*"],
       "#SocketControllers": ["SocketControllers/*"],
       "#Middlewares": ["Middlewares/*"],
-      "#SocketMiddlewares": ["SocketMiddlewares/*"]
+      "#SocketMiddlewares": ["SocketMiddlewares/*"],
+      "#Jobs": ["Jobs/*"],
     }
   },
   "extends": "@tsconfig/node20/tsconfig.json",
