@@ -32,7 +32,7 @@ interface appConfig {
         port: number
     }
     saproto_site: {
-        api_url: string
+        api_host: string
         api_shared_secret: string
     }
 }
@@ -48,7 +48,7 @@ const config: appConfig = {
     oauth: {
         id: process.env.OAUTH_ID ?? '0',
         secret: process.env.OAUTH_SECRET ?? '',
-        host: process.env.OAUTH_HOST ?? 'https://proto.utwente.nl',
+        host: process.env.OAUTH_HOST ?? 'http://saproto_sail:80',
         redirect_host: process.env.OAUTH_REDIRECT_HOST ?? 'http://localhost:3000'
     },
     env: {
@@ -68,7 +68,7 @@ const config: appConfig = {
         port: parseInt(process.env.PORT ?? '8000')
     },
     saproto_site: {
-        api_url: process.env.SAPROTO_SITE_API_URL ?? 'http://saproto_sail:80/api/protube',
+        api_host: process.env.SAPROTO_SITE_HOST ?? 'http://saproto_sail:80',
         api_shared_secret: process.env.SAPROTO_SITE_API_SHARED_SECRET ?? '123'
     }
 };
