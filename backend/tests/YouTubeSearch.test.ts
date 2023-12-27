@@ -72,4 +72,17 @@ describe('YouTubeSearch test', () => {
             expect(search.videos.continuationToken).toBeNull();
         });
     });
+
+    describe('testing if we can retrieve videos of a playlist', () => {
+        it('should be able to return videos of a playlist', async () => {
+            // some playlist of k3
+            const videos = await YouTubeSearchService.getVideosInPlaylist('RDEM9VPxSYaHZZn2MrZKZ0NjPQ');
+            expect(videos.length).toBeGreaterThan(0);
+        });
+
+        it('should return an empty array for an invalid playlist', async () => {
+            const videos = await YouTubeSearchService.getVideosInPlaylist('invalid');
+            expect(videos.length).toBe(0);
+        });
+    });
 });

@@ -1,4 +1,4 @@
-import { Client, SearchResult, type PlaylistCompact, type VideoCompact } from 'youtubei';
+import { Client, SearchResult, type PlaylistCompact, type VideoCompact, PlaylistVideos } from 'youtubei';
 import moment from 'moment';
 import c from '#Config.js';
 
@@ -181,6 +181,30 @@ function formatSearchPlaylists (playlists: PlaylistCompact[], continuationToken:
         continuationToken
     };
 }
+
+/**
+ * Get all the videos that are in the playlist
+ *
+ * @param playlistId The playlist id to search for
+ * @param durationLimitS The limit of a video (in seconds), set to -1 for admins to disable this. By default this is set to the max_video_duration in the config
+ * @returns An array of videos
+ */
+export async function getVideosInPlaylist (playlistId: string, durationLimitS: number = c.general.max_video_duration): Promise<SearchedVideo[]> {
+    const playlist = await youtube.getPlaylist(playlistId);
+
+    if (playlist === undefined || playlist.videoCount === 0) return [];
+
+    let videos: VideoCompact[] = [];
+
+    if (playlist.videos instanceof PlaylistVideos) {
+        await playlist.videos.next(0);
+        videos = playlist.videos.items;
+    } else {
+        videos = playlist.videos;
+    }
+
+    return formatSearchVideos(videos, durationLimitS).results;
+};
 
 /**
  * Format the views of a video
