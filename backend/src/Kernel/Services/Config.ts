@@ -35,6 +35,9 @@ interface appConfig {
         api_host: string
         api_shared_secret: string
     }
+    general: {
+        max_video_duration: number
+    }
 }
 
 const config: appConfig = {
@@ -70,6 +73,9 @@ const config: appConfig = {
     saproto_site: {
         api_host: process.env.SAPROTO_SITE_HOST ?? 'http://saproto_sail:80',
         api_shared_secret: process.env.SAPROTO_SITE_API_SHARED_SECRET ?? '123'
+    },
+    general: {
+        max_video_duration: parseInt(process.env.GENERAL_MAX_VIDEO_DURATION ?? '600')
     }
 };
 
