@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest ./tests",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "build": "npm run routes:generate && tsc --build --verbose ./tsconfig.build.json",
     "dev": "npm run routes:generate && node --es-module-specifier-resolution=node --import ./bootstrap.js src/main.ts",
     "debug": "node --es-module-specifier-resolution=node --import ./bootstrap.js src/test.ts",
@@ -99,6 +99,7 @@
     "zod-to-ts": "^1.2.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
     "@tsconfig/node20": "^20.1.2",
     "@types/fs-extra": "^11.0.1",
     "@types/jest": "^29.5.11",

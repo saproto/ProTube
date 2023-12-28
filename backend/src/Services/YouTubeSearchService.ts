@@ -4,7 +4,7 @@ import c from '#Config.js';
 
 const youtube = new Client();
 
-interface SearchedVideo {
+export interface SearchedVideo {
     video_id: string
     title: string
     duration_s: number
