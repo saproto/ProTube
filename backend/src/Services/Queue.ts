@@ -5,6 +5,7 @@ import c from '#Config.js';
 
 export interface Video extends SearchedVideo {
     user_id: number
+    queue: string
 };
 
 interface QueueEvents {
@@ -23,9 +24,10 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
      */
     private recentlyPlayed: Video | null = null;
 
-    constructor () {
+    constructor (
+        public readonly name: string
+    ) {
         super();
-        this.queue = [];
     }
 
     /**
@@ -37,7 +39,7 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
      */
     public add (searchedVideo: SearchedVideo, userId: number, isAdmin = false): void {
         // Inject userId
-        const video: Video = { ...searchedVideo, user_id: userId };
+        const video = this.injectQueueNameAndUserId(searchedVideo, userId);
 
         if (this.findDoppelganger(video)) throw new Error('Video already in queue!');
         if (this.videoIsTooLong(video, isAdmin)) throw new Error('Video too long!');
@@ -58,7 +60,7 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
 
         for (const searchedVideo of searchedVideos) {
             // Inject userId
-            const video: Video = { ...searchedVideo, user_id: userId };
+            const video = this.injectQueueNameAndUserId(searchedVideo, userId);
 
             // Don't allow duplicate videos or videos that are too long
             if (this.findDoppelganger(video) || this.videoIsTooLong(video, isAdmin)) {
@@ -87,7 +89,7 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
             video = inputVideo;
         } else {
             // Inject the user_id
-            video = { ...inputVideo, user_id: userId };
+            video = this.injectQueueNameAndUserId(inputVideo, userId);
         }
 
         this.queue.unshift(video);
@@ -105,6 +107,15 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
     }
 
     /**
+     * Get the current queue
+     *
+     * @returns The current queue
+     */
+    public getQueue (): Video[] {
+        return this.queue;
+    }
+
+    /**
      * Go to the next video in the queue
      *
      * @returns The video that is next in line to be played
@@ -118,6 +129,15 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
         this.recentlyPlayed = video;
 
         return video;
+    }
+
+    /**
+     * Get the next video in the queue without shifting it yet
+     *
+     * @returns The video that is next in line to be played
+     */
+    public getNext (): Video | null {
+        return this.queue[0] ?? null;
     }
 
     /**
@@ -282,5 +302,9 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
             return true;
         }
         return false;
+    }
+
+    private injectQueueNameAndUserId (video: SearchedVideo, userId: number): Video {
+        return { ...video, user_id: userId, queue: this.name };
     }
 }

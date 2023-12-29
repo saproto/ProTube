@@ -23,12 +23,14 @@ function createVideo (videoId: string | null = null, duration: number | null = n
     };
 }
 
-function videoWithUserId (video: SearchedVideo, userId: number): Video {
-    return { ...video, user_id: userId };
+const queueName = 'testQueue';
+
+function videoWithUserIdAndQueueName (video: SearchedVideo, userId: number): Video {
+    return { ...video, user_id: userId, queue: queueName };
 }
 
 describe('Testing the queue class', () => {
-    let queue = new Queue();
+    let queue = new Queue(queueName);
     const firstVideo = createVideo('testVideo');
 
     const queueUpdatedEvent = jest.fn(() => { });
@@ -42,7 +44,7 @@ describe('Testing the queue class', () => {
         queue.on('queue-updated', queueUpdatedEvent);
         queue.add(firstVideo, 1);
 
-        expect(queueUpdatedEvent).toHaveBeenCalledWith([videoWithUserId(firstVideo, 1)]);
+        expect(queueUpdatedEvent).toHaveBeenCalledWith([videoWithUserIdAndQueueName(firstVideo, 1)]);
     });
 
     // We're trying to add duplicate videos to the queue
@@ -78,7 +80,7 @@ describe('Testing the queue class', () => {
         queue.on('queue-updated', queueUpdatedEvent);
         queue.add(sampleVideo, 2, true);
 
-        expect(queueUpdatedEvent).toHaveBeenCalledWith([videoWithUserId(firstVideo, 1), videoWithUserId(sampleVideo, 2)]);
+        expect(queueUpdatedEvent).toHaveBeenCalledWith([videoWithUserIdAndQueueName(firstVideo, 1), videoWithUserIdAndQueueName(sampleVideo, 2)]);
     });
 
     // We're trying to clear the queue
@@ -105,18 +107,30 @@ describe('Testing the queue class', () => {
         queue.add(firstVideo, 1);
         queue.addToTop(videoOnTop, 2);
 
-        expect(queueUpdatedEvent).toHaveBeenCalledWith([videoWithUserId(videoOnTop, 2), videoWithUserId(firstVideo, 1)]);
+        expect(queueUpdatedEvent).toHaveBeenCalledWith([videoWithUserIdAndQueueName(videoOnTop, 2), videoWithUserIdAndQueueName(firstVideo, 1)]);
     });
 
-    // we're going from 1 item in the queue to an empty queue
     it('should be able to go to the next item in the queue', () => {
-        queue = new Queue();
+        queue = new Queue(queueName);
         // reset the queue to 1 item
         queue.add(firstVideo, 1);
 
         queue.on('queue-updated', queueUpdatedEvent);
 
-        expect(queue.playNext()).toEqual(videoWithUserId(firstVideo, 1));
+        expect(queue.getNext()).toEqual(videoWithUserIdAndQueueName(firstVideo, 1));
+        expect(queue.getQueue()).toEqual([videoWithUserIdAndQueueName(firstVideo, 1)]);
+        expect(queueUpdatedEvent).not.toHaveBeenCalled();
+    });
+
+    // we're going from 1 item in the queue to an empty queue
+    it('should be able to go to the next item in the queue', () => {
+        queue = new Queue(queueName);
+        // reset the queue to 1 item
+        queue.add(firstVideo, 1);
+
+        queue.on('queue-updated', queueUpdatedEvent);
+
+        expect(queue.playNext()).toEqual(videoWithUserIdAndQueueName(firstVideo, 1));
         expect(queueUpdatedEvent).toHaveBeenCalledWith([]);
     });
 
@@ -137,7 +151,7 @@ describe('Testing the queue class', () => {
         ];
 
         // attach the user id to all videos
-        const videosWithUserId = videos.map(video => videoWithUserId(video, 1));
+        const videosWithUserId = videos.map(video => videoWithUserIdAndQueueName(video, 1));
 
         queue.on('queue-updated', queueUpdatedEvent);
         queue.addMany(videos, 1);
@@ -147,7 +161,7 @@ describe('Testing the queue class', () => {
 
     // we're adding multiple videos to the queue
     it('should not be able to duplicate videos to the queue when adding many', () => {
-        queue = new Queue();
+        queue = new Queue(queueName);
 
         const videos = [
             createVideo('duplicate'),
@@ -156,7 +170,7 @@ describe('Testing the queue class', () => {
         ];
 
         // attach the user id to all videos
-        const videosWithUserId = videos.map(video => videoWithUserId(video, 1));
+        const videosWithUserId = videos.map(video => videoWithUserIdAndQueueName(video, 1));
         // remove the first duplicate (the first one is added to the queue)
         videosWithUserId.splice(1, 1);
 
@@ -171,7 +185,7 @@ describe('Testing the queue class', () => {
 
     // we're adding multiple videos to the queue
     it('should not be able to add videos that are too long to the queue when adding many', () => {
-        queue = new Queue();
+        queue = new Queue(queueName);
 
         const videos = [
             createVideo('notTooLong'),
@@ -180,7 +194,7 @@ describe('Testing the queue class', () => {
         ];
 
         // attach the user id to all videos
-        const videosWithUserId = videos.map(video => videoWithUserId(video, 1));
+        const videosWithUserId = videos.map(video => videoWithUserIdAndQueueName(video, 1));
         // remove the first duplicate (the first one is added to the queue)
         videosWithUserId.splice(1, 1);
 
@@ -195,7 +209,7 @@ describe('Testing the queue class', () => {
 
     // we're adding multiple videos to the queue
     it('should be able to add videos that are too long to the queue when adding many if we\'re an admin', () => {
-        queue = new Queue();
+        queue = new Queue(queueName);
 
         const videos = [
             createVideo('notTooLong'),
@@ -204,7 +218,7 @@ describe('Testing the queue class', () => {
         ];
 
         // attach the user id to all videos
-        const videosWithUserId = videos.map(video => videoWithUserId(video, 1));
+        const videosWithUserId = videos.map(video => videoWithUserIdAndQueueName(video, 1));
 
         queue.on('queue-updated', queueUpdatedEvent);
 
@@ -214,7 +228,7 @@ describe('Testing the queue class', () => {
     });
 
     it('should not be able to add duplicate videos to the queue when adding many if we\'re an admin', () => {
-        queue = new Queue();
+        queue = new Queue(queueName);
 
         const videos = [
             createVideo('duplicate'),
@@ -223,7 +237,7 @@ describe('Testing the queue class', () => {
         ];
 
         // attach the user id to all videos
-        const videosWithUserId = videos.map(video => videoWithUserId(video, 1));
+        const videosWithUserId = videos.map(video => videoWithUserIdAndQueueName(video, 1));
         // remove the first duplicate (the first one is added to the queue)
         videosWithUserId.splice(1, 1);
 
@@ -237,7 +251,7 @@ describe('Testing the queue class', () => {
     });
 
     it('should show the correct duration of the queue', () => {
-        queue = new Queue();
+        queue = new Queue(queueName);
 
         const videos = [
             createVideo('1', 400),
@@ -254,7 +268,7 @@ describe('Testing the queue class', () => {
     });
 
     it('should round-robin add items to the queue 1', () => {
-        queue = new Queue();
+        queue = new Queue(queueName);
 
         const videos = [
             createVideo(),
@@ -264,9 +278,9 @@ describe('Testing the queue class', () => {
 
         // attach the user id to all videos
         const videosWithUserId = [
-            videoWithUserId(videos[0], 1),
-            videoWithUserId(videos[1], 2),
-            videoWithUserId(videos[2], 3)
+            videoWithUserIdAndQueueName(videos[0], 1),
+            videoWithUserIdAndQueueName(videos[1], 2),
+            videoWithUserIdAndQueueName(videos[2], 3)
         ];
 
         videos.forEach((video, index) => {
@@ -279,13 +293,13 @@ describe('Testing the queue class', () => {
         queue.add(newVideo, 2);
 
         // expect the order to be 1,2,3,2 (round-robin)
-        videosWithUserId.push(videoWithUserId(newVideo, 2));
+        videosWithUserId.push(videoWithUserIdAndQueueName(newVideo, 2));
 
         expect(queueUpdatedEvent).toHaveBeenCalledWith(videosWithUserId);
     });
 
     it('should round-robin add items to the queue 2', () => {
-        queue = new Queue();
+        queue = new Queue(queueName);
 
         const videos = [
             createVideo(),
@@ -304,17 +318,17 @@ describe('Testing the queue class', () => {
 
         // expect the order to be 1,2,3,1 (round-robin)
         const videosWithUserId = [
-            videoWithUserId(videos[0], 1),
-            videoWithUserId(videos[1], 2),
-            videoWithUserId(newVideo, 3),
-            videoWithUserId(videos[2], 1)
+            videoWithUserIdAndQueueName(videos[0], 1),
+            videoWithUserIdAndQueueName(videos[1], 2),
+            videoWithUserIdAndQueueName(newVideo, 3),
+            videoWithUserIdAndQueueName(videos[2], 1)
         ];
 
         expect(queueUpdatedEvent).toHaveBeenCalledWith(videosWithUserId);
     });
 
     it('should round-robin add items to the queue 3', () => {
-        queue = new Queue();
+        queue = new Queue(queueName);
 
         const videos = [
             createVideo(),
@@ -335,18 +349,18 @@ describe('Testing the queue class', () => {
 
         // expect the order to be 1,2,3,1,1 (round-robin)
         const videosWithUserId = [
-            videoWithUserId(videos[0], 1),
-            videoWithUserId(videos[1], 2),
-            videoWithUserId(newVideo, 3),
-            videoWithUserId(videos[2], 1),
-            videoWithUserId(videos[3], 1)
+            videoWithUserIdAndQueueName(videos[0], 1),
+            videoWithUserIdAndQueueName(videos[1], 2),
+            videoWithUserIdAndQueueName(newVideo, 3),
+            videoWithUserIdAndQueueName(videos[2], 1),
+            videoWithUserIdAndQueueName(videos[3], 1)
         ];
 
         expect(queueUpdatedEvent).toHaveBeenCalledWith(videosWithUserId);
     });
 
     it('should round-robin add items to the queue 4', () => {
-        queue = new Queue();
+        queue = new Queue(queueName);
 
         const videos = [
             createVideo(),
@@ -367,11 +381,11 @@ describe('Testing the queue class', () => {
 
         // expect the order to be 1,2,1,2,1 (round-robin)
         const videosWithUserId = [
-            videoWithUserId(videos[0], 1),
-            videoWithUserId(videos[1], 2),
-            videoWithUserId(videos[2], 1),
-            videoWithUserId(newVideo, 2),
-            videoWithUserId(videos[3], 1)
+            videoWithUserIdAndQueueName(videos[0], 1),
+            videoWithUserIdAndQueueName(videos[1], 2),
+            videoWithUserIdAndQueueName(videos[2], 1),
+            videoWithUserIdAndQueueName(newVideo, 2),
+            videoWithUserIdAndQueueName(videos[3], 1)
         ];
 
         expect(queueUpdatedEvent).toHaveBeenCalledWith(videosWithUserId);
@@ -379,7 +393,7 @@ describe('Testing the queue class', () => {
 
     // Checking if the currently playing video is being taken into account when sorting
     it('should round-robin add items to the queue 5', () => {
-        queue = new Queue();
+        queue = new Queue(queueName);
 
         const videos = [
             createVideo(),
@@ -398,8 +412,8 @@ describe('Testing the queue class', () => {
 
         // expect the order to be (1,)2,1 (round-robin)
         const videosWithUserId = [
-            videoWithUserId(newVideo, 2),
-            videoWithUserId(videos[1], 1)
+            videoWithUserIdAndQueueName(newVideo, 2),
+            videoWithUserIdAndQueueName(videos[1], 1)
         ];
 
         expect(queueUpdatedEvent).toHaveBeenCalledWith(videosWithUserId);
@@ -407,7 +421,7 @@ describe('Testing the queue class', () => {
 
     // Checking if the isEmpty functionaly works
     it('should show an empty queue', () => {
-        queue = new Queue();
+        queue = new Queue(queueName);
 
         expect(queue.isEmpty()).toBe(true);
 
@@ -422,7 +436,7 @@ describe('Testing the queue class', () => {
 
     // Checking if we can remove a video
     it('should be able to remove videos', () => {
-        queue = new Queue();
+        queue = new Queue(queueName);
         const videos = [
             createVideo('video1'),
             createVideo('video2')
@@ -441,7 +455,7 @@ describe('Testing the queue class', () => {
 
         // User 1 owns this video, delete it
         expect(queue.removeVideosById(['video2'], 1)).toBe(1);
-        expect(queueUpdatedEvent).toHaveBeenCalledWith([videoWithUserId(videos[0], 1)]);
+        expect(queueUpdatedEvent).toHaveBeenCalledWith([videoWithUserIdAndQueueName(videos[0], 1)]);
 
         queueUpdatedEvent.mockReset();
 
