@@ -88,6 +88,13 @@ describe('Testing the queue class', () => {
         queue.clear();
 
         expect(queueUpdatedEvent).toHaveBeenCalledWith([]);
+        expect(queue.isEmpty()).toBe(true);
+
+        queueUpdatedEvent.mockReset();
+
+        // We're trying to clear an empty queue
+        queue.clear();
+        expect(queueUpdatedEvent).not.toHaveBeenCalled();
     });
 
     // We're trying to add a video to the top of the queue
@@ -368,5 +375,86 @@ describe('Testing the queue class', () => {
         ];
 
         expect(queueUpdatedEvent).toHaveBeenCalledWith(videosWithUserId);
+    });
+
+    // Checking if the currently playing video is being taken into account when sorting
+    it('should round-robin add items to the queue 5', () => {
+        queue = new Queue();
+
+        const videos = [
+            createVideo(),
+            createVideo()
+        ];
+
+        // currently playing: 1, queue: 1
+        queue.add(videos[0], 1);
+        queue.add(videos[1], 1);
+        queue.playNext();
+
+        queue.on('queue-updated', queueUpdatedEvent);
+
+        const newVideo = createVideo();
+        queue.add(newVideo, 2);
+
+        // expect the order to be (1,)2,1 (round-robin)
+        const videosWithUserId = [
+            videoWithUserId(newVideo, 2),
+            videoWithUserId(videos[1], 1)
+        ];
+
+        expect(queueUpdatedEvent).toHaveBeenCalledWith(videosWithUserId);
+    });
+
+    // Checking if the isEmpty functionaly works
+    it('should show an empty queue', () => {
+        queue = new Queue();
+
+        expect(queue.isEmpty()).toBe(true);
+
+        queue.add(createVideo(), 1);
+
+        expect(queue.isEmpty()).toBe(false);
+
+        queue.playNext();
+
+        expect(queue.isEmpty()).toBe(true);
+    });
+
+    // Checking if we can remove a video
+    it('should be able to remove videos', () => {
+        queue = new Queue();
+        const videos = [
+            createVideo('video1'),
+            createVideo('video2')
+        ];
+
+        // Both videos are from user 1
+        queue.add(videos[0], 1);
+        queue.add(videos[1], 1);
+
+        queue.on('queue-updated', queueUpdatedEvent);
+
+        // User 2 doesn't own this video, don't delete it
+        expect(() => queue.removeVideosById(['video2'], 2))
+            .toThrow('Illegal removal of video!');
+        expect(queueUpdatedEvent).not.toHaveBeenCalled();
+
+        // User 1 owns this video, delete it
+        expect(queue.removeVideosById(['video2'], 1)).toBe(1);
+        expect(queueUpdatedEvent).toHaveBeenCalledWith([videoWithUserId(videos[0], 1)]);
+
+        queueUpdatedEvent.mockReset();
+
+        // User 2, is an admin, therefore can delete user 1's video
+        expect(queue.removeVideosById(['video1'], 2, true)).toBe(1);
+        expect(queueUpdatedEvent).toHaveBeenCalledWith([]);
+
+        expect(queue.isEmpty()).toBe(true);
+
+        queueUpdatedEvent.mockReset();
+
+        // We're trying to delete a video that's not in the queue
+        expect(queue.removeVideosById(['video1'], 2)).toBe(0);
+        expect(queueUpdatedEvent).not.toHaveBeenCalled();
     });
 });

@@ -12,14 +12,29 @@ interface QueueEvents {
 }
 
 export class Queue extends TypedEventEmitter<QueueEvents> {
+    /**
+     * The actual queue
+     */
     private queue: Video[] = [];
-    private recentlyRemoved: Video | null = null;
+
+    /**
+     * The video that was removed from the queue by playNext()
+     * (so is currently playing) like the queue[-1], used for sorting the queue
+     */
+    private recentlyPlayed: Video | null = null;
 
     constructor () {
         super();
         this.queue = [];
     }
 
+    /**
+     * Add a video to the queue
+     *
+     * @param searchedVideo The video to add to the queue
+     * @param userId For which user we want to add it
+     * @param isAdmin Is this user an admin? (for the duration limit)
+     */
     public add (searchedVideo: SearchedVideo, userId: number, isAdmin = false): void {
         // Inject userId
         const video: Video = { ...searchedVideo, user_id: userId };
@@ -31,6 +46,13 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
         this.queueUpdated();
     }
 
+    /**
+     * Add multiple videos to the queue
+     *
+     * @param searchedVideos The videos to add to the queue
+     * @param userId For which user we want to add it
+     * @param isAdmin Is this user an admin? (for the duration limit)
+     */
     public addMany (searchedVideos: SearchedVideo[], userId: number, isAdmin = false): void {
         let partiallyAdded = false;
 
@@ -52,44 +74,100 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
         if (partiallyAdded) throw new Error('Some videos were already in the queue!');
     }
 
-    public addToTop (searchedVideo: SearchedVideo, userId: number): void {
-        // Inject userId
-        const video: Video = { ...searchedVideo, user_id: userId };
+    /**
+     * Add a video to the top of the queue
+     *
+     * @param searchedVideo The video to add to the queue
+     * @param userId For which user we want to add it
+     */
+    public addToTop (inputVideo: SearchedVideo | Video, userId: number): void {
+        let video: Video;
+
+        if ('user_id' in inputVideo) {
+            video = inputVideo;
+        } else {
+            // Inject the user_id
+            video = { ...inputVideo, user_id: userId };
+        }
 
         this.queue.unshift(video);
         this.queueUpdated();
     }
 
+    /**
+     * Clear the queue
+     */
     public clear (): void {
+        if (this.isEmpty()) return;
+
         this.queue = [];
         this.queueUpdated();
     }
 
+    /**
+     * Go to the next video in the queue
+     *
+     * @returns The video that is next in line to be played
+     */
     public playNext (): Video | null {
         const video = this.queue.shift() ?? null;
         if (video !== null) {
             this.queueUpdated();
         }
 
-        this.recentlyRemoved = video;
+        this.recentlyPlayed = video;
 
         return video;
     }
 
-    public removeVideoById (id: string, userId: number, isAdmin = false): void {
-        this.queue = this.queue.filter((video) => {
-            // video can only be removed if the id matches and the user is an admin or the user is the one who added the video
-            if (video.video_id === id && (isAdmin || video.user_id === userId)) {
-                return false;
+    /**
+     * Remove a set of videos from the queue by video_id
+     *
+     * @param ids An array of video_ids which to be removed from the queue
+     * @param userId The user that is deleting these videos
+     * @param isAdmin Is this user an admin (can delete all videos)
+     * @returns The amount of videos that were deleted
+     */
+    public removeVideosById (ids: string[], userId: number, isAdmin = false): number {
+        let deletedVideoCount = 0;
+
+        const newQueue = this.queue.filter((video) => {
+            // We don't see the id of this video in our list, keep it
+            if (!ids.includes(video.video_id)) return true;
+
+            // This video is in our list, but we're not allowed to remove it
+            if (!isAdmin && userId !== video.user_id) {
+                throw new Error('Illegal removal of video!');
             }
-            return true;
+            deletedVideoCount++;
+
+            // delete this video
+            return false;
         });
+
+        this.queue = newQueue;
+
+        if (deletedVideoCount > 0) {
+            this.queueUpdated();
+        }
+
+        return deletedVideoCount;
     }
 
+    /**
+     * Get the queue duration (S)
+     *
+     * @returns The current queue duration in seconds
+     */
     public getTotalDurationS (): number {
         return this.queue.reduce((total, video) => total + video.duration_s, 0);
     }
 
+    /**
+     * Get the queue duration (formatted HH:mm:ss)
+     *
+     * @returns The current queue duration in HH:mm:ss
+     */
     public getTotalDurationFormatted (): string {
         const totalDurationS = this.getTotalDurationS();
 
@@ -99,15 +177,27 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
         ).format('HH:mm:ss');
     }
 
+    /**
+     * Is the queue empty?
+     *
+     * @returns Whether the queue is empty or not
+     */
     public isEmpty (): boolean {
         return this.queue.length === 0;
     }
 
+    /**
+     * The queue was changed somehow, resort it and update the listeners
+     */
     private queueUpdated (): void {
         this.sortQueue();
         this.emit('queue-updated', this.queue);
     }
 
+    /**
+     * Sort the queue Round-Robin style
+     * Takes into account the currently playing video (this.recentlyplayed)
+     */
     private sortQueue (): void {
         // duplicate the queue
         const oldQueue = [...this.queue];
@@ -115,8 +205,8 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
         if (oldQueue.length === 0) return;
 
         // insert the last removed video at the start of the queue (if not null)
-        if (this.recentlyRemoved !== null) {
-            oldQueue.unshift(this.recentlyRemoved);
+        if (this.recentlyPlayed !== null) {
+            oldQueue.unshift(this.recentlyPlayed);
         }
 
         // get all ids in the queue on which to order
@@ -163,17 +253,30 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
         }
 
         // The currentvideo wasn't empty and was added for the sorting algorithm. Remove it again
-        if (this.recentlyRemoved !== null) {
+        if (this.recentlyPlayed !== null) {
             newQueue.shift();
         }
 
         this.queue = newQueue;
     }
 
+    /**
+     * Check if the video is already in the queue
+     *
+     * @param video The video to check
+     * @returns Whether the video is already in the queue
+     */
     private findDoppelganger (video: Video): boolean {
         return this.queue.some(queueVideo => queueVideo.video_id === video.video_id);
     }
 
+    /**
+     * Check if the video is too long
+     *
+     * @param video The video to check
+     * @param isAdmin Whether the user is an admin (duration is ignored)
+     * @returns Whether the video is too long
+     */
     private videoIsTooLong (video: Video, isAdmin = false): boolean {
         if (video.duration_s > c.general.max_video_duration && !isAdmin) {
             return true;
