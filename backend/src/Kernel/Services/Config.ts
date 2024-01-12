@@ -2,6 +2,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 interface appConfig {
+    /**
+     * Database configuration.
+     */
     db: {
         host: string
         port: number
@@ -9,37 +12,100 @@ interface appConfig {
         password: string
         database: string
     }
+    /**
+     * OAuth configuration.
+     */
     oauth: {
+        /**
+         * The OAuth client ID.
+         */
         id: string
+        /**
+         * The OAuth client secret.
+         */
         secret: string
+        /**
+         * The host where we should talk/redirect to for oauth.
+         */
         host: string
+        /**
+         * Where should the host redirect to after a successful login? (to us)
+         */
         redirect_host: string
     }
+    /**
+     * Defines whether the application is in dev or prod mode.
+     */
     env: {
         development: boolean
         production: boolean
     }
+    /**
+     * Redis configuration.
+     */
     redis: {
         host: string
         port: number
     }
+    /**
+     * Session configuration.
+     */
     session: {
+        /**
+         * Logged in session duration in seconds.
+         */
         ttl_seconds: number
+        /**
+         * The name of the session cookie.
+         */
         name: string
+        /**
+         * The secret used to sign the session cookie.
+         */
         secret: string
     }
+    /**
+     * Server configuration.
+     */
     server: {
+        /**
+         * The port the server should listen on.
+         */
         port: number
     }
+    /**
+     * Saproto site configuration.
+     */
     saproto_site: {
+        /**
+         * The host which should be used for api communication
+         */
         api_host: string
+        /**
+         * The shared secret used for bi-directional authentication with the saproto site.
+         */
         api_shared_secret: string
     }
+    /**
+     * General protube settings
+     */
     general: {
+        /**
+         * The maximum duration of a video in seconds for non-admins.
+         */
         max_video_duration: number
     }
+    /**
+     * Logging configuration.
+     */
     logging: {
+        /**
+         * How many days do we keep the log files
+         */
         retention_days: number
+        /**
+         * Where do we store them
+         */
         path: string
     }
 }

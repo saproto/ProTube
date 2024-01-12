@@ -18,6 +18,7 @@ async function loadUser (fastify: FastifyInstance, options: unknown): Promise<vo
     fastify.addHook('preHandler', async (req, reply) => {
         const user = await User.findByPk(req.session.get('user_id'));
         if (user === null) {
+            // url defined via fastify-plugin (Kernel/Authentication)
             await reply.redirect('/auth/login');
             return;
         }

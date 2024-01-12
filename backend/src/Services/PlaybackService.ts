@@ -8,4 +8,5 @@ export const priorityQueue = new Queue('priority');
 const playbackHandler = new PlaybackHandler(queue, priorityQueue);
 
 log.info('PLAYBACKHANDLER', 'Playback handler started');
+
 export default playbackHandler;

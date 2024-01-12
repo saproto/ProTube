@@ -25,7 +25,7 @@ export async function registerAuthentication (fastify: FastifyInstance): Promise
             }
         },
         startRedirectPath: '/auth/login',
-        callbackUri: 'http://localhost:3000/auth/login/callback',
+        callbackUri: `${c.oauth.redirect_host}/auth/login/callback`,
         scope: [],
         // @ts-expect-error No typing available
         generateStateFunction: (request) => {
