@@ -38,6 +38,10 @@ interface appConfig {
     general: {
         max_video_duration: number
     }
+    logging: {
+        retention_days: number
+        path: string
+    }
 }
 
 const config: appConfig = {
@@ -76,6 +80,10 @@ const config: appConfig = {
     },
     general: {
         max_video_duration: parseInt(process.env.GENERAL_MAX_VIDEO_DURATION ?? '600')
+    },
+    logging: {
+        retention_days: parseInt(process.env.LOGGING_RETENTION_DAYS ?? '14'),
+        path: process.env.LOGGING_PATH ?? 'logs'
     }
 };
 

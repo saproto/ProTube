@@ -1,6 +1,6 @@
 import { Queue } from '#Modules/Queue.js';
 import { PlaybackHandler } from '#Modules/PlaybackHandler.js';
-import { log } from '#Kernel/Services/Logging.js';
+import log from '#Kernel/Services/Logging.js';
 
 export const queue = new Queue('regular');
 export const priorityQueue = new Queue('priority');

@@ -2,3 +2,4 @@ src/Kernel/Routes/*.json
 src/Routes/typings
 coverage
 dist
+logs
