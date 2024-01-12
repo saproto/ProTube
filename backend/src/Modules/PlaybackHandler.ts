@@ -1,5 +1,5 @@
 import { TypedEventEmitter } from '#Kernel/Services/EventEmitter.js';
-import { type Video, type Queue } from '#Services/Queue.js';
+import { type Video, type Queue } from '#Modules/Queue.js';
 import moment from 'moment';
 
 interface PlaybackHandlerEvents {

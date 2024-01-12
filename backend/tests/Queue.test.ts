@@ -1,4 +1,4 @@
-import { Queue, type Video } from '#Services/Queue.js';
+import { Queue, type Video } from '#Modules/Queue.js';
 import { describe, it, jest } from '@jest/globals';
 import { faker } from '@faker-js/faker';
 import { type SearchedVideo } from '#Services/YouTubeSearchService.js';

@@ -1,8 +1,8 @@
-import { Queue, type Video } from '#Services/Queue.js';
+import { Queue, type Video } from '#Modules/Queue.js';
 import c from '#Config.js';
 import { faker } from '@faker-js/faker';
 import { jest, describe, it, beforeEach, afterAll } from '@jest/globals';
-import { PlaybackHandler, PlaybackMode, PlaybackState } from '#Services/PlaybackHandler.js';
+import { PlaybackHandler, PlaybackMode, PlaybackState } from '#Modules/PlaybackHandler.js';
 import { type SearchedVideo } from '#Services/YouTubeSearchService.js';
 
 function createVideo (videoId: string | null = null, duration: number | null = null): SearchedVideo {

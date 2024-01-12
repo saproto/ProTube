@@ -61,6 +61,10 @@
     "#Jobs/*": {
       "production": "./dist/Jobs/*",
       "default": "./src/Jobs/*"
+    },
+    "#Modules/*": {
+      "production": "./dist/Modules/*",
+      "default": "./src/Modules/*"
     }
   },
   "description": "",
