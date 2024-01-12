@@ -42,6 +42,10 @@
       "production": "./dist/Kernel/Services/Config.js",
       "default": "./src/Kernel/Services/Config.js"
     },
+    "#Logging.js": {
+      "production": "./dist/Kernel/Services/Logging.js",
+      "default": "./src/Kernel/Services/Logging.js"
+    },
     "#Kernel/*": {
       "production": "./dist/Kernel/*",
       "default": "./src/Kernel/*"

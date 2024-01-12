@@ -12,6 +12,7 @@ interface QueueEvents {
     'queue-updated': [Video[]]
 }
 
+// ToDo: Add Redis to this queue
 export class Queue extends TypedEventEmitter<QueueEvents> {
     /**
      * The actual queue

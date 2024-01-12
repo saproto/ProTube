@@ -11,6 +11,7 @@
       "#Kernel/*": ["Kernel/*"],
       "#Models/*": ["Models/*"],
       "#Config.js": ["Kernel/Services/Config.js"],
+      "#Logging.js": ["Kernel/Services/Logging.js"],
       "#Schemas": ["Schemas/*"],
       "#SocketControllers": ["SocketControllers/*"],
       "#Middlewares": ["Middlewares/*"],

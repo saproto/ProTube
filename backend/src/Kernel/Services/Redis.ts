@@ -1,5 +1,6 @@
 import { Redis } from 'ioredis';
 import c from '#Config.js';
+import log from '#Logging.js';
 
 const redis = new Redis({
     host: c.redis.host,
@@ -14,7 +15,8 @@ const redis = new Redis({
  * @returns {Promise<boolean>}
  */
 export async function startRedisConnection (): Promise<boolean> {
-    console.log('Checking for redis connection....');
+    log.info('REDIS', 'Checking for redis connection....');
+
     const connectionAttempts: number = 5;
     const connectionDelay: number = 1000;
     let status: string = redis.status;
@@ -22,7 +24,7 @@ export async function startRedisConnection (): Promise<boolean> {
     // Attempt a few times to connect to redis
     for (let i: number = 0; i < connectionAttempts; i++) {
         status = redis.status;
-        console.log(`Redis connection status: ${status}`);
+        log.debug('REDIS', `Connection attempt ${i + 1}/${connectionAttempts}...`);
         if (status === 'ready') {
             break;
         }
@@ -30,11 +32,16 @@ export async function startRedisConnection (): Promise<boolean> {
     }
 
     if (status !== 'ready') {
+        log.error('REDIS', 'Redis connection failed!');
         throw new Error('Redis connection failed!');
     }
 
     const ping = await redis.ping();
-    console.log(`Redis ping: ${ping}`);
+    if (ping !== 'PONG') {
+        log.error('REDIS', 'Redis ping failed!');
+        throw new Error('Redis ping failed!');
+    }
+    log.info('REDIS', 'Redis connection established!');
 
     return status === 'ready';
 }

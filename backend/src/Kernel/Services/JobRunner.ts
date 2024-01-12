@@ -1,11 +1,9 @@
 import { type BaseJob } from '#App/Jobs/BaseJob.js';
-import { CleanupJob } from '#App/Jobs/CleanupJob.js';
 import cron from 'node-cron';
 
 export class JobRunner {
     // All jobs which you want to define.
     jobs: BaseJob[] = [
-        new CleanupJob()
     ];
 
     /**

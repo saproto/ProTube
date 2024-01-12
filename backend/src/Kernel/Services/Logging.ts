@@ -5,7 +5,7 @@ import c from '#Config.js';
 import colors from 'colors/safe.js';
 
 let logOutPut: DailyRotateFile | winston.transports.ConsoleTransportInstance = new winston.transports.DailyRotateFile({
-    level: 'info',
+    level: 'debug',
     filename: '%DATE%-protube.log',
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,
@@ -20,7 +20,8 @@ const prefixes = {
     API: colors.yellow('API'),
     PLAYBACKHANDLER: colors.cyan('PLAYBACKHANDLER'),
     USERSOCKET: colors.green('USERSOCKET'),
-    ADMINSOCKET: colors.gray('ADMINSOCKET')
+    ADMINSOCKET: colors.gray('ADMINSOCKET'),
+    REDIS: colors.red('REDIS')
 };
 
 const logLevels = {
@@ -37,7 +38,7 @@ let logLevel = logLevels.INFO;
 
 // Dev mode: log with colors into console except for logging to files + different timestamp format
 if (c.env.development) {
-    logOutPut = new winston.transports.Console();
+    logOutPut = new winston.transports.Console({ level: 'debug' });
     color = winston.format.colorize();
     timestampFormat = 'HH:mm:ss';
     logLevel = logLevels.DEBUG;
