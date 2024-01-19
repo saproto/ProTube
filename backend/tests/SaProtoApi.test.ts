@@ -16,6 +16,9 @@ const PROTUBE_USERS = {
     }
 };
 
+// ToDo: The current protube test thing uses a password_client to login the user. Nice but
+// this won't work for the authetnication. Then we need to set the password_client to false again
+// in the laravel database in the table oauth_clients.
 describe('Protube API test', () => {
     let userToken: string = '';
     let adminToken: string = '';

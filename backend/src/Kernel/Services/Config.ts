@@ -25,13 +25,17 @@ interface appConfig {
          */
         secret: string
         /**
-         * The host where we should talk/redirect to for oauth.
+         * The host where we should redirect the user to. (127.0.0.1:8080 for local)
          */
         host: string
         /**
+         * The host used by oauth to request tokens (http://saproto_sail:80 for local)
+         */
+        token_host: string
+        /**
          * Where should the host redirect to after a successful login? (to us)
          */
-        redirect_host: string
+        redirect_host_return: string
     }
     /**
      * Defines whether the application is in dev or prod mode.
@@ -121,8 +125,9 @@ const config: appConfig = {
     oauth: {
         id: process.env.OAUTH_ID ?? '0',
         secret: process.env.OAUTH_SECRET ?? '',
-        host: process.env.OAUTH_HOST ?? 'http://saproto_sail:80',
-        redirect_host: process.env.OAUTH_REDIRECT_HOST ?? 'http://localhost:3000'
+        host: process.env.OAUTH_HOST ?? 'http://localhost:8080',
+        token_host: process.env.OAUTH_TOKEN_HOST ?? 'http://saproto_sail:80',
+        redirect_host_return: process.env.OAUTH_REDIRECT_HOST_RETURN ?? 'http://localhost:3000'
     },
     env: {
         development: process.env.NODE_ENV === 'development',

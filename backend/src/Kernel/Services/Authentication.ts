@@ -20,27 +20,25 @@ export async function registerAuthentication (fastify: FastifyInstance): Promise
             auth: {
                 authorizeHost: c.oauth.host,
                 authorizePath: '/oauth/authorize',
-                tokenHost: c.oauth.host,
+                tokenHost: c.oauth.token_host,
                 tokenPath: '/oauth/token'
             }
         },
+        pkce: 'S256',
         startRedirectPath: '/auth/login',
-        callbackUri: `${c.oauth.redirect_host}/auth/login/callback`,
+        callbackUri: `${c.oauth.redirect_host_return}/auth/login/callback`,
         scope: [],
-        // @ts-expect-error No typing available
         generateStateFunction: (request) => {
             const state = crypto.randomBytes(16).toString('base64url');
             request.session.set('oauth-state', state);
             return state;
         },
-        // @ts-expect-error No typing available
-        checkStateFunction: (request, callback) => {
-            const sessionState = request.session.get('oauth-state');
-            if (request.query.state === sessionState) {
-                callback();
-                return;
+        checkStateFunction: (request) => {
+            // @ts-expect-error no typing found
+            if (request.query.state === request.session.get('oauth-state')) {
+                return true;
             }
-            callback(new Error('Invalid state'));
+            return false;
         }
     });
 }

@@ -19,8 +19,6 @@ const socket: SocketRoute[] = [{
     },
     postConnectionMiddlewares: [(socket) => {
         return (__, next) => {
-            console.log('postconnection middleware');
-            console.log(socket.request.user);
             next();
         };
     }, sessionRefreshMiddleware],

@@ -1,36 +1,18 @@
 import z from 'zod';
-import c from '#Kernel/Services/Config.js';
 import { User } from '#Models/User.js';
 import UserSchema from '#Schemas/UserSchema.js';
 import { webRoute } from '#Kernel/Routes/Web/Registrar.js';
+import { type OAuth2Token } from '@fastify/oauth2';
+import { SaprotoApiService } from '#Services/SaprotoApiService.js';
 
 export const loginCallback = webRoute({
     schema: z.null(),
     handler: async (request, reply) => {
-        const token = await request.server.saproto.getAccessTokenFromAuthorizationCodeFlow(request);
+        // @ts-expect-error The typing is fucked but it should work (it doesn't like the modified reply)
+        const token = (await request.server.saproto.getAccessTokenFromAuthorizationCodeFlow(request, reply) as OAuth2Token);
 
-        interface AuthenticatedUser {
-            authenticated: true
-            name: string
-            admin: boolean
-            id: number
-        }
-
-        interface UnauthenticatedUser {
-            authenticated: false
-        }
-
-        type User = AuthenticatedUser | UnauthenticatedUser;
-
-        const response = await fetch(
-            `${c.oauth.host}/api/protube/userdetails`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token.token.access_token}`
-                }
-            }
-        );
-        const userData: User = await response.json();
+        const apiClient = new SaprotoApiService(token.token.access_token);
+        const userData = await apiClient.getUserDetails();
 
         if (!userData.authenticated) {
             reply.statusCode = 401;
