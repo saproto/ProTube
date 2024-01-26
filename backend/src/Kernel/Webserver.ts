@@ -29,11 +29,20 @@ export async function startWebServer (): Promise<void> {
     await server.register(fastifySwagger, {
         openapi: {
             info: {
-                title: 'SampleApi',
-                description: 'Sample backend service',
+                title: 'ProTube backend API documentation',
+                description: 'Cool shit',
                 version: '1.0.0'
             },
-            servers: []
+            servers: [{
+                url: 'http://localhost:{port}',
+                description: 'ProTube frontend',
+                variables: {
+                    port: {
+                        default: '3000',
+                        description: 'The port on which the frontend is running (locally)'
+                    }
+                }
+            }]
         },
         transform: jsonSchemaTransform
         // You can also create transform with custom skiplist of endpoints that should not be included in the specification:

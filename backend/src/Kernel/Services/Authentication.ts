@@ -26,6 +26,7 @@ export async function registerAuthentication (fastify: FastifyInstance): Promise
         },
         pkce: 'S256',
         startRedirectPath: '/auth/login',
+        tags: ['guest'],
         callbackUri: `${c.oauth.redirect_host_return}/auth/login/callback`,
         scope: [],
         generateStateFunction: (request) => {

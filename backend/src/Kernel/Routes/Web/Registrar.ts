@@ -81,7 +81,7 @@ export default class WebRouteRegistrar {
      * @param routes - The routes to register
      */
     async register (fastify: FastifyInstance, routes: WebRoute): Promise<void> {
-        await this.#registerRoute(fastify, routes, '');
+        await this.#registerRoute(fastify, routes, '', routes.name);
     }
 
     /**
@@ -91,7 +91,7 @@ export default class WebRouteRegistrar {
      * @param routes - The routes to register
      * @param prefix - The prefix to add to the routes
      */
-    async #registerRoute (fastify: FastifyInstance, routes: WebRoute, prefix: string): Promise<void> {
+    async #registerRoute (fastify: FastifyInstance, routes: WebRoute, prefix: string, namePrefix: string): Promise<void> {
         const routePrefix = prefix + routes.prefix;
         // if there are middlewares create a new context and 'rerun' the registerRoute function with the new context
         if (routes.middlewares.length > 0) {
@@ -101,7 +101,7 @@ export default class WebRouteRegistrar {
                 }
                 // flush the middlewares so they don't get applied again
                 routes.middlewares = [];
-                await this.#registerRoute(middlewaredServer, routes, prefix);
+                await this.#registerRoute(middlewaredServer, routes, prefix, namePrefix);
             });
             return;
         }
@@ -121,8 +121,9 @@ export default class WebRouteRegistrar {
                             body: newRoute.bodySchema
                         }),
                         ...(newRoute.requestSchema !== undefined && {
-                            params: newRoute.requestSchema
-                        })
+                            querystring: newRoute.requestSchema
+                        }),
+                        tags: [namePrefix]
                     },
                     handler: newRoute.handler,
                     method,
@@ -130,7 +131,7 @@ export default class WebRouteRegistrar {
                 });
             } else {
                 // it's a route group with subroutes
-                await this.#registerRoute(fastify, route, routePrefix);
+                await this.#registerRoute(fastify, route, routePrefix, namePrefix + ' - ' + route.name);
             }
         }
     }
