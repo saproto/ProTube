@@ -5,7 +5,7 @@ import type z from 'zod';
 
 type url = `/${string}` | '';
 
-type RouteDefinition = [HTTPMethods, string, url, webRouteInterface<any, any>];
+type RouteDefinition = [HTTPMethods, string, url, webRouteInterface<any, any, any>];
 
 export interface WebRoute {
     prefix: url
@@ -14,17 +14,20 @@ export interface WebRoute {
     routes: Array<RouteDefinition | WebRoute>
 }
 
-interface webRouteInterface<T extends ZodTypeAny, U extends ZodTypeAny | undefined> {
+interface webRouteInterface<T extends ZodTypeAny, U extends ZodTypeAny | undefined, V extends ZodTypeAny | undefined> {
     schema: ZodTypeAny
     bodySchema?: ZodTypeAny
+    requestSchema?: ZodTypeAny
     handler: RouteOptions['handler'] extends (
         request: infer RequestType,
         reply: infer ReplyType
     ) => infer ReturnType
         ? (
-            request: Omit<RequestType, 'body'> & {
+            request: Omit<RequestType, 'body' & 'params'> & {
                 // @ts-expect-error It smh does work
                 body: U extends undefined ? never : z.infer<U>
+                // @ts-expect-error It smh does work
+                params: V extends undefined ? never : z.infer<V>
             },
             reply: Omit<ReplyType, 'send'> & {
                 send: (payload: z.infer<T>) => any
@@ -40,17 +43,20 @@ interface webRouteInterface<T extends ZodTypeAny, U extends ZodTypeAny | undefin
  * @param input - The route configuration
  * @returns - The same route configuration, but typed
  */
-export function webRoute<T extends ZodTypeAny = ZodTypeAny, U extends ZodTypeAny | undefined = undefined> (input: {
+export function webRoute<T extends ZodTypeAny = ZodTypeAny, U extends ZodTypeAny | undefined = undefined, V extends ZodTypeAny | undefined = undefined> (input: {
     schema: T
     bodySchema?: U
+    requestSchema?: V
     handler: RouteOptions['handler'] extends (
         request: infer RequestType,
         reply: infer ReplyType
     ) => infer ReturnType
         ? (
-            request: Omit<RequestType, 'body'> & {
+            request: Omit<RequestType, 'body' & 'params'> & {
                 // @ts-expect-error It smh does work
                 body: U extends undefined ? never : z.infer<U>
+                // @ts-expect-error It smh does work
+                params: V extends undefined ? never : z.infer<V>
             },
             reply: Omit<ReplyType, 'send'> & {
                 send: (payload: z.infer<T>) => Promise<any>
@@ -58,10 +64,11 @@ export function webRoute<T extends ZodTypeAny = ZodTypeAny, U extends ZodTypeAny
             ...args: any[]
         ) => ReturnType
         : never
-}): webRouteInterface<T, U> {
+}): webRouteInterface<T, U, V> {
     return {
         schema: input.schema,
         bodySchema: input.bodySchema,
+        requestSchema: input.requestSchema,
         handler: input.handler
     };
 }
@@ -112,6 +119,9 @@ export default class WebRouteRegistrar {
                         },
                         ...(newRoute.bodySchema !== undefined && {
                             body: newRoute.bodySchema
+                        }),
+                        ...(newRoute.requestSchema !== undefined && {
+                            params: newRoute.requestSchema
                         })
                     },
                     handler: newRoute.handler,

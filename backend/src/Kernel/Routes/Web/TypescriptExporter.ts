@@ -151,11 +151,17 @@ export default class TypescriptExporter {
 
                 if (name === '') throw new Error('A route name must be set!');
 
+                // If there is a bodySchema, use that, otherwise use the requestSchema
+                let requestTypescript = TypescriptGenerator.createTsTypes('request', newRoute.bodySchema);
+                if (requestTypescript === '') {
+                    requestTypescript = TypescriptGenerator.createTsTypes('request', newRoute.requestSchema);
+                }
+
                 const routeType: formattedWebRoute = {
                     name,
                     fullName: fullNamespace + '.' + name,
                     responseTypescript: TypescriptGenerator.createTsTypes(name, newRoute.schema),
-                    requestTypescript: TypescriptGenerator.createTsTypes('request', newRoute.bodySchema),
+                    requestTypescript,
                     url: routePrefix + routes.prefix + url,
                     params: this.#findRouteParams(url)
                 };
