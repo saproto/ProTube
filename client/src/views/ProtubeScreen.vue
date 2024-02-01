@@ -193,8 +193,11 @@ onMounted(() => {
     if (event.data === -1) {
       return;
     }
-    
-    if(event.data === 5 && playerState.value.playerType === enums.TYPES.VIDEO){
+
+    if (
+      event.data === 5 &&
+      playerState.value.playerType === enums.TYPES.VIDEO
+    ) {
       player.playVideo();
       bufferTime = (Date.now() - firstTime) / 1000;
     }
