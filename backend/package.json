@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "main": "index.js",
   "scripts": {
+    "artisan": "node --es-module-specifier-resolution=node --import ./bootstrap.js src/artisan.ts",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "build": "npm run routes:generate && tsc --build --verbose ./tsconfig.build.json",
     "dev": "npm run routes:generate && node --es-module-specifier-resolution=node --import ./bootstrap.js src/main.ts",
@@ -87,6 +88,7 @@
     "colors": "^1.4.0",
     "connect-redis": "^7.1.0",
     "dotenv": "^16.3.1",
+    "enquirer": "^2.4.1",
     "fastify": "^4.19.2",
     "fastify-plugin": "^4.5.1",
     "fastify-socket.io": "^4.0.0",
@@ -104,6 +106,7 @@
     "socket.io": "^4.7.1",
     "typeorm": "^0.3.17",
     "typescript": "^5.2.2",
+    "umzug": "^3.6.1",
     "winston": "^3.11.0",
     "winston-daily-rotate-file": "^4.7.1",
     "youtubei": "^1.2.1",
@@ -127,6 +130,7 @@
     "ts-jest-resolver": "^2.0.1",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
-    "types-fastify-socket.io": "^0.0.1"
+    "types-fastify-socket.io": "^0.0.1",
+    "zod-validation-error": "^3.0.0"
   }
 }

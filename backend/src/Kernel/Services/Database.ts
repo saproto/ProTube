@@ -1,7 +1,8 @@
 import c from '#Config.js';
 import mysql2 from 'mysql2';
-import { Sequelize } from 'sequelize';
-import { loadUser } from '#Models/User.js';
+import { type QueryInterface, Sequelize } from 'sequelize';
+
+export type Migration = ({ context }: { context: { queryInterface: QueryInterface } }) => Promise<void>;
 
 const sequelize = new Sequelize(
     c.db.database,
@@ -18,6 +19,5 @@ const sequelize = new Sequelize(
 
 export async function startDatabaseConnection (): Promise<void> {
     await sequelize.authenticate();
-    loadUser(sequelize);
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ force: false });
 }
