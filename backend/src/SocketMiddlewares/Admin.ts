@@ -7,7 +7,7 @@ const AdminSocket: preConnectionSocketMiddleware = (socket, next) => {
         return;
     }
 
-    if (user.isAdmin()) {
+    if (user.isAdmin) {
         next();
     } else {
         next(new Error('Only for admins!'));

@@ -5,7 +5,7 @@ async function loadAdmin (fastify: FastifyInstance, options: unknown): Promise<v
     fastify.addHook('preHandler', async (req, reply) => {
         const user = req.user;
 
-        if (user.isAdmin()) {
+        if (user.isAdmin) {
             return;
         };
 

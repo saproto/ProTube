@@ -18,7 +18,10 @@
       "#SocketMiddlewares": ["SocketMiddlewares/*"],
       "#Jobs": ["Jobs/*"],
       "#Modules": ["Modules/*"]
-    }
+    },
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false
   },
   "extends": "@tsconfig/node20/tsconfig.json",
   "include": ["src/**/*.ts", "src/**/*.d.ts", ".eslintrc.cjs", "tests/**/*.ts", "jest.config.cjs"],

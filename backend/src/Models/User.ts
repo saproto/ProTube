@@ -1,18 +1,45 @@
-import { Model, type InferAttributes, type InferCreationAttributes, type CreationOptional } from 'sequelize';
+import { column, computed, hasMany } from '@adonisjs/lucid/orm';
+import { Model } from '#Kernel/Services/Database.js';
+import { UserAdmin } from './UserAdmin.js';
+import * as relations from '@adonisjs/lucid/types/relations';
 
-export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
-    isAdmin (): boolean {
-        return this.admin;
-    }
+export class User extends Model {
+    static table = 'users';
 
-    declare id: CreationOptional<number>;
+    @column({ isPrimary: true })
+    declare id: number;
+
+    @column()
     declare name: string;
-    declare admin: boolean;
-    declare valid_remote_until: CreationOptional<Date>;
-    declare banned_until: CreationOptional<Date>;
-    declare connection_attempts: CreationOptional<number>;
+
+    @column({ serializeAs: null })
     declare refresh_token: string;
+
+    @column({ serializeAs: null })
     declare access_token: string;
-    declare createdAt: CreationOptional<Date>;
-    declare updatedAt: CreationOptional<Date>;
+
+    @column()
+    declare admin: boolean;
+
+    @column.dateTime({ autoCreate: true })
+    declare created_at: Date;
+
+    @column.dateTime({ autoCreate: true, autoUpdate: true })
+    declare updated_at: Date;
+
+    @hasMany(() => UserAdmin, { foreignKey: 'user_id' })
+    public userAdmins: relations.HasMany<typeof UserAdmin>;
+
+    @hasMany(() => UserAdmin, {
+        foreignKey: 'user_id',
+        onQuery: (query) => {
+            void query.withScopes((scopes) => scopes.current());
+        }
+    })
+    public currentAdmins: relations.HasMany<typeof UserAdmin>;
+
+    @computed()
+    get isAdmin (): boolean {
+        return this.currentAdmins?.length > 0;
+    }
 }

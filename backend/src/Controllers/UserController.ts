@@ -5,7 +5,11 @@ import z from 'zod';
 export const userInfo = webRoute({
     schema: UserSchema,
     handler: async (request, reply) => {
-        await reply.send(request.user);
+        await reply.send({
+            admin: request.user.isAdmin,
+            id: request.user.id,
+            name: request.user.name
+        });
     }
 });
 

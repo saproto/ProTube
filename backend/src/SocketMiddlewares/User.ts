@@ -14,17 +14,26 @@ declare module 'http' {
 const loadUser: preConnectionSocketMiddleware = (socket, next) => {
     const userId = socket.request.session.get<'user_id'>('user_id');
 
-    User.findByPk(userId).then((user) => {
-        if (user === null) {
-            next();
-            return;
-        }
+    if (userId === undefined) {
+        next(new Error('Unauthenticated'));
+        return;
+    }
 
-        socket.request.user = user;
-        next();
-    }).catch((error) => {
-        next(error);
-    });
+    User.query()
+        .where('id', userId)
+        .preload('currentAdmins')
+        .first()
+        .then((user) => {
+            if (user === null) {
+                next();
+                return;
+            }
+
+            socket.request.user = user;
+            next();
+        }).catch((error) => {
+            next(error);
+        });
 };
 
 export default loadUser;

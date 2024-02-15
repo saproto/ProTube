@@ -1,23 +1,47 @@
-import c from '#Config.js';
-import mysql2 from 'mysql2';
-import { type QueryInterface, Sequelize } from 'sequelize';
+import 'reflect-metadata';
+import dbConfig from '#App/config/database.js';
+import { Database } from '@adonisjs/lucid/database';
+import { Logger } from '@adonisjs/core/logger';
+import { Emitter } from '@adonisjs/core/events';
+import { Application } from '@adonisjs/core/app';
+import { Adapter } from '../../../node_modules/@adonisjs/lucid/build/src/orm/adapter/index.js';
+import { BaseModel } from '@adonisjs/lucid/orm';
+import root from '#App/rootPath.js';
 
-export type Migration = ({ context }: { context: { queryInterface: QueryInterface } }) => Promise<void>;
+let db: Database;
+let adapter: Adapter;
+let app: Application<Record<any, any>>;
 
-const sequelize = new Sequelize(
-    c.db.database,
-    c.db.username,
-    c.db.password,
-    {
-        host: c.db.host,
-        port: c.db.port,
-        dialect: 'mysql',
-        dialectModule: mysql2,
-        logging: false
-    }
-);
-
+/**
+ * Some cursed shit is happening here,
+ * we're partially starting an adonisjs application so we can use the lucid orm :')
+ */
 export async function startDatabaseConnection (): Promise<void> {
-    await sequelize.authenticate();
-    await sequelize.sync({ force: false });
+    console.log('Connecting to the database...');
+
+    const logger = new Logger({
+        enabled: false
+    });
+
+    app = new Application(new URL(`file://${root()}`), {
+        environment: 'unknown'
+    });
+    await app.init();
+
+    const emitter = new Emitter(app);
+    db = new Database(dbConfig, logger, emitter);
+    adapter = new Adapter(db);
 }
+
+/**
+ * We override the adonis' model so we can inject the boot override to inject
+ * our database adapter
+ */
+class Model extends BaseModel {
+    static boot (): void {
+        super.boot();
+        this.useAdapter(adapter);
+    }
+}
+
+export { db as default, adapter, Model, app };

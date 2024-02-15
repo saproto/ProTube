@@ -2,11 +2,9 @@
 import enquirer from 'enquirer';
 import c from '#Config.js';
 import root from '#App/rootPath.js';
-import mysql2 from 'mysql2';
 import path from 'path';
 import { writeFileSync } from 'fs';
-import { SequelizeStorage, Umzug } from 'umzug';
-import { type QueryInterface, Sequelize } from 'sequelize';
+import { MigrationRunner } from '@adonisjs/lucid/migration';
 
 const migrationsPath = path.resolve(root(), 'Migrations');
 const modelsPath = path.resolve(root(), 'Models');
@@ -19,8 +17,7 @@ enquirer.prompt({
         { message: 'Create a model + migration', name: 'model-with-migration' },
         { message: 'Create a model', name: 'model' },
         { message: 'Create a migration', name: 'migration' },
-        { message: 'Run all migrations', name: 'run-migrations' },
-        { message: 'Rollback migrations', name: 'rollback-migrations' }
+        { message: 'Run or rollback migrations', name: 'run-migrations' }
     ]
 }).then(async (answers) => {
     // @ts-expect-error - We know that the action will be a string
@@ -37,9 +34,6 @@ enquirer.prompt({
         case 'run-migrations':
             await runAllMigrationsAction();
             break;
-        case 'rollback-migrations':
-            await rollbackMigrationsAction();
-            break;
     }
 }).catch(console.error);
 
@@ -49,45 +43,49 @@ enquirer.prompt({
 async function runAllMigrationsAction (): Promise<void> {
     await areYouSure('Not running migrations.');
 
-    if (c.env.development) {
-        const sequelize = getSequelizeInstance();
+    const answer = await enquirer.prompt({
+        type: 'select',
+        name: 'fresh',
+        message: 'Wipe the database?',
+        choices: [
+            { message: 'No', name: 'no' },
+            { message: 'Yes', name: 'yes' }
+        ]
+    });
 
-        const answer = await enquirer.prompt({
-            type: 'select',
-            name: 'fresh',
-            message: 'Wipe the database?',
-            choices: [
-                { message: 'Yes', name: 'yes' },
-                { message: 'No', name: 'no' }
-            ]
-        });
-
-        // @ts-expect-error - We know that the confirm will be a string
-        if (answer.fresh === 'yes') {
-            await sequelize.query('DROP DATABASE IF EXISTS ' + c.db.database);
-            await sequelize.query('CREATE DATABASE IF NOT EXISTS ' + c.db.database);
-            console.log('Wiped database');
+    // @ts-expect-error - We know that the confirm will be a string
+    if (answer.fresh === 'yes') {
+        if (c.env.production) {
+            await areYouSure('Not wiping the database.');
         }
+        await wipeDatabase();
     }
 
-    const umzug = getUmzugInstance();
+    const upOrDown = await enquirer.prompt({
+        type: 'select',
+        name: 'upOrDown',
+        message: 'Up or down?',
+        choices: [
+            { message: 'Up', name: 'up' },
+            { message: 'Down', name: 'down' }
+        ]
+    });
 
-    const migrationsRun = await umzug.up();
+    // @ts-expect-error - We know that the confirm will be a string
+    const migrationRunner = await getMigrationRunner(upOrDown.upOrDown);
 
-    console.log(`Ran ${migrationsRun.length} migrations.`);
-}
+    if (c.env.production) {
+        await areYouSure('Not running migrations.');
+    }
 
-/**
- * Handler for rolling back migrations
- */
-async function rollbackMigrationsAction (): Promise<void> {
-    await areYouSure('Not rolling back migrations.');
+    await migrationRunner.run();
 
-    const umzug = getUmzugInstance();
+    if (migrationRunner.error !== null) {
+        console.log(migrationRunner.error);
+    }
 
-    const migrationsRun = await umzug.down();
-
-    console.log(`Reverted ${migrationsRun.length} migrations.`);
+    console.log('Migrations ran:', Object.keys(migrationRunner.migratedFiles));
+    abort('Done.');
 }
 
 /**
@@ -148,73 +146,24 @@ function createModelAction (): void {
  * @param migrationName The name of the new migration, without the date
  */
 function createMigration (migrationName: string): void {
-    const name = `/${(new Date()).toISOString()}_${migrationName}.ts`;
+    const name = `/${Date.now()}_${migrationName}.ts`;
 
-    writeFileSync(migrationsPath + name, `import type { Migration } from '#Kernel/Services/Database.js';
-import { DataTypes } from 'sequelize';
+    writeFileSync(migrationsPath + name, `/* eslint-disable @typescript-eslint/no-floating-promises */
+import { BaseSchema } from '@adonisjs/lucid/schema';
 
-export const up: Migration = async ({ context }) => {
-    await context.queryInterface.createTable('${migrationName}', {
-        id: {
-            allowNull: false,
-            primaryKey: true,
-            type: DataTypes.INTEGER.UNSIGNED,
-            autoIncrement: true
-        },
-        createdAt: {
-            allowNull: false,
-            type: DataTypes.DATE
-        },
-        updatedAt: {
-            allowNull: false,
-            type: DataTypes.DATE
-        }
-    });
-};
+export default class extends BaseSchema {
+    async up (): Promise<void> {
+        this.schema.createTable('tableName', (table) => {
+            table.increments('id').primary();
+            table.timestamps({ defaultToNow: true });
+        });
+    }
 
-export const down: Migration = async ({ context }) => {
-    await context.queryInterface.dropTable('${migrationName}');
-};
-    `);
+    async down (): Promise<void> {
+        this.schema.dropTable('tableName');
+    }
 }
-
-/**
- * Get a new Umzug instance
- *
- * @param sequelize The Sequelize instance to use
- * @returns The new Umzug instance
- */
-function getUmzugInstance (sequelize = getSequelizeInstance()): Umzug<{ queryInterface: QueryInterface }> {
-    return new Umzug({
-        migrations: {
-            glob: ['Migrations/**s', {
-                cwd: root()
-            }]
-        },
-        context: { queryInterface: sequelize.getQueryInterface() },
-        storage: new SequelizeStorage({ sequelize }),
-        logger: console
-    });
-}
-
-/**
- * Get a new Sequelize instance
- *
- * @returns The new Sequelize instance
- */
-function getSequelizeInstance (): Sequelize {
-    return new Sequelize(
-        c.db.database,
-        c.db.username,
-        c.db.password,
-        {
-            host: c.db.host,
-            port: c.db.port,
-            dialect: 'mysql',
-            dialectModule: mysql2,
-            logging: false
-        }
-    );
+`);
 }
 
 /**
@@ -247,19 +196,54 @@ async function areYouSure (abortionMessage: string, alsoAskInDevMode = false, qu
 }
 
 /**
+ * Create and initialize a migrationrunner
+ *
+ * @param direction 'up' or 'down'
+ * @returns Initialized migrationRunner
+ */
+async function getMigrationRunner (direction: 'up' | 'down'): Promise<MigrationRunner> {
+    const db = await import('#Kernel/Services/Database.js');
+    await db.startDatabaseConnection();
+
+    return new MigrationRunner(db.default, db.app, {
+        direction
+    });
+};
+
+/**
+ * Wipe/reset the database (deletes and recreates it)
+ */
+async function wipeDatabase (): Promise<void> {
+    const db = await import('#Kernel/Services/Database.js');
+    await db.startDatabaseConnection();
+
+    await db.default.rawQuery('DROP DATABASE IF EXISTS ' + c.db.database);
+    await db.default.rawQuery('CREATE DATABASE IF NOT EXISTS ' + c.db.database);
+    console.log('Wiped database');
+}
+
+/**
  * Create a new model inside the Models directory
  *
  * @param name The name of the new Model
  */
 function createModel (name: string): void {
-    writeFileSync(modelsPath + `/${name}.ts`, `import { Model, DataTypes, type Sequelize, type InferAttributes, type InferCreationAttributes, type CreationOptional } from 'sequelize';
+    writeFileSync(modelsPath + `/${name}.ts`, `import { column } from '@adonisjs/lucid/orm';
+import { Model } from '#Kernel/Services/Database.js';
 
-    export class ${name} extends Model<InferAttributes<${name}>, InferCreationAttributes<${name}>> {
-        declare id: CreationOptional<number>;
-        declare createdAt: CreationOptional<Date>;
-        declare updatedAt: CreationOptional<Date>;
-    }
-    `);
+export class ${name} extends Model {
+    static table = '${name.toLowerCase()}s';
+
+    @column({ isPrimary: true })
+    declare id: number;
+
+    @column.dateTime({ autoCreate: true })
+    declare created_at: Date;
+
+    @column.dateTime({ autoCreate: true, autoUpdate: true })
+    declare updated_at: Date;
+}
+`);
 }
 
 /**

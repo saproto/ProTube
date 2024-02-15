@@ -1,5 +1,7 @@
-src/Kernel/Routes/*.json
-src/Routes/typings
-coverage
-dist
-logs
+.idea/
+.vscode/
+node_modules/
+build/
+tmp/
+temp/
+logs/

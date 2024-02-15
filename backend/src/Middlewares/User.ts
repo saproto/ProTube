@@ -12,11 +12,23 @@ declare module 'fastify' {
     }
 }
 
+/**
+ * Fastify plugin to load the user that is currently logged into the request object.
+ */
 async function loadUser (fastify: FastifyInstance, options: unknown): Promise<void> {
     fastify.decorateRequest('user', null);
 
     fastify.addHook('preHandler', async (req, reply) => {
-        const user = await User.findByPk(req.session.get('user_id'));
+        const userId = req.session.get('user_id');
+
+        if (userId === undefined) {
+            await reply.redirect('/auth/login');
+            return;
+        }
+
+        const user = await User.query().where('id', userId).preload('currentAdmins').first();
+
+        console.log(user?.toJSON());
         if (user === null) {
             // url defined via fastify-plugin (Kernel/Authentication)
             await reply.redirect('/auth/login');
