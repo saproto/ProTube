@@ -1,5 +1,6 @@
+import log from '#App/Kernel/Services/Logging.js';
 import { type FastifyInstance } from 'fastify';
-import { type Socket, type Server } from 'socket.io';
+import { type Socket, type Server, type Namespace } from 'socket.io';
 import { type ZodTypeAny } from 'zod';
 import type z from 'zod';
 
@@ -34,6 +35,12 @@ interface socketEmitInterface<Data extends ZodTypeAny, EventName extends string>
             ? EventName extends string ? [ ] : [ ]
             : [ data: z.infer<Data> ]
     ) => void
+    broadcast: (
+        socket: Namespace,
+        ...args: Data extends Zod.ZodNever
+            ? EventName extends string ? [ ] : [ ]
+            : [ data: z.infer<Data> ]
+    ) => void
     schema: Data
 }
 
@@ -52,6 +59,15 @@ export function socketEmit<Data extends ZodTypeAny = Zod.ZodNever, EventName ext
                 return;
             }
             socket.emit(input.name);
+        },
+        broadcast: (namespace, ...args: Data extends Zod.ZodNever
+            ? [ ]
+            : [ data: z.infer<Data> ]) => {
+            if (args.length === 1) {
+                namespace.emit(input.name, args[0]);
+                return;
+            }
+            namespace.emit(input.name);
         },
         schema: input.schema
     };
@@ -82,6 +98,8 @@ export function onSocketEvent<Data extends ZodTypeAny = Zod.ZodNever, Callback e
     };
 }
 
+export type bootedNamespace = (namespace: Namespace) => Promise<void>;
+
 export interface SocketRoute {
     namespace: url
     name: string
@@ -89,6 +107,7 @@ export interface SocketRoute {
     postConnectionMiddlewares: postConnectionSocketMiddleware[]
     connectionEvent?: (socket: Socket) => void
     disconnectEvent?: (socket: Socket) => void
+    booted?: bootedNamespace
     routes: RouteDefinition[]
 }
 
@@ -113,6 +132,11 @@ export default class SocketRouteRegistrar {
         route.preConnectionMiddlewares.forEach((middleware) => {
             server.use(middleware);
         });
+
+        if (route.booted !== undefined) {
+            await route.booted(server);
+            log.info('USERSOCKET', `booted namespace ${route.namespace}`);
+        }
 
         server.on('connection', (socket) => {
             if (route?.connectionEvent !== undefined ?? false) {
