@@ -99,13 +99,34 @@
             class="absolute -right-0 -bottom-0 ml-auto mr-2 text-red-500">
           </font-awesome-icon>
 
-          <button
-            v-if="removeButton"
-            class="absolute -right-0 -bottom-0 rounded-lg bg-red-600 py-2 px-3 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
-            @click="$emit('remove-clicked', videoID)">
-            <font-awesome-icon icon="fa-solid fa-trash" size="lg">
-            </font-awesome-icon>
-          </button>
+          <div class="absolute -right-0 -bottom-0 flex gap-1">
+            <button
+              v-if="canMoveUp"
+              class=" rounded-lg bg-proto_green py-2 px-3 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+              @click="$emit('move-clicked-up', videoID)">
+              <font-awesome-icon
+                icon="fas fa-arrow-up"
+                fixed-width />
+            </button>
+
+            <button
+              v-if="canMoveDown"
+              class="rounded-lg bg-proto_green py-2 px-3 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+              @click="$emit('move-clicked-down', videoID)">
+              <font-awesome-icon
+                icon="fa-solid fa-arrow-down"
+                fixed-width />
+
+            </button>
+
+            <button
+              v-if="removeButton"
+              class="rounded-lg bg-red-600 py-2 px-3 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+              @click="$emit('remove-clicked', videoID)">
+              <font-awesome-icon icon="fa-solid fa-trash" size="lg">
+              </font-awesome-icon>
+            </button>
+          </div>
         </ul>
       </button>
     </li>
@@ -151,6 +172,14 @@ const props = defineProps({
     default: null,
   },
   removeButton: {
+    type: Boolean,
+    default: false,
+  },
+  canMoveUp: {
+    type: Boolean,
+    default: false,
+  },
+  canMoveDown: {
     type: Boolean,
     default: false,
   },

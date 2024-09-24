@@ -92,6 +92,24 @@ endpoint.on("connection", (socket) => {
     }
   });
 
+  socket.on("move-video", (videoID, up, callback) => {
+    logger.clientInfo(
+      `${socket.id} Requested change in order ${up?'up':'down'} of ${videoID}`
+    );
+    try {
+      callback({
+        success: queueManager.changeOrder(
+          videoID,
+          up,
+          socket.request.session.passport.user.id,
+          socket.request.user.admin
+        ),
+      });
+    } catch (e) {
+      callback(e.getInfo());
+    }
+  });
+
   socket.on("get-queue", (callback) => {
     callback({
       queue: queueManager.getQueue(),

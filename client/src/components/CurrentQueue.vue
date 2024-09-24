@@ -53,14 +53,14 @@
       </div>
     </div>
     <div
-      class="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark flex max-h-[84vh] justify-center overflow-y-scroll overscroll-contain px-0">
+      class="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark flex max-h-[84vh] justify-center overscroll-auto px-0">
       <div v-if="skeletonLoading" class="w-full">
         <ul class="grid gap-2">
           <SkeletonResult v-for="index in 10" :key="index" />
         </ul>
       </div>
       <div v-if="!skeletonLoading" class="w-full">
-        <ul class="grid gap-2 pr-4">
+          <TransitionGroup name="list" tag="ul" class="grid gap-2 pr-4">
           <VideoCard
             v-for="(video, index) in queue"
             :key="video.id"
@@ -70,10 +70,15 @@
             :channel="video.channel"
             :duration="video.durationFormatted"
             :thumbnail="video.thumbnail.url"
-            :removeButton="admin || video.user.id === userID"
+            :removeButton="props.admin || video.user.id === props.userID"
+            :canMoveUp="canMoveVideoUp(index)"
+            :canMoveDown="canMoveVideoDown(index)"
             :videoID="video.id"
-            @remove-clicked="removeFromQueue([video.id])" />
-        </ul>
+            @remove-clicked="removeFromQueue([video.id])"
+            @move-clicked-up="moveVideo(video.id, true)"
+            @move-clicked-down="moveVideo(video.id, false)"
+          />
+        </TransitionGroup>
         <div
           v-if="!skeletonLoading && queue.length < 1"
           class="mt-4 text-gray-400">
@@ -113,6 +118,18 @@ const props = defineProps({
   userID: Number,
 });
 
+const canMoveVideoDown = (videoIndex)=>{
+  return queue.value.slice(videoIndex, -1).some((video) => {
+    return (video.user.id === queue.value[videoIndex].user.id) && (props.admin || video.user.id === props.userID);
+  });
+}
+
+const canMoveVideoUp = (videoIndex)=>{
+ return queue.value.slice(0, videoIndex).some((video) => {
+    return (video.user.id === queue.value[videoIndex].user.id) && (props.admin || video.user.id === props.userID);
+  });
+}
+
 // return array of unique users in queue
 const usersInQueue = computed(() => {
   return queue.value.filter(
@@ -128,7 +145,6 @@ const userHasItemsInQueue = computed(() => {
   const videosOfUser = queue.value.filter((video) => {
     return video.user.id === props.userID;
   });
-  console.log(videosOfUser);
   return videosOfUser.length > 0;
 });
 
@@ -148,6 +164,18 @@ async function removeFromQueue(videoIDs) {
   emit("display-toast", {
     status: data.status ?? enums.STATUS.SUCCESS,
     message: data.message ?? `Successfully removed video(s)!`,
+  });
+}
+
+async function moveVideo(videoID, up) {
+  const data = await new Promise((resolve) => {
+    normalSocket.emit("move-video", videoID, up, (callback) => {
+      resolve(callback);
+    });
+  });
+  emit("display-toast", {
+    status: data.status ?? enums.STATUS.SUCCESS,
+    message: data.message ?? `Successfully moved video` + (up ? " up!" : " down!"),
   });
 }
 

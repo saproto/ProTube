@@ -64,7 +64,7 @@ const addPlaylist = (shuffled) => {
         {{ playlist.title }}
       </div>
 
-      <img class="rounded-lg mb-1" :src="playlist.thumbnail.url" alt="album thumbnail"/>
+      <img class="rounded-lg mb-1 max-w-sm" :src="playlist.thumbnail.url" alt="album thumbnail"/>
       <div class="mx-5 flex justify-between mb-3">
         <div class="text-md text-gray-600 dark:text-white">
           {{ playlist.channel }}
