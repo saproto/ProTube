@@ -39,7 +39,7 @@ app.use("/api/", authApi);
 app.use("/api/laravel/", protubeApi);
 
 let server;
-if (process.env.HTTPS === "true" || false) {
+if (process.env.HTTPS === "true") {
   const privateKey = fs.readFileSync(process.env.SSL_KEY_FILE, "utf8");
   const certificate = fs.readFileSync(process.env.SSL_CERT_FILE, "utf8");
   const ssl = { key: privateKey, cert: certificate };

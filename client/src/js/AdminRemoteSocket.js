@@ -16,7 +16,7 @@ export const connectSocket = () => {
 };
 
 socket.on("connect_error", async (err) => {
-  if (err.message == "unauthorized") router.push({ name: "Login" });
+  if (err.message === "unauthorized") router.push({ name: "Login" });
 });
 
 export default socket;

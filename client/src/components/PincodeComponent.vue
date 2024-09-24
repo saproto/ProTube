@@ -99,7 +99,7 @@ onMounted(() => {
 });
 
 socket.on("connect_error", (err) => {
-  if (err.message == "Invalid screencode")
+  if (err.message === "Invalid screencode")
     processPinEntered(false, "Invalid pincode entered!");
   processPinEntered(false, err);
   // else processPinEntered(false, "Whoops.. Can't do anything with this response..");

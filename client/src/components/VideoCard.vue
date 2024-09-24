@@ -1,5 +1,5 @@
 <template>
-  <transition @before-enter="beforeEnter" @enter="enter" appear>
+  <transition appear @before-enter="beforeEnter" @enter="enter">
     <li
       class="col-span-1 flex w-full flex-col overflow-hidden text-center shadow duration-200"
       :class="roundedCorners ? 'rounded-lg' : 'rounded-sm'"
@@ -14,14 +14,14 @@
         class="bg-proto_blue absolute bottom-0 h-2 w-0 rounded-sm opacity-60"></div>
       <button
         :disabled="!clickable"
-        @click="$emit('video-clicked', videoID)"
         :class="[
           clickable && statusIcon === enums.STATUS.NOTHING
             ? 'hover:bg-white/40 dark:hover:bg-stone-800/40'
             : 'cursor-default',
           { 'rounded-lg': roundedCorners },
         ]"
-        class="border-proto_blue flex flex-1 flex-col border-l-4 bg-white/80 px-8 py-4 duration-200 dark:border-gray-800 dark:bg-stone-800/80">
+        class="border-proto_blue flex flex-1 flex-col border-l-4 bg-white/80 px-8 py-4 duration-200 dark:border-gray-800 dark:bg-stone-800/80"
+        @click="$emit('video-clicked', videoID)">
         <div
           class="text-md w-full overflow-x-hidden text-lg font-bold text-gray-800 dark:text-stone-300">
           <h3
@@ -101,8 +101,8 @@
 
           <button
             v-if="removeButton"
-            @click="$emit('remove-clicked', videoID)"
-            class="absolute -right-0 -bottom-0 rounded-lg bg-red-600 py-2 px-3 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+            class="absolute -right-0 -bottom-0 rounded-lg bg-red-600 py-2 px-3 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+            @click="$emit('remove-clicked', videoID)">
             <font-awesome-icon icon="fa-solid fa-trash" size="lg">
             </font-awesome-icon>
           </button>

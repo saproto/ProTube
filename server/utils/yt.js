@@ -71,6 +71,22 @@ exports.getVideo = async (videoId, isAdmin = false) => {
   return video;
 };
 
+exports.getPlaylistInfo = async(playlistId)=>{
+  let playlist;
+  try {
+    playlist = await youtube.getPlaylist(playlistId);
+  } catch (e) {
+    throw new hardError("Error at fetching videos!");
+  }
+  if (!playlist) throw new softError("Could not find that playlist");
+  return {
+    id: playlist.id,
+    title: playlist.title,
+    channel: playlist.channel.name,
+    thumbnail: playlist.thumbnails[playlist.thumbnails.length - 1],
+    videoCount: playlist.videoCount,
+  };
+}
 //get all videos of a playlist and return them
 exports.getVideosInPlaylist = async (playlistId, isAdmin = false) => {
   logger.youtubeInfo(`Getting videos associated with playlist ${playlistId}`);

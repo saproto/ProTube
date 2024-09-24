@@ -2,39 +2,39 @@
   <transition name="search" mode="out-in" appear>
     <SearchWrapper
       :user="user"
-      v-on:query-videos="fetchVideos"
-      v-on:query-single-video="fetchThenAddVideo"
-      v-on:query-playlist="fetchThenAddPlaylist" />
+      @query-videos="fetchVideos"
+      @query-single-video="fetchThenAddVideo"
+      @query-playlist="fetchPlaylist" />
   </transition>
 
   <div class="gap-2 md:grid md:grid-cols-6">
     <div class="col-span-3 lg:col-span-4">
       <transition name="results" mode="out-in" appear>
-        <MasterControls v-if="user.admin" v-on:display-toast="displayToast" />
+        <MasterControls v-if="user.admin" @display-toast="displayToast" />
       </transition>
 
       <transition name="results" mode="out-in" appear>
-        <RadioStations v-if="user.admin" v-on:display-toast="displayToast" />
+        <RadioStations v-if="user.admin" @display-toast="displayToast" />
       </transition>
 
-      <transition name="results" mode="out-in" id="resultsWrapper" appear>
+      <transition id="resultsWrapper" name="results" mode="out-in" appear>
         <ResultsWrapper
-          v-on:next-page="fetchVideos"
-          v-on:display-toast="displayToast"
           :videos="foundVideos"
-          :continuationToken="continuationToken"
-          :skeletonLoading="resultsWrapperSkeletons" />
+          :continuation-token="continuationToken"
+          :skeleton-loading="resultsWrapperSkeletons"
+          @next-page="fetchVideos"
+          @display-toast="displayToast" />
       </transition>
     </div>
     <div class="col-span-3 lg:col-span-2">
       <transition name="results" mode="out-in" appear>
         <CurrentQueue
-          @display-toast="displayToast"
           :admin="user.admin"
-          :userID="user.id" />
+          :user-i-d="user.id"
+          @display-toast="displayToast" />
       </transition>
 
-      <ToastsModal :latestToast="latestToast" />
+      <ToastsModal :latest-toast="latestToast" />
 
       <transition name="modal" appear>
         <PincodeModal v-if="loginModalVisible" />
@@ -42,8 +42,17 @@
 
       <transition name="modal" appear>
         <LoadModal
-          :message="loadModalMessage"
-          v-if="loadModalVisible && !loginModalVisible" />
+          v-if="loadModalVisible && !loginModalVisible"
+          :message="loadModalMessage" />
+      </transition>
+
+      <transition name="modal" appear>
+        <PlaylistModal
+          :admin="user.admin"
+          v-if="!loginModalVisible"
+          ref="confirmModal"
+          @add-playlist="addPlaylist"
+        />
       </transition>
     </div>
   </div>
@@ -59,8 +68,9 @@ import ToastsModal from "@/components/modals/ToastsModal.vue";
 import MasterControls from "@/components/MasterControls.vue";
 import RadioStations from "@/components/RadioStations.vue";
 import socket, { connectSocket } from "@/js/RemoteSocket";
-import { onMounted, ref, onBeforeMount, onBeforeUnmount } from "vue";
+import { onBeforeMount, onBeforeUnmount, onMounted, ref } from "vue";
 import enums from "@/js/Enums";
+import PlaylistModal from "../components/modals/PlaylistModal.vue";
 
 const loginModalVisible = ref(true);
 const loadModalVisible = ref(false);
@@ -69,6 +79,7 @@ const loadModalMessage = ref("");
 const foundVideos = ref([]);
 const continuationToken = ref(null);
 const latestToast = ref(null);
+const confirmModal = ref(null);
 
 const user = ref({
   name: "",
@@ -80,8 +91,7 @@ const user = ref({
 onBeforeMount(async () => {
   const response = await fetch("/api/user");
   if (response.redirected) return (window.location.href = response.url);
-  const data = await response.json();
-  user.value = data;
+  user.value = await response.json();
   if (user.value.hasValidRemote) connectSocket();
 });
 
@@ -121,11 +131,24 @@ async function fetchThenAddVideo(videoId) {
   loadModalVisible.value = false;
 }
 
-async function fetchThenAddPlaylist(playlistId) {
+async function fetchPlaylist(playlistId) {
+  loadModalVisible.value = true;
+  loadModalMessage.value = "Adding videos from playlist...";
+  const playlist = await new Promise((resolve) => {
+    socket.emit("fetch-playlist", playlistId, (result) => {
+      resolve(result);
+    });
+  });
+
+  loadModalVisible.value = false;
+  confirmModal.value.show(playlist);
+}
+
+async function addPlaylist(playlistId, shuffled) {
   loadModalVisible.value = true;
   loadModalMessage.value = "Adding videos from playlist...";
   const result = await new Promise((resolve) => {
-    socket.emit("fetch-then-add-playlist", playlistId, (result) => {
+    socket.emit("add-playlist", playlistId, shuffled, (result) => {
       resolve(result);
     });
   });

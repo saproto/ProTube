@@ -29,7 +29,7 @@ exports.addFair = (video) => {
     for (const vid of queue) {
       videoCount += vid.user.id === video.user.id;
     }
-    if (videoCount >= parseInt(process.env.USER_MAX_VIDEOS_IN_QUEUE)) {
+    if (videoCount >= parseInt(process.env.VITE_USER_MAX_VIDEOS_IN_QUEUE)) {
       throw new softError("Video limit in the queue reached!");
     }
   }
@@ -134,7 +134,7 @@ function organizeQueue() {
   allIds.forEach((userId) => {
     videosPerUser.push(
       oldQueue.filter((element) => {
-        return element.user.id == userId;
+        return element.user.id === userId;
       })
     );
   });
