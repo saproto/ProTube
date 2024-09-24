@@ -22,7 +22,9 @@ import {
   faSearch,
   faTrash,
   faQuestionCircle,
-  faCaretDown, faArrowDown, faArrowUp
+  faCaretDown,
+  faArrowDown,
+  faArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(

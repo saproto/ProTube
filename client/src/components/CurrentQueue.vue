@@ -60,7 +60,7 @@
         </ul>
       </div>
       <div v-if="!skeletonLoading" class="w-full">
-          <TransitionGroup name="list" tag="ul" class="grid gap-2 pr-4">
+        <TransitionGroup name="list" tag="ul" class="grid gap-2 pr-4">
           <VideoCard
             v-for="(video, index) in queue"
             :key="video.id"
@@ -76,8 +76,7 @@
             :videoID="video.id"
             @remove-clicked="removeFromQueue([video.id])"
             @move-clicked-up="moveVideo(video.id, true)"
-            @move-clicked-down="moveVideo(video.id, false)"
-          />
+            @move-clicked-down="moveVideo(video.id, false)" />
         </TransitionGroup>
         <div
           v-if="!skeletonLoading && queue.length < 1"
@@ -118,17 +117,23 @@ const props = defineProps({
   userID: Number,
 });
 
-const canMoveVideoDown = (videoIndex)=>{
+const canMoveVideoDown = (videoIndex) => {
   return queue.value.slice(videoIndex, -1).some((video) => {
-    return (video.user.id === queue.value[videoIndex].user.id) && (props.admin || video.user.id === props.userID);
+    return (
+      video.user.id === queue.value[videoIndex].user.id &&
+      (props.admin || video.user.id === props.userID)
+    );
   });
-}
+};
 
-const canMoveVideoUp = (videoIndex)=>{
- return queue.value.slice(0, videoIndex).some((video) => {
-    return (video.user.id === queue.value[videoIndex].user.id) && (props.admin || video.user.id === props.userID);
+const canMoveVideoUp = (videoIndex) => {
+  return queue.value.slice(0, videoIndex).some((video) => {
+    return (
+      video.user.id === queue.value[videoIndex].user.id &&
+      (props.admin || video.user.id === props.userID)
+    );
   });
-}
+};
 
 // return array of unique users in queue
 const usersInQueue = computed(() => {
@@ -175,7 +180,8 @@ async function moveVideo(videoID, up) {
   });
   emit("display-toast", {
     status: data.status ?? enums.STATUS.SUCCESS,
-    message: data.message ?? `Successfully moved video` + (up ? " up!" : " down!"),
+    message:
+      data.message ?? `Successfully moved video` + (up ? " up!" : " down!"),
   });
 }
 

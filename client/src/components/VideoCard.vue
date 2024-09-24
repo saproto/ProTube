@@ -36,7 +36,7 @@
           </h3>
         </div>
         <ul
-          class="fa-ul relative mt-auto ml-5 w-full text-right text-sm font-medium text-gray-900 dark:text-stone-300">
+          class="fa-ul relative ml-5 mt-auto w-full text-right text-sm font-medium text-gray-900 dark:text-stone-300">
           <li
             v-if="name"
             class="justify-bottom mt-auto flex flex-1 align-bottom">
@@ -82,46 +82,41 @@
             v-show="statusIcon === enums.STATUS.SUCCESS"
             icon="fa-solid fa-check-circle"
             size="lg"
-            class="absolute -right-0 -bottom-0 ml-auto mr-2 text-green-500">
+            class="absolute -bottom-0 -right-0 ml-auto mr-2 text-green-500">
           </font-awesome-icon>
 
           <font-awesome-icon
             v-show="statusIcon === enums.STATUS.WARNING"
             icon="fa-solid fa-warning"
             size="lg"
-            class="absolute -right-0 -bottom-0 ml-auto mr-2 text-yellow-400">
+            class="absolute -bottom-0 -right-0 ml-auto mr-2 text-yellow-400">
           </font-awesome-icon>
 
           <font-awesome-icon
             v-show="statusIcon === enums.STATUS.ERROR"
             icon="fa-solid fa-xmark-circle"
             size="lg"
-            class="absolute -right-0 -bottom-0 ml-auto mr-2 text-red-500">
+            class="absolute -bottom-0 -right-0 ml-auto mr-2 text-red-500">
           </font-awesome-icon>
 
-          <div class="absolute -right-0 -bottom-0 flex gap-1">
+          <div class="absolute -bottom-0 -right-0 flex gap-1">
             <button
               v-if="canMoveUp"
-              class=" rounded-lg bg-proto_green py-2 px-3 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+              class="bg-proto_green rounded-lg px-3 py-2 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
               @click="$emit('move-clicked-up', videoID)">
-              <font-awesome-icon
-                icon="fas fa-arrow-up"
-                fixed-width />
+              <font-awesome-icon icon="fas fa-arrow-up" fixed-width />
             </button>
 
             <button
               v-if="canMoveDown"
-              class="rounded-lg bg-proto_green py-2 px-3 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+              class="bg-proto_green rounded-lg px-3 py-2 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
               @click="$emit('move-clicked-down', videoID)">
-              <font-awesome-icon
-                icon="fa-solid fa-arrow-down"
-                fixed-width />
-
+              <font-awesome-icon icon="fa-solid fa-arrow-down" fixed-width />
             </button>
 
             <button
               v-if="removeButton"
-              class="rounded-lg bg-red-600 py-2 px-3 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+              class="rounded-lg bg-red-600 px-3 py-2 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
               @click="$emit('remove-clicked', videoID)">
               <font-awesome-icon icon="fa-solid fa-trash" size="lg">
               </font-awesome-icon>

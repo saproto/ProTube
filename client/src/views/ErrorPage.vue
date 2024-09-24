@@ -2,7 +2,7 @@
   <div
     class="dark:bg-proto_background_gray-dark grid min-h-screen place-items-center">
     <div
-      class="dark:bg-proto_secondary_gray-dark z-50 mx-auto mx-5 max-w-[450px] content-center rounded-md bg-white p-8 text-center shadow-md dark:text-white">
+      class="dark:bg-proto_secondary_gray-dark z-50 mx-5 mx-auto max-w-[450px] content-center rounded-md bg-white p-8 text-center shadow-md dark:text-white">
       <div class="w-full text-center">
         <font-awesome-icon
           icon="fa-solid fa-warning"

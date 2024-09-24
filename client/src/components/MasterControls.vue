@@ -81,7 +81,7 @@
             <div class="absolute -right-full min-w-max">
               <button
                 @click="resetScreenCode"
-                class="bg-proto_blue hover:bg-proto_blue/80 rounded-md py-1 px-2 text-sm text-white shadow-md duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80">
+                class="bg-proto_blue hover:bg-proto_blue/80 rounded-md px-2 py-1 text-sm text-white shadow-md duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80">
                 New code
               </button>
             </div>

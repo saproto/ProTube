@@ -44,7 +44,7 @@
 
     <div
       @mouseleave="infoTooltipVisible = false"
-      class="absolute top-0 right-0 m-3 hidden md:block">
+      class="absolute right-0 top-0 m-3 hidden md:block">
       <font-awesome-icon
         @mouseenter="infoTooltipVisible = true"
         icon="fa-solid fa-question-circle"
@@ -53,7 +53,7 @@
       </font-awesome-icon>
       <div
         v-show="infoTooltipVisible"
-        class="dark:bg-proto_secondary_gray-dark transition-300 float-left mr-3 max-w-[250px] rounded-md bg-white py-2 px-5 text-justify dark:text-white">
+        class="dark:bg-proto_secondary_gray-dark transition-300 float-left mr-3 max-w-[250px] rounded-md bg-white px-5 py-2 text-justify dark:text-white">
         If you are experiencing any problems with ProTube or have a feature
         request please let the
         <a

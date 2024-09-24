@@ -31,11 +31,11 @@ endpoint.on("connection", (socket) => {
 
   socket.on("fetch-playlist", async (playlistId, callback) => {
     try {
-      const playlist = await youtube.getPlaylistInfo(
-        playlistId,
-      );
+      const playlist = await youtube.getPlaylistInfo(playlistId);
       callback(playlist);
-      logger.youtubeInfo("Returned playlist information to the client (remote)");
+      logger.youtubeInfo(
+        "Returned playlist information to the client (remote)"
+      );
     } catch (e) {
       callback(e.getInfo());
     }
@@ -50,11 +50,11 @@ endpoint.on("connection", (socket) => {
 
       videos.forEach((video) => (video.user = formatUser(socket)));
 
-      if(shufflePlaylist) {
+      if (shufflePlaylist) {
         videos = videos
-          .map(value => ({ value, sort: Math.random() }))
+          .map((value) => ({ value, sort: Math.random() }))
           .sort((a, b) => a.sort - b.sort)
-          .map(({ value }) => value)
+          .map(({ value }) => value);
       }
 
       callback(queueManager.addAllFair(videos));
@@ -94,7 +94,9 @@ endpoint.on("connection", (socket) => {
 
   socket.on("move-video", (videoID, up, callback) => {
     logger.clientInfo(
-      `${socket.id} Requested change in order ${up?'up':'down'} of ${videoID}`
+      `${socket.id} Requested change in order ${
+        up ? "up" : "down"
+      } of ${videoID}`
     );
     try {
       callback({

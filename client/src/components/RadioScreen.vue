@@ -7,7 +7,7 @@
         style="width: 150px"
         :src="`https://www.nederland.fm/i/l/${radio.z}.gif`" />
       <div
-        class="from-proto_blue absolute -top-1/2 -left-1/4 -z-10 h-52 w-52 animate-[spin_3s_linear_infinite] bg-gradient-to-r via-white to-white" />
+        class="from-proto_blue absolute -left-1/4 -top-1/2 -z-10 h-52 w-52 animate-[spin_3s_linear_infinite] bg-gradient-to-r via-white to-white" />
     </div>
     <br />
     <audio
@@ -19,7 +19,7 @@
       height="200"></audio>
     <button
       v-if="playButton"
-      class="bg-proto_blue hover:bg-proto_blue/80 my-auto mx-auto mt-5 flex rounded-md py-1 px-2 text-white shadow-md"
+      class="bg-proto_blue hover:bg-proto_blue/80 mx-auto my-auto mt-5 flex rounded-md px-2 py-1 text-white shadow-md"
       @click="playClick">
       play audio
     </button>

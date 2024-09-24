@@ -78,25 +78,26 @@ exports.changeOrder = (videoID, up, userID, isAdmin = false) => {
   // Video not found in the queue
   if (index === -1) throw new softError("Video not found in the queue!");
   // User is not an admin and does not own the video -> illegal move
-  if(!isAdmin && queue[index].user.id !== userID) throw new hardError("Illegal move of video!");
+  if (!isAdmin && queue[index].user.id !== userID)
+    throw new hardError("Illegal move of video!");
   //find the index of the next video of this user if the video is moved up
-  if(!up){
-      //loop from the current index to the end of the queue and check if the user is the same
-      for(let i = index; i < queue.length; i++){
-        if(queue[i].user.id === queue[index].user.id && i !== index){
-          //swap the videos
-          let temp = queue[i];
-          queue[i] = queue[index];
-          queue[index] = temp;
-          eventBus.emit("queue-update");
-          return enums.SUCCESS;
-        }
+  if (!up) {
+    //loop from the current index to the end of the queue and check if the user is the same
+    for (let i = index; i < queue.length; i++) {
+      if (queue[i].user.id === queue[index].user.id && i !== index) {
+        //swap the videos
+        let temp = queue[i];
+        queue[i] = queue[index];
+        queue[index] = temp;
+        eventBus.emit("queue-update");
+        return enums.SUCCESS;
+      }
     }
   }
-  if(up) {
+  if (up) {
     //loop from the current index to the start of the queue and check if the user is the same
-    for(let i = index; i >= 0; i--){
-      if(queue[i].user.id === queue[index].user.id && i !== index){
+    for (let i = index; i >= 0; i--) {
+      if (queue[i].user.id === queue[index].user.id && i !== index) {
         //swap the videos
         let temp = queue[i];
         queue[i] = queue[index];
@@ -107,7 +108,7 @@ exports.changeOrder = (videoID, up, userID, isAdmin = false) => {
     }
   }
   throw new softError("Could not find the video to swap with!");
-}
+};
 
 // Removing videos by video id from the queue
 exports.removeVideos = (videoIDs, userID, isAdmin = false) => {

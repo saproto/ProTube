@@ -51,8 +51,7 @@
           :admin="user.admin"
           v-if="!loginModalVisible"
           ref="confirmModal"
-          @add-playlist="addPlaylist"
-        />
+          @add-playlist="addPlaylist" />
       </transition>
     </div>
   </div>

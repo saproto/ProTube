@@ -71,7 +71,7 @@ exports.getVideo = async (videoId, isAdmin = false) => {
   return video;
 };
 
-exports.getPlaylistInfo = async(playlistId)=>{
+exports.getPlaylistInfo = async (playlistId) => {
   let playlist;
   try {
     playlist = await youtube.getPlaylist(playlistId);
@@ -86,7 +86,7 @@ exports.getPlaylistInfo = async(playlistId)=>{
     thumbnail: playlist.thumbnails[playlist.thumbnails.length - 1],
     videoCount: playlist.videoCount,
   };
-}
+};
 //get all videos of a playlist and return them
 exports.getVideosInPlaylist = async (playlistId, isAdmin = false) => {
   logger.youtubeInfo(`Getting videos associated with playlist ${playlistId}`);

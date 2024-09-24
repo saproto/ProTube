@@ -24,7 +24,7 @@
     </ul>
     <button
       v-if="videos.length > 17"
-      class="bg-proto_blue mt-4 flex-none rounded-md py-2 px-4 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+      class="bg-proto_blue mt-4 flex-none rounded-md px-4 py-2 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
       @click="$emit('nextPage')">
       Get more results
     </button>
