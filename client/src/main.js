@@ -57,6 +57,6 @@ import router from "./router/index.js";
 
 const app = createApp(App);
 // app.config.globalProperties.eventBus = eventBus;
-app.component("font-awesome-icon", FontAwesomeIcon);
+app.component("FontAwesomeIcon", FontAwesomeIcon);
 app.use(router);
 app.mount("#app");
