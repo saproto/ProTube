@@ -50,8 +50,7 @@ defineProps({
     type: Number,
     default: 404,
   },
-  routeback: {type: String ,
-  default: null},
+  routeback: { type: String, default: null },
 });
 
 // See https://en.wikipedia.org/wiki/List_of_HTTP_status_codes for error codes

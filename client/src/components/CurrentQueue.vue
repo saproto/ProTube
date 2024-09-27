@@ -114,7 +114,7 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  userID: { type:Number, default: null },
+  userID: { type: Number, default: null },
 });
 
 const canMoveVideoDown = (videoIndex) => {

@@ -31,7 +31,7 @@ import { ref, onMounted, watch } from "vue";
 
 const playButton = ref(true);
 const props = defineProps({
-  radio: { type:Object, default:null },
+  radio: { type: Object, default: null },
   volume: {
     type: Number,
     default: -1,

@@ -38,12 +38,12 @@ import VideoCard from "@/components/VideoCard.vue";
 import enums from "@/js/Enums";
 import socket from "@/js/RemoteSocket";
 
-const emit = defineEmits(["display-toast", 'nextPage']);
+const emit = defineEmits(["display-toast", "nextPage"]);
 
 const props = defineProps({
-  videos: {type:Object,default:null},
-  continuationToken: {type:String,default:''},
-  skeletonLoading: {type:Boolean,default:false},
+  videos: { type: Object, default: null },
+  continuationToken: { type: String, default: "" },
+  skeletonLoading: { type: Boolean, default: false },
 });
 
 async function addVideoToQueue(videoID) {

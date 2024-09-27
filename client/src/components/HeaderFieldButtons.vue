@@ -67,7 +67,7 @@ defineProps({
     type: Boolean,
     default: false,
   },
-  name: {type:String, default: ''},
-  classes: {type:String, default: ''},
+  name: { type: String, default: "" },
+  classes: { type: String, default: "" },
 });
 </script>

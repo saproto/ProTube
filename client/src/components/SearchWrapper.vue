@@ -80,7 +80,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const searchString = ref("");
 defineProps({
-  user: {type: Object, default: null},
+  user: { type: Object, default: null },
 });
 
 const emit = defineEmits([

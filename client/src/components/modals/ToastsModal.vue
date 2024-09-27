@@ -22,7 +22,7 @@ const toasts = ref([]);
 
 // latestToast items: duration (ms), message, status
 const props = defineProps({
-  latestToast: {type: Object, default: null},
+  latestToast: { type: Object, default: null },
 });
 
 watch(
