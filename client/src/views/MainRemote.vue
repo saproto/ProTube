@@ -48,9 +48,9 @@
 
       <transition name="modal" appear>
         <PlaylistModal
-          :admin="user.admin"
           v-if="!loginModalVisible"
           ref="confirmModal"
+          :admin="user.admin"
           @add-playlist="addPlaylist" />
       </transition>
     </div>

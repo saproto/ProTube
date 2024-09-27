@@ -44,8 +44,8 @@ const addPlaylist = (shuffled) => {
 
 <template>
   <dialog
-    class="rounded-lg backdrop:bg-black/20 backdrop:backdrop-blur-md"
     ref="dialog"
+    class="rounded-lg backdrop:bg-black/20 backdrop:backdrop-blur-md"
     @close="visible = false">
     <form v-if="visible" method="dialog" class="m-2">
       <div class="mb-3 flex w-full justify-between">

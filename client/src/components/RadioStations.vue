@@ -16,8 +16,8 @@
             :key="radio"
             class="inline-block px-3">
             <div
-              @click="setRadio(radio.z, radio.o)"
-              class="h-[3.75rem] w-24 rounded-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:cursor-pointer hover:opacity-80 hover:shadow-lg">
+              class="h-[3.75rem] w-24 rounded-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:cursor-pointer hover:opacity-80 hover:shadow-lg"
+              @click="setRadio(radio.z, radio.o)">
               <img
                 :alt="radio.o"
                 class="bg-proto_blue hover:bg-proto_blue/80 overflow-hidden truncate rounded-lg text-white"

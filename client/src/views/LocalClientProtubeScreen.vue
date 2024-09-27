@@ -1,8 +1,8 @@
 <template>
   <ProtubeScreen
     :volume="volume"
-    :screenCode="screenCode"
-    v-on:youtube-media-error="playerError" />
+    :screen-code="screenCode"
+    @youtube-media-error="playerError" />
   <ReconnectionHandler :socket="socket" />
 </template>
 

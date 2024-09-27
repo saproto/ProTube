@@ -1,5 +1,5 @@
 <template>
-  <ProtubeScreen :volume="volume" :screenCode="screenCode" />
+  <ProtubeScreen :volume="volume" :screen-code="screenCode" />
   <ReconnectionHandler :socket="socket" />
 </template>
 

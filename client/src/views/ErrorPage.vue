@@ -26,8 +26,8 @@
         >.
       </p>
       <router-link
-        :to="routeback"
         v-if="routeback"
+        :to="routeback"
         :replace="true"
         class="bg-proto_blue hover:bg-proto_blue/80 mx-auto flex justify-center rounded-md p-2 text-white">
         Go Back
@@ -50,7 +50,8 @@ defineProps({
     type: Number,
     default: 404,
   },
-  routeback: String,
+  routeback: {type: String ,
+  default: null},
 });
 
 // See https://en.wikipedia.org/wiki/List_of_HTTP_status_codes for error codes

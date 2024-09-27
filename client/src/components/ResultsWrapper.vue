@@ -18,8 +18,8 @@
         :views="video.viewsFormatted"
         :thumbnail="video.thumbnail.url"
         :clickable="video?.status === undefined ? 'show' : ''"
-        :videoID="video.id"
-        :statusIcon="video.status"
+        :video-i-d="video.id"
+        :status-icon="video.status"
         @video-clicked="addVideoToQueue" />
     </ul>
     <button
@@ -38,12 +38,12 @@ import VideoCard from "@/components/VideoCard.vue";
 import enums from "@/js/Enums";
 import socket from "@/js/RemoteSocket";
 
-const emit = defineEmits(["display-toast"]);
+const emit = defineEmits(["display-toast", 'nextPage']);
 
 const props = defineProps({
-  videos: Object,
-  continuationToken: String,
-  skeletonLoading: Boolean,
+  videos: {type:Object,default:null},
+  continuationToken: {type:String,default:''},
+  skeletonLoading: {type:Boolean,default:false},
 });
 
 async function addVideoToQueue(videoID) {

@@ -137,6 +137,7 @@ import { ref, onMounted } from "vue";
 const cardId = `card_${Math.random()}`;
 const textOverflowing = ref(false);
 
+defineEmits(['video-clicked', 'move-clicked-up', 'move-clicked-down', 'remove-clicked'])
 const props = defineProps({
   name: {
     type: String,
@@ -150,10 +151,10 @@ const props = defineProps({
     type: String,
     default: null,
   },
-  duration: String,
-  thumbnail: String,
-  title: String,
-  videoID: String,
+  duration: {type:String,default:''},
+  thumbnail: {type:String,default:''},
+  title: {type:String,default:''},
+  videoID: {type:String,default:''},
   index: {
     type: Number,
     default: 0,

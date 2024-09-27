@@ -40,10 +40,10 @@
             :channel="video.channel"
             :duration="video.durationFormatted"
             :thumbnail="video.thumbnail.url"
-            :videoID="video.id"
-            :textScrolling="true"
-            :roundedCorners="true"
-            :progressBar="index === 0 ? queueProgress : 0"
+            :video-i-d="video.id"
+            :text-scrolling="true"
+            :rounded-corners="true"
+            :progress-bar="index === 0 ? queueProgress : 0"
             :opacity="0.9" />
         </div>
       </div>
@@ -90,7 +90,7 @@
   <ReconnectionHandler
     v-if="screenCode === -1"
     :socket="socket"
-    :maxAttempts="5" />
+    :max-attempts="5" />
 </template>
 
 <script setup>

@@ -5,9 +5,9 @@
         Master controls
       </h3>
       <button
-        @click="switchTheme"
         v-if="!inProduction"
-        class="ml-auto flex-none rounded-md bg-gray-800 px-4 py-1 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg dark:bg-gray-100 dark:text-gray-800 md:mt-0">
+        class="ml-auto flex-none rounded-md bg-gray-800 px-4 py-1 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg dark:bg-gray-100 dark:text-gray-800 md:mt-0"
+        @click="switchTheme">
         Switch Theme
       </button>
     </div>
@@ -18,12 +18,12 @@
           Volume - {{ playerSettings.volume }}
         </span>
         <input
-          @change="volumeChange"
           class="bg-proto_blue hover:bg-proto_blue/80 h-2 w-full appearance-none rounded-xl border border-gray-500 outline-none"
           type="range"
           min="0"
           max="100"
-          :value="playerSettings.volume" />
+          :value="playerSettings.volume"
+          @change="volumeChange" />
         <div class="container mt-2 flex">
           <!--     Video/Radio toggle     -->
           <div class="flex">
@@ -33,7 +33,6 @@
               </span>
             </div>
             <button
-              @click="toggleRadioProtube"
               type="button"
               :class="
                 playerSettings.playerType === enums.TYPES.RADIO
@@ -41,7 +40,8 @@
                   : 'bg-proto_green'
               "
               class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              role="switch">
+              role="switch"
+              @click="toggleRadioProtube">
               <span
                 :class="
                   playerSettings.playerType === enums.TYPES.RADIO
@@ -62,26 +62,26 @@
             <!-- TODO: Add back button in admin controls -->
             <!--<font-awesome-icon class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" icon="backward" />-->
             <font-awesome-icon
-              @click="playPause"
               class="cursor-pointer text-2xl text-gray-600 dark:text-white"
               :icon="
                 playerSettings.playerMode === enums.MODES.PLAYING
                   ? 'pause'
                   : 'play'
-              ">
+              "
+              @click="playPause">
             </font-awesome-icon>
             <font-awesome-icon
-              @click="skipVideo"
               class="mx-2 cursor-pointer text-2xl text-gray-600 dark:text-white"
-              icon="forward">
+              icon="forward"
+              @click="skipVideo">
             </font-awesome-icon>
           </div>
           <!--     New code button     -->
           <div class="relative ml-auto">
             <div class="absolute -right-full min-w-max">
               <button
-                @click="resetScreenCode"
-                class="bg-proto_blue hover:bg-proto_blue/80 rounded-md px-2 py-1 text-sm text-white shadow-md duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80">
+                class="bg-proto_blue hover:bg-proto_blue/80 rounded-md px-2 py-1 text-sm text-white shadow-md duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80"
+                @click="resetScreenCode">
                 New code
               </button>
             </div>

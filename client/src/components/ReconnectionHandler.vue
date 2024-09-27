@@ -13,7 +13,7 @@ let stopConnecting = false;
 const connectionDelayS = 5;
 
 const props = defineProps({
-  socket: Object,
+  socket: { type:Object, default: null },
   maxAttempts: {
     type: Number,
     default: -1,

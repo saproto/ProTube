@@ -39,7 +39,7 @@ import enums from "@/js/Enums";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 defineProps({
-  message: String,
+  message: { type:String, default:'' },
   status: {
     type: Number,
     default: -1,

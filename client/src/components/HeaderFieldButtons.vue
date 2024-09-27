@@ -6,32 +6,32 @@
     <div
       class="grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-2 xl:grid-cols-4">
       <router-link
-        to="/screen/admin"
         v-if="adminScreen"
+        to="/screen/admin"
         class="bg-proto_blue rounded-md px-4 py-2 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
         Admin screen
       </router-link>
       <router-link
-        to="/screen"
         v-if="screen"
+        to="/screen"
         class="bg-proto_blue rounded-md px-4 py-2 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
         Screen
       </router-link>
       <router-link
-        to="/statistics"
         v-if="statistics"
+        to="/statistics"
         class="bg-proto_blue rounded-md px-4 py-2 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
         Statistics
       </router-link>
       <router-link
-        to="/remote"
         v-if="remote"
+        to="/remote"
         class="bg-proto_blue rounded-md px-4 py-2 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
         Remote
       </router-link>
       <router-link
-        to="/soundboard"
         v-if="soundboard"
+        to="/soundboard"
         class="bg-proto_blue rounded-md px-4 py-2 text-center text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
         Soundboard
       </router-link>
@@ -67,7 +67,7 @@ defineProps({
     type: Boolean,
     default: false,
   },
-  name: String,
-  classes: String,
+  name: {type:String, default: ''},
+  classes: {type:String, default: ''},
 });
 </script>
