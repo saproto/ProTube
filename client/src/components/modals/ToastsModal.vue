@@ -6,9 +6,9 @@
       <transition-group name="list">
         <ToastComponent
           v-for="toast in toasts"
+          :key="toast"
           :message="toast.message"
-          :status="toast.status"
-          :key="toast" />
+          :status="toast.status" />
       </transition-group>
     </div>
   </div>
@@ -22,7 +22,7 @@ const toasts = ref([]);
 
 // latestToast items: duration (ms), message, status
 const props = defineProps({
-  latestToast: Object,
+  latestToast: { type: Object, default: null },
 });
 
 watch(

@@ -5,21 +5,21 @@
         class="flex w-full text-2xl font-medium leading-6 text-white md:block">
         <span class="w-full"> ProTube playlist panel</span>
         <font-awesome-icon
-          @click="openMenu = !openMenu"
           :class="openMenu ? 'fa-rotate-90' : 'fa-rotate-0'"
           class="block cursor-pointer duration-500 md:hidden"
-          icon="bars" />
+          icon="bars"
+          @click="openMenu = !openMenu" />
       </h3>
       <div class="mt-2 max-w-xl text-sm text-gray-200">
         <p>Search for any song on YouTube and add it to the ProTube playlist</p>
       </div>
       <form
-        @submit.prevent="processQuery"
-        class="mt-auto flex pt-4 sm:items-center">
+        class="mt-auto flex pt-4 sm:items-center"
+        @submit.prevent="processQuery">
         <div class="group flex h-10 w-full md:max-w-md">
           <input
-            minlength="1"
             v-model="searchString"
+            minlength="1"
             class="w-full min-w-min rounded-l-md border border-gray-400 bg-white pl-2 text-gray-700 placeholder-gray-500 outline-none focus:placeholder-gray-600"
             placeholder="Search" />
           <button
@@ -43,17 +43,17 @@
       :name="user.name" />
 
     <div
-      @mouseleave="infoTooltipVisible = false"
-      class="absolute top-0 right-0 m-3 hidden md:block">
+      class="absolute right-0 top-0 m-3 hidden md:block"
+      @mouseleave="infoTooltipVisible = false">
       <font-awesome-icon
-        @mouseenter="infoTooltipVisible = true"
         icon="fa-solid fa-question-circle"
         size="lg"
-        class="transition-500 text-white opacity-70 transition-opacity hover:opacity-100">
+        class="transition-500 text-white opacity-70 transition-opacity hover:opacity-100"
+        @mouseenter="infoTooltipVisible = true">
       </font-awesome-icon>
       <div
         v-show="infoTooltipVisible"
-        class="dark:bg-proto_secondary_gray-dark transition-300 float-left mr-3 max-w-[250px] rounded-md bg-white py-2 px-5 text-justify dark:text-white">
+        class="dark:bg-proto_secondary_gray-dark transition-300 float-left mr-3 max-w-[250px] rounded-md bg-white px-5 py-2 text-justify dark:text-white">
         If you are experiencing any problems with ProTube or have a feature
         request please let the
         <a
@@ -80,7 +80,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const searchString = ref("");
 defineProps({
-  user: Object,
+  user: { type: Object, default: null },
 });
 
 const emit = defineEmits([

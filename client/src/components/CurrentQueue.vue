@@ -7,18 +7,18 @@
       <label class="text-2xl text-gray-600 dark:text-white">
         Queue - {{ queueDuration }}
       </label>
-      <div class="relative" v-if="queue.length >= 1 && admin">
+      <div v-if="queue.length >= 1 && admin" class="relative">
         <div
           class="mt-4 flex rounded-md text-center text-white duration-200 md:mt-0">
           <button
-            @click="clearQueue()"
-            class="bg-proto_blue rounded-l-md px-4 py-0.5 duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+            class="bg-proto_blue rounded-l-md px-4 py-0.5 duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+            @click="clearQueue()">
             Clear queue
           </button>
           <button
+            class="bg-proto_blue rounded-r-md border-l border-l-white px-4 py-0.5 duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
             @click="removeVideoDropDown = true"
-            @focusout="hideRemoveVideoDropDown"
-            class="bg-proto_blue rounded-r-md border-l border-l-white px-4 py-0.5 duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+            @focusout="hideRemoveVideoDropDown">
             <font-awesome-icon
               :class="removeVideoDropDown ? 'rotate-180' : ''"
               class="duration-300"
@@ -36,8 +36,8 @@
               <li
                 v-for="video in usersInQueue"
                 :key="video.user.id"
-                @click="removeVideosForUser(video.user.id)"
-                class="hover:bg-proto_blue w-full py-1 pl-3 pr-9 text-left text-gray-600 duration-300 hover:cursor-pointer hover:text-white dark:text-white">
+                class="hover:bg-proto_blue w-full py-1 pl-3 pr-9 text-left text-gray-600 duration-300 hover:cursor-pointer hover:text-white dark:text-white"
+                @click="removeVideosForUser(video.user.id)">
                 {{ video.user.name }}
               </li>
             </ul>
@@ -46,21 +46,21 @@
       </div>
       <div v-else-if="!admin && userHasItemsInQueue">
         <button
-          @click="removeVideosForUser(userID)"
-          class="bg-proto_blue rounded-md px-4 py-0.5 text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
+          class="bg-proto_blue rounded-md px-4 py-0.5 text-white duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+          @click="removeVideosForUser(userID)">
           Remove all my videos
         </button>
       </div>
     </div>
     <div
-      class="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark flex max-h-[84vh] justify-center overflow-y-scroll overscroll-contain px-0">
+      class="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark flex max-h-[84vh] justify-center overscroll-auto px-0">
       <div v-if="skeletonLoading" class="w-full">
         <ul class="grid gap-2">
           <SkeletonResult v-for="index in 10" :key="index" />
         </ul>
       </div>
       <div v-if="!skeletonLoading" class="w-full">
-        <ul class="grid gap-2 pr-4">
+        <TransitionGroup name="list" tag="ul" class="grid gap-2 pr-4">
           <VideoCard
             v-for="(video, index) in queue"
             :key="video.id"
@@ -70,10 +70,14 @@
             :channel="video.channel"
             :duration="video.durationFormatted"
             :thumbnail="video.thumbnail.url"
-            :removeButton="admin || video.user.id === userID"
-            :videoID="video.id"
-            @remove-clicked="removeFromQueue([video.id])" />
-        </ul>
+            :remove-button="props.admin || video.user.id === props.userID"
+            :can-move-up="canMoveVideoUp(index)"
+            :can-move-down="canMoveVideoDown(index)"
+            :video-i-d="video.id"
+            @remove-clicked="removeFromQueue([video.id])"
+            @move-clicked-up="moveVideo(video.id, true)"
+            @move-clicked-down="moveVideo(video.id, false)" />
+        </TransitionGroup>
         <div
           v-if="!skeletonLoading && queue.length < 1"
           class="mt-4 text-gray-400">
@@ -110,8 +114,26 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  userID: Number,
+  userID: { type: Number, default: null },
 });
+
+const canMoveVideoDown = (videoIndex) => {
+  return queue.value.slice(videoIndex, -1).some((video) => {
+    return (
+      video.user.id === queue.value[videoIndex].user.id &&
+      (props.admin || video.user.id === props.userID)
+    );
+  });
+};
+
+const canMoveVideoUp = (videoIndex) => {
+  return queue.value.slice(0, videoIndex).some((video) => {
+    return (
+      video.user.id === queue.value[videoIndex].user.id &&
+      (props.admin || video.user.id === props.userID)
+    );
+  });
+};
 
 // return array of unique users in queue
 const usersInQueue = computed(() => {
@@ -128,7 +150,6 @@ const userHasItemsInQueue = computed(() => {
   const videosOfUser = queue.value.filter((video) => {
     return video.user.id === props.userID;
   });
-  console.log(videosOfUser);
   return videosOfUser.length > 0;
 });
 
@@ -148,6 +169,19 @@ async function removeFromQueue(videoIDs) {
   emit("display-toast", {
     status: data.status ?? enums.STATUS.SUCCESS,
     message: data.message ?? `Successfully removed video(s)!`,
+  });
+}
+
+async function moveVideo(videoID, up) {
+  const data = await new Promise((resolve) => {
+    normalSocket.emit("move-video", videoID, up, (callback) => {
+      resolve(callback);
+    });
+  });
+  emit("display-toast", {
+    status: data.status ?? enums.STATUS.SUCCESS,
+    message:
+      data.message ?? `Successfully moved video` + (up ? " up!" : " down!"),
   });
 }
 

@@ -2,7 +2,7 @@
   <div
     class="dark:bg-proto_background_gray-dark grid min-h-screen place-items-center">
     <div
-      class="dark:bg-proto_secondary_gray-dark z-50 mx-auto mx-5 max-w-[450px] content-center rounded-md bg-white p-8 text-center shadow-md dark:text-white">
+      class="dark:bg-proto_secondary_gray-dark z-50 mx-5 mx-auto max-w-[450px] content-center rounded-md bg-white p-8 text-center shadow-md dark:text-white">
       <div class="w-full text-center">
         <font-awesome-icon
           icon="fa-solid fa-warning"
@@ -26,8 +26,8 @@
         >.
       </p>
       <router-link
-        :to="routeback"
         v-if="routeback"
+        :to="routeback"
         :replace="true"
         class="bg-proto_blue hover:bg-proto_blue/80 mx-auto flex justify-center rounded-md p-2 text-white">
         Go Back
@@ -50,7 +50,7 @@ defineProps({
     type: Number,
     default: 404,
   },
-  routeback: String,
+  routeback: { type: String, default: null },
 });
 
 // See https://en.wikipedia.org/wiki/List_of_HTTP_status_codes for error codes

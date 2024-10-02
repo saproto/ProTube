@@ -1,5 +1,5 @@
 <template>
-  <transition @before-enter="beforeEnter" @enter="enter" appear>
+  <transition appear @before-enter="beforeEnter" @enter="enter">
     <li
       class="col-span-1 flex w-full flex-col overflow-hidden text-center shadow duration-200"
       :class="roundedCorners ? 'rounded-lg' : 'rounded-sm'"
@@ -14,14 +14,14 @@
         class="bg-proto_blue absolute bottom-0 h-2 w-0 rounded-sm opacity-60"></div>
       <button
         :disabled="!clickable"
-        @click="$emit('video-clicked', videoID)"
         :class="[
           clickable && statusIcon === enums.STATUS.NOTHING
             ? 'hover:bg-white/40 dark:hover:bg-stone-800/40'
             : 'cursor-default',
           { 'rounded-lg': roundedCorners },
         ]"
-        class="border-proto_blue flex flex-1 flex-col border-l-4 bg-white/80 px-8 py-4 duration-200 dark:border-gray-800 dark:bg-stone-800/80">
+        class="border-proto_blue flex flex-1 flex-col border-l-4 bg-white/80 px-8 py-4 duration-200 dark:border-gray-800 dark:bg-stone-800/80"
+        @click="$emit('video-clicked', videoID)">
         <div
           class="text-md w-full overflow-x-hidden text-lg font-bold text-gray-800 dark:text-stone-300">
           <h3
@@ -36,7 +36,7 @@
           </h3>
         </div>
         <ul
-          class="fa-ul relative mt-auto ml-5 w-full text-right text-sm font-medium text-gray-900 dark:text-stone-300">
+          class="fa-ul relative ml-5 mt-auto w-full text-right text-sm font-medium text-gray-900 dark:text-stone-300">
           <li
             v-if="name"
             class="justify-bottom mt-auto flex flex-1 align-bottom">
@@ -82,30 +82,46 @@
             v-show="statusIcon === enums.STATUS.SUCCESS"
             icon="fa-solid fa-check-circle"
             size="lg"
-            class="absolute -right-0 -bottom-0 ml-auto mr-2 text-green-500">
+            class="absolute -bottom-0 -right-0 ml-auto mr-2 text-green-500">
           </font-awesome-icon>
 
           <font-awesome-icon
             v-show="statusIcon === enums.STATUS.WARNING"
             icon="fa-solid fa-warning"
             size="lg"
-            class="absolute -right-0 -bottom-0 ml-auto mr-2 text-yellow-400">
+            class="absolute -bottom-0 -right-0 ml-auto mr-2 text-yellow-400">
           </font-awesome-icon>
 
           <font-awesome-icon
             v-show="statusIcon === enums.STATUS.ERROR"
             icon="fa-solid fa-xmark-circle"
             size="lg"
-            class="absolute -right-0 -bottom-0 ml-auto mr-2 text-red-500">
+            class="absolute -bottom-0 -right-0 ml-auto mr-2 text-red-500">
           </font-awesome-icon>
 
-          <button
-            v-if="removeButton"
-            @click="$emit('remove-clicked', videoID)"
-            class="absolute -right-0 -bottom-0 rounded-lg bg-red-600 py-2 px-3 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg">
-            <font-awesome-icon icon="fa-solid fa-trash" size="lg">
-            </font-awesome-icon>
-          </button>
+          <div class="absolute -bottom-0 -right-0 flex gap-1">
+            <button
+              v-if="canMoveUp"
+              class="bg-proto_green rounded-lg px-3 py-2 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+              @click="$emit('move-clicked-up', videoID)">
+              <font-awesome-icon icon="fas fa-arrow-up" fixed-width />
+            </button>
+
+            <button
+              v-if="canMoveDown"
+              class="bg-proto_green rounded-lg px-3 py-2 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+              @click="$emit('move-clicked-down', videoID)">
+              <font-awesome-icon icon="fa-solid fa-arrow-down" fixed-width />
+            </button>
+
+            <button
+              v-if="removeButton"
+              class="rounded-lg bg-red-600 px-3 py-2 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"
+              @click="$emit('remove-clicked', videoID)">
+              <font-awesome-icon icon="fa-solid fa-trash" size="lg">
+              </font-awesome-icon>
+            </button>
+          </div>
         </ul>
       </button>
     </li>
@@ -121,6 +137,12 @@ import { ref, onMounted } from "vue";
 const cardId = `card_${Math.random()}`;
 const textOverflowing = ref(false);
 
+defineEmits([
+  "video-clicked",
+  "move-clicked-up",
+  "move-clicked-down",
+  "remove-clicked",
+]);
 const props = defineProps({
   name: {
     type: String,
@@ -134,10 +156,10 @@ const props = defineProps({
     type: String,
     default: null,
   },
-  duration: String,
-  thumbnail: String,
-  title: String,
-  videoID: String,
+  duration: { type: String, default: "" },
+  thumbnail: { type: String, default: "" },
+  title: { type: String, default: "" },
+  videoID: { type: String, default: "" },
   index: {
     type: Number,
     default: 0,
@@ -151,6 +173,14 @@ const props = defineProps({
     default: null,
   },
   removeButton: {
+    type: Boolean,
+    default: false,
+  },
+  canMoveUp: {
+    type: Boolean,
+    default: false,
+  },
+  canMoveDown: {
     type: Boolean,
     default: false,
   },

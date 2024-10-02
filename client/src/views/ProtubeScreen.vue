@@ -15,7 +15,7 @@
 
     <div
       v-if="playerState.playerType === enums.TYPES.VIDEO"
-      class="absolute top-0 right-0 mt-2">
+      class="absolute right-0 top-0 mt-2">
       <div
         class="border-proto_blue dark:bg-proto_secondary_gray-dark mb-1 mr-4 mt-1 w-max rounded-lg border-r-4 bg-white px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
         Want to add your own music? Visit www.protu.be!
@@ -26,7 +26,7 @@
       <div class="absolute bottom-0 mb-1 w-screen rounded-lg">
         <div class="flex justify-between">
           <div
-            class="border-proto_blue dark:bg-proto_secondary_gray-dark ml-4 mb-1 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+            class="border-proto_blue dark:bg-proto_secondary_gray-dark mb-1 ml-4 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
             Queue: {{ totalDuration }}
           </div>
         </div>
@@ -40,10 +40,10 @@
             :channel="video.channel"
             :duration="video.durationFormatted"
             :thumbnail="video.thumbnail.url"
-            :videoID="video.id"
-            :textScrolling="true"
-            :roundedCorners="true"
-            :progressBar="index === 0 ? queueProgress : 0"
+            :video-i-d="video.id"
+            :text-scrolling="true"
+            :rounded-corners="true"
+            :progress-bar="index === 0 ? queueProgress : 0"
             :opacity="0.9" />
         </div>
       </div>
@@ -57,7 +57,7 @@
             class="dark:bg-proto_secondary_gray-dark -z-10 h-full max-w-none rounded-lg bg-white"
             alt="Loading..." />
         </div>
-        <div class="absolute top-0 left-0 mt-2 ml-4 rounded-lg text-lg">
+        <div class="absolute left-0 top-0 ml-4 mt-2 rounded-lg text-lg">
           <div
             class="border-proto_blue dark:bg-proto_secondary_gray-dark rounded-lg border-l-4 bg-white p-1 px-4 py-2 text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
             Album: {{ photo.album_name }}<br />
@@ -79,7 +79,7 @@
         class=""
         :class="
           photo && !photo.error && photo.url !== ''
-            ? 'absolute right-0 bottom-0 mr-2 place-items-end'
+            ? 'absolute bottom-0 right-0 mr-2 place-items-end'
             : ' grid h-screen place-items-center'
         ">
         <RadioScreen :radio="playerState.radio" :volume="volume" />
@@ -90,7 +90,7 @@
   <ReconnectionHandler
     v-if="screenCode === -1"
     :socket="socket"
-    :maxAttempts="5" />
+    :max-attempts="5" />
 </template>
 
 <script setup>

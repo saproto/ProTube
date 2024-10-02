@@ -29,14 +29,36 @@ endpoint.on("connection", (socket) => {
     }
   });
 
-  socket.on("fetch-then-add-playlist", async (playlistId, callback) => {
+  socket.on("fetch-playlist", async (playlistId, callback) => {
     try {
-      const videos = await youtube.getVideosInPlaylist(
+      const playlist = await youtube.getPlaylistInfo(playlistId);
+      callback(playlist);
+      logger.youtubeInfo(
+        "Returned playlist information to the client (remote)"
+      );
+    } catch (e) {
+      callback(e.getInfo());
+    }
+  });
+
+  socket.on("add-playlist", async (playlistId, shufflePlaylist, callback) => {
+    try {
+      let videos = await youtube.getVideosInPlaylist(
         playlistId,
         socket.request.user.admin
       );
+
       videos.forEach((video) => (video.user = formatUser(socket)));
+
+      if (shufflePlaylist) {
+        videos = videos
+          .map((value) => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ value }) => value);
+      }
+
       callback(queueManager.addAllFair(videos));
+      logger.youtubeInfo("Added playlist with id: " + playlistId);
     } catch (e) {
       callback(e.getInfo());
     }
@@ -61,6 +83,26 @@ endpoint.on("connection", (socket) => {
       callback({
         success: queueManager.removeVideos(
           videoIDs,
+          socket.request.session.passport.user.id,
+          socket.request.user.admin
+        ),
+      });
+    } catch (e) {
+      callback(e.getInfo());
+    }
+  });
+
+  socket.on("move-video", (videoID, up, callback) => {
+    logger.clientInfo(
+      `${socket.id} Requested change in order ${
+        up ? "up" : "down"
+      } of ${videoID}`
+    );
+    try {
+      callback({
+        success: queueManager.changeOrder(
+          videoID,
+          up,
           socket.request.session.passport.user.id,
           socket.request.user.admin
         ),

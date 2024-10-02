@@ -5,7 +5,7 @@
     role="dialog"
     aria-modal="true">
     <div
-      class="flex h-5/6 items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+      class="flex h-5/6 items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
       <div
         class="bg-proto_background_gray-dark/50 fixed inset-0 transition-opacity"
         aria-hidden="true"></div>
@@ -34,7 +34,7 @@
 
 <script setup>
 defineProps({
-  message: String,
+  message: { type: String, default: "" },
 });
 </script>
 
