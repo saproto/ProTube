@@ -1,6 +1,6 @@
 <template>
   <!-- snowflakes in december -->
-  <keep-alive v-if="new Date().getMonth()===11">
+  <keep-alive v-if="new Date().getMonth() === 11">
     <SnowFall
       :class="
         currentRoute === 'Screen' ||
