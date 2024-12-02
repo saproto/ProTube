@@ -1,4 +1,16 @@
 <template>
+  <!-- snowflakes in december -->
+  <keep-alive v-if="new Date().getMonth()===11">
+    <SnowFall
+      :class="
+        currentRoute === 'Screen' ||
+        currentRoute === 'Admin Screen' ||
+        currentRoute === 'Error' ||
+        currentRoute === 'Local Admin Screen'
+          ? ''
+          : '-z-10'
+      " />
+  </keep-alive>
   <div
     v-if="
       currentRoute == 'Screen' ||
@@ -22,6 +34,9 @@
 <script setup>
 import { useRoute } from "vue-router";
 import { computed } from "vue";
+
+// snowflake's
+import SnowFall from "@/components/SnowFall";
 
 document.title =
   process.env.NODE_ENV === "development" ? "[LOCAL] ProTube" : "ProTube";
