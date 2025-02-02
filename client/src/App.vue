@@ -3,20 +3,20 @@
   <keep-alive v-if="new Date().getMonth() === 11">
     <SnowFall
       :class="
-        currentRoute === 'Screen' ||
-        currentRoute === 'Admin Screen' ||
-        currentRoute === 'Error' ||
-        currentRoute === 'Local Admin Screen'
+        $route.name === 'Screen' ||
+        $route.name === 'Admin Screen' ||
+        $route.name === 'Error' ||
+        $route.name === 'Local Admin Screen'
           ? ''
           : '-z-10'
       " />
   </keep-alive>
   <div
     v-if="
-      currentRoute == 'Screen' ||
-      currentRoute == 'Admin Screen' ||
-      currentRoute == 'Error' ||
-      currentRoute == 'Local Admin Screen'
+      $route.name == 'Screen' ||
+      $route.name == 'Admin Screen' ||
+      $route.name == 'Error' ||
+      $route.name === 'Local Admin Screen'
     ">
     <router-view v-slot="{ Component, route }">
       <transition :name="route.meta.transition || ''">
@@ -32,9 +32,6 @@
 </template>
 
 <script setup>
-import { useRoute } from "vue-router";
-import { computed } from "vue";
-
 // snowflake's
 import SnowFall from "@/components/SnowFall";
 
@@ -52,9 +49,6 @@ if (
   document.documentElement.classList.remove("dark");
 }
 
-const currentRoute = computed(() => {
-  return useRoute().name;
-});
 </script>
 
 <style>
