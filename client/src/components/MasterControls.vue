@@ -94,7 +94,7 @@
 
 <script setup>
 import socket, { connectSocket } from "@/js/AdminRemoteSocket";
-import { ref, onBeforeMount, onBeforeUnmount, defineEmits } from "vue";
+import { ref, onBeforeMount, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import enums from "@/js/Enums";
 import ContentField from "../layout/ContentField.vue";

@@ -29,8 +29,8 @@ exports.search = async (
   let newContinuation = result.continuation;
 
   if (!videos) return new Error("Could not find any videos");
-
   videos.map((video) => sanitizeVideo(video));
+
   // Checking if video already in queue
   videos.forEach((video) => {
     if (queue.some((queueVid) => queueVid.id === video.id)) {
@@ -114,6 +114,8 @@ const sanitizeVideo = (video) => {
   delete video.description;
   delete video.comments;
   delete video.client;
+  delete video.chapters;
+  delete video.captions;
 
   video.channel = video.channel.name;
   video.thumbnail = video.thumbnails[video.thumbnails.length - 1];
