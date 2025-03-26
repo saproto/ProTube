@@ -94,7 +94,7 @@
 
 <script setup>
 import socket, { connectSocket } from "@/js/AdminRemoteSocket";
-import { ref, onBeforeMount, onBeforeUnmount } from "vue";
+import {ref, onBeforeMount, onBeforeUnmount, onMounted} from "vue";
 import { useRouter } from "vue-router";
 import enums from "@/js/Enums";
 import ContentField from "../layout/ContentField.vue";
@@ -122,9 +122,23 @@ onBeforeMount(async () => {
   else await router.push({ name: "Error", params: { errorcode: 401 } });
 });
 
+onMounted(()=>{
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+})
+
 onBeforeUnmount(() => {
   socket.disconnect();
+  document.removeEventListener("visibilitychange", handleVisibilityChange);
 });
+
+function handleVisibilityChange() {
+  if (document.visibilityState === "visible") {
+    console.log("Tab is back in focus");
+  }
+  if(user.value.admin){
+    connectSocket();
+  }
+}
 
 socket.on("connect", () => {
   socket.emit("get-player-settings", (result) => {
