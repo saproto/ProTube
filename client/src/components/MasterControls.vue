@@ -24,33 +24,18 @@
           max="100"
           :value="playerSettings.volume"
           @change="volumeChange" />
-        <div class="container mt-2 flex">
+        <div class="container mt-2 flex flex-wrap justify-between gap-2">
           <!--     Video/Radio toggle     -->
-          <div class="flex">
+          <div class="flex shrink-0 grow basis-[0]">
             <div class="mr-3">
               <span class="text-sm font-medium text-gray-900 dark:text-white">
                 ProTube
               </span>
             </div>
-            <button
-              type="button"
-              :class="
-                playerSettings.playerType === enums.TYPES.RADIO
-                  ? 'bg-proto_blue'
-                  : 'bg-proto_green'
-              "
-              class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              role="switch"
-              @click="toggleRadioProtube">
-              <span
-                :class="
-                  playerSettings.playerType === enums.TYPES.RADIO
-                    ? 'translate-x-5'
-                    : 'translate-x-0'
-                "
-                class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out">
-              </span>
-            </button>
+            <SwitchButton
+              :on="playerSettings.playerType === enums.TYPES.RADIO"
+              @toggled="toggleRadioProtube"></SwitchButton>
+
             <div class="ml-3">
               <span class="text-sm font-medium text-gray-900 dark:text-white">
                 Radio
@@ -58,9 +43,7 @@
             </div>
           </div>
           <!--   Video controls   -->
-          <div class="mx-auto">
-            <!-- TODO: Add back button in admin controls -->
-            <!--<font-awesome-icon class="cursor-pointer text-2xl mx-2 text-gray-600 dark:text-white" icon="backward" />-->
+          <div class="shrink-0 grow basis-[0]">
             <font-awesome-icon
               class="cursor-pointer text-2xl text-gray-600 dark:text-white"
               :icon="
@@ -76,15 +59,14 @@
               @click="skipVideo">
             </font-awesome-icon>
           </div>
+
           <!--     New code button     -->
-          <div class="relative ml-auto">
-            <div class="absolute -right-full min-w-max">
-              <button
-                class="bg-proto_blue hover:bg-proto_blue/80 rounded-md px-2 py-1 text-sm text-white shadow-md duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80"
-                @click="resetScreenCode">
-                New code
-              </button>
-            </div>
+          <div class="grow basis-[0]">
+            <button
+              class="bg-proto_blue hover:bg-proto_blue/80 whitespace-nowrap rounded-md p-2 text-sm text-white shadow-md duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80"
+              @click="resetScreenCode">
+              New code
+            </button>
           </div>
         </div>
       </div>
@@ -98,7 +80,7 @@ import { ref, onBeforeMount, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import enums from "@/js/Enums";
 import ContentField from "../layout/ContentField.vue";
-
+import SwitchButton from "@/components/SwitchButton.vue";
 const emit = defineEmits(["display-toast"]);
 
 const user = ref({});

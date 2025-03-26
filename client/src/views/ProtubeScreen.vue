@@ -54,7 +54,7 @@
         <div class="flex h-screen justify-center overflow-x-hidden p-5">
           <img
             :src="photo.url"
-            class="dark:bg-proto_secondary_gray-dark -z-10 h-full max-w-none rounded-lg bg-white"
+            class="dark:bg-proto_secondary_gray-dark h-full max-w-none rounded-lg bg-white"
             alt="Loading..." />
         </div>
         <div class="absolute left-0 top-0 ml-4 mt-2 rounded-lg text-lg">
