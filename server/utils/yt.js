@@ -117,9 +117,12 @@ const sanitizeVideo = (video) => {
     channel: video.channel?.name,
     duration: video.duration,
     thumbnail: video.thumbnails[video.thumbnails.length - 1],
-    durationFormatted: video.duration>=3600?format_hh_mm_ss(video.duration):format_mm_ss(video.duration),
-    viewsFormatted : formatViews(video.viewCount),
-  }
+    durationFormatted:
+      video.duration >= 3600
+        ? format_hh_mm_ss(video.duration)
+        : format_mm_ss(video.duration),
+    viewsFormatted: formatViews(video.viewCount),
+  };
 };
 
 function formatViews(views) {

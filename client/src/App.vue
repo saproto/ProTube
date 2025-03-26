@@ -16,7 +16,7 @@
       $route.name == 'Screen' ||
       $route.name == 'Admin Screen' ||
       $route.name == 'Error' ||
-      $route.name === 'Local Admin Screen'||
+      $route.name === 'Local Admin Screen' ||
       $route.name === 'Photo Screen'
     ">
     <router-view v-slot="{ Component, route }">
@@ -49,7 +49,6 @@ if (
 } else {
   document.documentElement.classList.remove("dark");
 }
-
 </script>
 
 <style>
