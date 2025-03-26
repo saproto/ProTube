@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import MainRemote from "@/views/MainRemote.vue";
 import ProtubeScreen from "@/views/ProtubeScreen.vue";
+import PhotoScreen from "@/views/PhotoScreen.vue";
 import AdminProtubeScreen from "@/views/AdminProtubeScreen.vue";
 import ErrorPage from "@/views/ErrorPage.vue";
 import LoginPage from "@/views/LoginPage.vue";
@@ -38,6 +39,11 @@ const routes = [
     path: "/screen/local",
     name: "Local Admin Screen",
     component: LocalClientProtubeScreen,
+  },
+  {
+    path: "/photos",
+    name: "Photo Screen",
+    component: PhotoScreen,
   },
   {
     path: "/error",
