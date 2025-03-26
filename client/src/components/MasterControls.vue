@@ -24,18 +24,17 @@
           max="100"
           :value="playerSettings.volume"
           @change="volumeChange" />
-        <div class="container mt-2 flex gap-2 flex-wrap justify-between">
+        <div class="container mt-2 flex flex-wrap justify-between gap-2">
           <!--     Video/Radio toggle     -->
-          <div class="flex shrink-0 basis-[0] grow">
-            <div class="mr-3 ">
+          <div class="flex shrink-0 grow basis-[0]">
+            <div class="mr-3">
               <span class="text-sm font-medium text-gray-900 dark:text-white">
                 ProTube
               </span>
             </div>
             <SwitchButton
-                :on = "playerSettings.playerType === enums.TYPES.RADIO"
-                @toggled="toggleRadioProtube"
-            ></SwitchButton>
+              :on="playerSettings.playerType === enums.TYPES.RADIO"
+              @toggled="toggleRadioProtube"></SwitchButton>
 
             <div class="ml-3">
               <span class="text-sm font-medium text-gray-900 dark:text-white">
@@ -44,7 +43,7 @@
             </div>
           </div>
           <!--   Video controls   -->
-          <div class="shrink-0 basis-[0] grow">
+          <div class="shrink-0 grow basis-[0]">
             <font-awesome-icon
               class="cursor-pointer text-2xl text-gray-600 dark:text-white"
               :icon="
@@ -62,12 +61,12 @@
           </div>
 
           <!--     New code button     -->
-          <div class="basis-[0] grow">
-          <button
-              class="whitespace-nowrap bg-proto_blue hover:bg-proto_blue/80 p-2 rounded-md text-sm text-white shadow-md duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80"
+          <div class="grow basis-[0]">
+            <button
+              class="bg-proto_blue hover:bg-proto_blue/80 whitespace-nowrap rounded-md p-2 text-sm text-white shadow-md duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80"
               @click="resetScreenCode">
-            New code
-          </button>
+              New code
+            </button>
           </div>
         </div>
       </div>

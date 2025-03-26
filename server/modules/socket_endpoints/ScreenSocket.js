@@ -11,7 +11,6 @@ let album = {
 };
 
 endpoint.on("connection", (socket) => {
-
   logger.screenInfo(
     `Screen connected from ${socket.handshake.address} with socket id ${socket.id}`
   );

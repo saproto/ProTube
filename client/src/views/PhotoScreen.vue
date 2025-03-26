@@ -30,7 +30,7 @@
 
 <script setup>
 import socket, { connectSocket } from "@/js/ScreenSocket";
-import {onBeforeMount, onBeforeUnmount, ref} from "vue";
+import { onBeforeMount, onBeforeUnmount, ref } from "vue";
 import ReconnectionHandler from "../components/ReconnectionHandler.vue";
 
 const screenCode = ref("0000");
