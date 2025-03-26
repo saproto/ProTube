@@ -30,15 +30,20 @@
 
 <script setup>
 import socket, { connectSocket } from "@/js/ScreenSocket";
-import { onBeforeMount, ref } from "vue";
+import {onBeforeMount, onBeforeUnmount, ref} from "vue";
 import ReconnectionHandler from "../components/ReconnectionHandler.vue";
 
 const screenCode = ref("0000");
 socket.on("new-screen-code", (newCode) => {
   screenCode.value = newCode;
 });
+
 onBeforeMount(() => {
   connectSocket();
+});
+
+onBeforeUnmount(() => {
+  socket.disconnect();
 });
 
 const photo = ref({

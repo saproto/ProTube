@@ -2,20 +2,25 @@ const fetch = require("node-fetch");
 const endpoint = io.of("/socket/screen");
 const queueManager = require("../QueueManager");
 const playbackManager = require("../PlaybackManager");
-let newPhotoInterval = null;
+setInterval(emitNewPhoto, 10000);
 let photo = null;
 let album = {
   album_name: "",
   date_taken: "",
   photos: [],
 };
+
 endpoint.on("connection", (socket) => {
+
   logger.screenInfo(
     `Screen connected from ${socket.handshake.address} with socket id ${socket.id}`
   );
 
-  if (!photo) emitNewPhoto();
-  socket.emit("photo-update", photo);
+  endpoint.emit("photo-update", {
+    url: photo,
+    album_name: album.album_name,
+    date_taken: album.date_taken,
+  });
 
   socket.emit("queue-update", {
     queue: queueManager.getQueue(),
@@ -47,12 +52,6 @@ eventBus.on("queue-update", () => {
 eventBus.on("player-update", () => {
   let queue = queueManager.getQueue();
   let playerType = playbackManager.getPlayerType();
-  if (queue.length <= 0 || playerType !== enums.TYPES.VIDEO) {
-    emitNewPhoto();
-  } else if (playerType === enums.TYPES.VIDEO) {
-    clearInterval(newPhotoInterval);
-    newPhotoInterval = null;
-  }
 
   endpoint.emit("player-update", {
     playerType: playerType,
@@ -70,9 +69,6 @@ eventBus.on("new-video-timestamp", (timestamp) => {
 });
 
 function emitNewPhoto() {
-  if (newPhotoInterval === null) {
-    newPhotoInterval = setInterval(emitNewPhoto, 10000);
-  }
   if (album.photos.length > 0) {
     photo = album.photos.shift();
     endpoint.emit("photo-update", {
