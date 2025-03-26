@@ -29,7 +29,8 @@ exports.search = async (
   let newContinuation = result.continuation;
 
   if (!videos) return new Error("Could not find any videos");
-  videos.map((video) => sanitizeVideo(video));
+  videos = videos.filter((video) => video.channel !== undefined);
+  videos = videos.map((video) => sanitizeVideo(video));
 
   // Checking if video already in queue
   videos.forEach((video) => {
@@ -110,24 +111,15 @@ exports.getVideosInPlaylist = async (playlistId, isAdmin = false) => {
 };
 
 const sanitizeVideo = (video) => {
-  delete video.related;
-  delete video.description;
-  delete video.comments;
-  delete video.client;
-  delete video.chapters;
-  delete video.captions;
-
-  video.channel = video.channel.name;
-  video.thumbnail = video.thumbnails[video.thumbnails.length - 1];
-  delete video.thumbnails;
-
-  if (video.duration >= 3600)
-    video.durationFormatted = format_hh_mm_ss(video.duration);
-  else video.durationFormatted = format_mm_ss(video.duration);
-
-  video.viewsFormatted = formatViews(video.viewCount);
-
-  return video;
+  return {
+    id: video.id,
+    title: video.title,
+    channel: video.channel?.name,
+    duration: video.duration,
+    thumbnail: video.thumbnails[video.thumbnails.length - 1],
+    durationFormatted: video.duration>=3600?format_hh_mm_ss(video.duration):format_mm_ss(video.duration),
+    viewsFormatted : formatViews(video.viewCount),
+  }
 };
 
 function formatViews(views) {
