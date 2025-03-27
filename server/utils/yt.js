@@ -103,7 +103,7 @@ exports.getVideosInPlaylist = async (playlistId, isAdmin = false) => {
 
   videos = videos.filter((video) => video.channel !== undefined);
   videos = videos.map((video) => sanitizeVideo(video));
-  
+
   if (isAdmin) return videos;
 
   return videos.filter(
