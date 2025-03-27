@@ -101,7 +101,9 @@ exports.getVideosInPlaylist = async (playlistId, isAdmin = false) => {
   if (!playlist) throw new softError("Could not find that playlist");
   if (!videos) throw new softError("Could not find any videos");
 
-  videos.map((video) => sanitizeVideo(video));
+  videos = videos.filter((video) => video.channel !== undefined);
+  videos = videos.map((video) => sanitizeVideo(video));
+
   if (isAdmin) return videos;
 
   return videos.filter(
