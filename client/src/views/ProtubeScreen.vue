@@ -10,7 +10,9 @@
     </div>
 
     <div v-show="isPlayingVideo">
-      <div :id="playerID" class="min-h-screen w-full" />
+      <div
+           :id="playerID"
+      ></div>
     </div>
 
     <div
@@ -22,7 +24,7 @@
       </div>
     </div>
 
-    <div v-if="isPlayingVideo">
+    <div v-if="isPlayingVideo && !screenSettings.hideQueue">
       <div class="absolute bottom-0 mb-1 w-screen rounded-lg">
         <div class="flex justify-between">
           <div
@@ -49,7 +51,7 @@
       </div>
     </div>
 
-    <div v-if="!isPlayingVideo" class="dark:text-white">
+    <div class="dark:text-white">
       <div v-if="photo && !photo.error && photo.url !== ''">
         <div class="flex h-screen justify-center overflow-x-hidden p-5">
           <img
@@ -124,13 +126,18 @@ const playerState = ref({
   volume: 0,
 });
 
+const screenSettings = ref({
+  hideQueue: false,
+  smallPlayer: false,
+})
+
 const photo = ref({
   url: "",
   album_name: "",
   date_taken: 0,
 });
 
-const emit = defineEmits(["youtube-media-error"]);
+const emit = defineEmits(["youtube-media-error", "screen-settings-update"]);
 const props = defineProps({
   volume: {
     type: Number,
@@ -264,6 +271,16 @@ socket.on("new-video-timestamp", async (newStamp) => {
   }
 });
 
+socket.on("screen-settings-update", (newValue) => {
+  screenSettings.value = newValue
+  const elmnt = document.getElementById(playerID);
+  if(screenSettings.value.smallPlayer) {
+    elmnt.classList.add("small-player");
+  }else{
+    elmnt.classList.remove("small-player");
+  }
+});
+
 socket.on("queue-update", (newQueue) => {
   queue.value = newQueue.queue;
 });
@@ -272,3 +289,26 @@ socket.on("photo-update", (newPhoto) => {
   photo.value = newPhoto;
 });
 </script>
+<style scoped>
+:global(.small-player){
+  width: 20% !important;
+  position: absolute !important;
+  right: 12px !important;
+  top: 62px !important;
+  left: unset !important;
+  height: unset !important;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.5rem;
+  border-right: 4px solid rgb(0, 170, 192);
+}
+
+/* Target the iframe inside the dynamically created div */
+::v-deep(iframe) {
+  width: 100%;
+  height: 100dvh;
+  position: absolute;
+  top: unset;
+  left: unset;
+
+}
+</style>

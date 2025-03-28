@@ -8,7 +8,7 @@ const {
   toggleType,
   playNextVideo,
   setVolume,
-  getPlayerType,
+  getPlayerType, getQueueVisibility, getSmallPlayer, toggleQueueVisibility, toggleSmallPlayer,
 } = require("../PlaybackManager");
 const { adminResetScreenCode } = require("../ScreenCode");
 const radio = require("../RadioStations");
@@ -66,6 +66,24 @@ endpoint.on("connection", (socket) => {
     }
   });
 
+  socket.on("toggle-hidden-queue", async (callback) => {
+    logger.adminInfo(`${socket.id} Toggling the visibility of the queue`);
+    try {
+      callback({ success: toggleQueueVisibility() });
+    } catch (e) {
+      callback(e.getInfo());
+    }
+  });
+
+  socket.on("toggle-small-player", async (callback) => {
+    logger.adminInfo(`${socket.id} Toggling the size of the player`);
+    try {
+      callback({ success: toggleSmallPlayer() });
+    } catch (e) {
+      callback(e.getInfo());
+    }
+  });
+
   socket.on("play-radio", (stationID, callback) => {
     logger.adminInfo(`${socket.id} Setting the radio to: ${stationID}`);
     try {
@@ -113,6 +131,13 @@ endpoint.on("connection", (socket) => {
 });
 
 eventBus.on("player-update", updateAdminPanels);
+
+eventBus.on("screen-settings-update", () => {
+  endpoint.emit("screen-settings-update", {
+    hideQueue: getQueueVisibility(),
+    smallPlayer: getSmallPlayer()
+  });
+});
 
 eventBus.on("queue-update", () => {
   endpoint.emit("queue-update", {

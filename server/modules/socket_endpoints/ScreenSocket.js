@@ -2,6 +2,7 @@ const fetch = require("node-fetch");
 const endpoint = io.of("/socket/screen");
 const queueManager = require("../QueueManager");
 const playbackManager = require("../PlaybackManager");
+const {getQueueVisibility, getSmallPlayer} = require("../PlaybackManager");
 setInterval(emitNewPhoto, 10000);
 let photo = null;
 let album = {
@@ -45,6 +46,13 @@ eventBus.on("queue-update", () => {
   endpoint.emit("queue-update", {
     queue: queueManager.getQueue(),
     duration: queueManager.getTotalDurationFormatted(),
+  });
+});
+
+eventBus.on("screen-settings-update", () => {
+  endpoint.emit("screen-settings-update", {
+    hideQueue: getQueueVisibility(),
+    smallPlayer: getSmallPlayer()
   });
 });
 

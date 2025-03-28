@@ -11,12 +11,16 @@ let selectedRadioStation = {};
 let playbackInterval;
 let volume = 75;
 let timestamp = 0;
+let hideQueue = false;
+let smallPlayer = false;
 
 exports.getCurrentVideoTimestamp = () => timestamp;
 exports.getPlayerType = () => playerType;
 exports.getPlayerMode = () => playerMode;
 exports.getLastStation = () => selectedRadioStation;
 exports.getVolume = () => volume;
+exports.getSmallPlayer = () => smallPlayer;
+exports.getQueueVisibility = () => hideQueue;
 
 exports.setVolume = (newVolume) => {
   if (newVolume > 100 || newVolume < 0) throw new hardError("Invalid volume!");
@@ -113,6 +117,17 @@ exports.playPause = () => {
   if (playerMode === enums.MODES.PLAYING) return this.pauseVideo();
   throw new hardError("Can't resume ProTube!");
 };
+
+exports.toggleSmallPlayer = () => {
+  smallPlayer = !smallPlayer;
+  eventBus.emit("screen-settings-update");
+  return enums.SUCCESS;
+}
+exports.toggleQueueVisibility = () => {
+  hideQueue = !hideQueue;
+  eventBus.emit("screen-settings-update");
+  return enums.SUCCESS;
+}
 
 exports.toggleType = () => {
   if (playerType === enums.TYPES.RADIO) {
