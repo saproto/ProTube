@@ -63,7 +63,9 @@
       </div>
     </div>
 
-    <div v-if="!isPlayingVideo || screenSettings.smallPlayer" class="dark:text-white">
+    <div
+      v-if="!isPlayingVideo || screenSettings.smallPlayer"
+      class="dark:text-white">
       <div v-if="photo && !photo.error && photo.url !== ''">
         <div class="flex h-screen justify-center overflow-x-hidden p-5">
           <img
