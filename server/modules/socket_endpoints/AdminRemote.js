@@ -23,6 +23,11 @@ endpoint.on("connection", (socket) => {
     logger.adminInfo(`Disconnected admin socket: ${socket.id}`);
   });
 
+  socket.emit("screen-settings-update", {
+    hideQueue: getQueueVisibility(),
+    smallPlayer: getSmallPlayer()
+  });
+
   socket.on("get-queue", (callback) => {
     callback({
       queue: queueManager.getQueue(),
