@@ -122,12 +122,12 @@ exports.toggleSmallPlayer = () => {
   smallPlayer = !smallPlayer;
   eventBus.emit("screen-settings-update");
   return enums.SUCCESS;
-}
+};
 exports.toggleQueueVisibility = () => {
   hideQueue = !hideQueue;
   eventBus.emit("screen-settings-update");
   return enums.SUCCESS;
-}
+};
 
 exports.toggleType = () => {
   if (playerType === enums.TYPES.RADIO) {

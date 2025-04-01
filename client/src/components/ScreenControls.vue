@@ -19,8 +19,8 @@
         Small Player
       </span>
       <SwitchButton
-          :on="screenSettings.smallPlayer"
-          @toggled="emit('toggle-small-player')"></SwitchButton>
+        :on="screenSettings.smallPlayer"
+        @toggled="emit('toggle-small-player')"></SwitchButton>
     </div>
   </ContentField>
 </template>
@@ -33,12 +33,12 @@ const emit = defineEmits(["toggle-queue-visibility", "toggle-small-player"]);
 defineProps({
   screenSettings: {
     type: Object,
-default:()=>{
-  return {
-    hideQueue: false,
-    smallPlayer: false,
-  }
-}
-  }
-})
+    default: () => {
+      return {
+        hideQueue: false,
+        smallPlayer: false,
+      };
+    },
+  },
+});
 </script>

@@ -8,7 +8,11 @@ const {
   toggleType,
   playNextVideo,
   setVolume,
-  getPlayerType, getQueueVisibility, getSmallPlayer, toggleQueueVisibility, toggleSmallPlayer,
+  getPlayerType,
+  getQueueVisibility,
+  getSmallPlayer,
+  toggleQueueVisibility,
+  toggleSmallPlayer,
 } = require("../PlaybackManager");
 const { adminResetScreenCode } = require("../ScreenCode");
 const radio = require("../RadioStations");
@@ -25,7 +29,7 @@ endpoint.on("connection", (socket) => {
 
   socket.emit("screen-settings-update", {
     hideQueue: getQueueVisibility(),
-    smallPlayer: getSmallPlayer()
+    smallPlayer: getSmallPlayer(),
   });
 
   socket.on("get-queue", (callback) => {
@@ -140,7 +144,7 @@ eventBus.on("player-update", updateAdminPanels);
 eventBus.on("screen-settings-update", () => {
   endpoint.emit("screen-settings-update", {
     hideQueue: getQueueVisibility(),
-    smallPlayer: getSmallPlayer()
+    smallPlayer: getSmallPlayer(),
   });
 });
 

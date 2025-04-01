@@ -11,19 +11,17 @@
 
     <div v-show="isPlayingVideo">
       <div
-      id="player-wrapper" class="overflow-hidden"
-      :class="{
-        'small-player': screenSettings.smallPlayer,
-        'hide-queue': screenSettings.hideQueue,
-      }">
+        id="player-wrapper"
+        class="overflow-hidden"
+        :class="{
+          'small-player': screenSettings.smallPlayer,
+          'hide-queue': screenSettings.hideQueue,
+        }">
         <div
-            v-if="screenSettings.smallPlayer"
-            :style="`width:${queueProgress}%;`"
-            class="bg-proto_blue absolute bottom-0 h-2 w-0 rounded-sm z-[1] opacity-60"></div>
-        <div
-            :id="playerID"
-        ></div>
-
+          v-if="screenSettings.smallPlayer"
+          :style="`width:${queueProgress}%;`"
+          class="bg-proto_blue absolute bottom-0 z-[1] h-2 w-0 rounded-sm opacity-60"></div>
+        <div :id="playerID"></div>
       </div>
     </div>
 
@@ -45,8 +43,8 @@
           </div>
         </div>
         <div
-            v-if="!screenSettings.hideQueue"
-             class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
+          v-if="!screenSettings.hideQueue"
+          class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
           <VideoCard
             v-for="(video, index) in queueWithCurrent.slice(0, 5)"
             :key="video.id"
@@ -143,7 +141,7 @@ const playerState = ref({
 const screenSettings = ref({
   hideQueue: false,
   smallPlayer: false,
-})
+});
 
 const photo = ref({
   url: "",
@@ -286,7 +284,7 @@ socket.on("new-video-timestamp", async (newStamp) => {
 });
 
 socket.on("screen-settings-update", (newValue) => {
-  screenSettings.value = newValue
+  screenSettings.value = newValue;
 });
 
 socket.on("queue-update", (newQueue) => {
@@ -298,8 +296,8 @@ socket.on("photo-update", (newPhoto) => {
 });
 </script>
 <style scoped>
-:global(.small-player){
-  width: calc(20% - 0.8rem)!important;
+:global(.small-player) {
+  width: calc(20% - 0.8rem) !important;
   position: absolute !important;
   right: 1rem !important;
   bottom: 8.5rem !important;
@@ -310,10 +308,9 @@ socket.on("photo-update", (newPhoto) => {
   border-left: 4px solid rgb(0, 170, 192);
 }
 
-:global(.small-player.hide-queue){
+:global(.small-player.hide-queue) {
   bottom: 0.5rem !important;
 }
-
 
 /* Target the iframe inside the dynamically created div */
 ::v-deep(iframe) {

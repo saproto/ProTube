@@ -1,8 +1,9 @@
 <template>
-  <div id="outside">
-
-  </div>
-  <ProtubeScreen @screen-settings-update="updateScreenSettings" :volume="volume" :screen-code="screenCode" />
+  <div id="outside"></div>
+  <ProtubeScreen
+    @screen-settings-update="updateScreenSettings"
+    :volume="volume"
+    :screen-code="screenCode" />
   <ReconnectionHandler :socket="socket" />
 </template>
 
@@ -20,7 +21,7 @@ const volume = ref(50);
 const screenSettings = ref({
   hideQueue: false,
   smallPlayer: false,
-})
+});
 
 onBeforeMount(async () => {
   const response = await fetch("/api/user");
@@ -47,8 +48,8 @@ socket.on("new-screen-code", (newCode) => {
   screenCode.value = newCode;
 });
 
-const updateScreenSettings = (newValue)=>{
+const updateScreenSettings = (newValue) => {
   screenSettings.value = newValue;
-  console.log(screenSettings.value)
-}
+  console.log(screenSettings.value);
+};
 </script>
