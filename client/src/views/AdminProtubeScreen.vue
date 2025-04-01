@@ -1,5 +1,4 @@
 <template>
-  <div id="outside"></div>
   <ProtubeScreen
     @screen-settings-update="updateScreenSettings"
     :volume="volume"
