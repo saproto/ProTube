@@ -11,8 +11,20 @@
 
     <div v-show="isPlayingVideo">
       <div
-           :id="playerID"
-      ></div>
+      id="player-wrapper" class="overflow-hidden"
+      :class="{
+        'small-player': screenSettings.smallPlayer,
+        'hide-queue': screenSettings.hideQueue,
+      }">
+        <div
+            v-if="screenSettings.smallPlayer"
+            :style="`width:${queueProgress}%;`"
+            class="bg-proto_blue absolute bottom-0 h-2 w-0 rounded-sm z-[1] opacity-60"></div>
+        <div
+            :id="playerID"
+        ></div>
+
+      </div>
     </div>
 
     <div
@@ -24,7 +36,7 @@
       </div>
     </div>
 
-    <div v-if="isPlayingVideo && !screenSettings.hideQueue">
+    <div v-if="isPlayingVideo">
       <div class="absolute bottom-0 mb-1 w-screen rounded-lg">
         <div class="flex justify-between">
           <div
@@ -32,7 +44,9 @@
             Queue: {{ totalDuration }}
           </div>
         </div>
-        <div class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
+        <div
+            v-if="!screenSettings.hideQueue"
+             class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
           <VideoCard
             v-for="(video, index) in queueWithCurrent.slice(0, 5)"
             :key="video.id"
@@ -273,12 +287,6 @@ socket.on("new-video-timestamp", async (newStamp) => {
 
 socket.on("screen-settings-update", (newValue) => {
   screenSettings.value = newValue
-  const elmnt = document.getElementById(playerID);
-  if(screenSettings.value.smallPlayer) {
-    elmnt.classList.add("small-player");
-  }else{
-    elmnt.classList.remove("small-player");
-  }
 });
 
 socket.on("queue-update", (newQueue) => {
@@ -291,24 +299,29 @@ socket.on("photo-update", (newPhoto) => {
 </script>
 <style scoped>
 :global(.small-player){
-  width: 20% !important;
+  width: calc(20% - 0.8rem)!important;
   position: absolute !important;
-  right: 12px !important;
-  top: 62px !important;
+  right: 1rem !important;
+  bottom: 8.5rem !important;
   left: unset !important;
   height: unset !important;
   aspect-ratio: 16 / 9;
   border-radius: 0.5rem;
-  border-right: 4px solid rgb(0, 170, 192);
+  border-left: 4px solid rgb(0, 170, 192);
 }
+
+:global(.small-player.hide-queue){
+  bottom: 0.5rem !important;
+}
+
 
 /* Target the iframe inside the dynamically created div */
 ::v-deep(iframe) {
+  aspect-ratio: 16 / 9;
   width: 100%;
-  height: 100dvh;
+  height: 100%;
   position: absolute;
   top: unset;
   left: unset;
-
 }
 </style>

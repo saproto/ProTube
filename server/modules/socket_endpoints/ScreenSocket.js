@@ -27,8 +27,9 @@ endpoint.on("connection", (socket) => {
     duration: queueManager.getTotalDurationFormatted(),
   });
 
-  socket.on("disconnect", () => {
-    logger.screenInfo(`Disconnected socket: ${socket.id}`);
+  endpoint.emit("screen-settings-update", {
+    hideQueue: getQueueVisibility(),
+    smallPlayer: getSmallPlayer()
   });
 
   socket.emit("player-update", {
@@ -39,6 +40,11 @@ endpoint.on("connection", (socket) => {
     queue: queueManager.getQueue(),
     volume: playbackManager.getVolume(),
     radio: playbackManager.getLastStation(),
+  });
+
+
+  socket.on("disconnect", () => {
+    logger.screenInfo(`Disconnected socket: ${socket.id}`);
   });
 });
 
