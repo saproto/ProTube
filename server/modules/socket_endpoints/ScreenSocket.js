@@ -2,6 +2,7 @@ const fetch = require("node-fetch");
 const endpoint = io.of("/socket/screen");
 const queueManager = require("../QueueManager");
 const playbackManager = require("../PlaybackManager");
+const { getQueueVisibility, getSmallPlayer } = require("../PlaybackManager");
 setInterval(emitNewPhoto, 10000);
 let photo = null;
 let album = {
@@ -26,8 +27,9 @@ endpoint.on("connection", (socket) => {
     duration: queueManager.getTotalDurationFormatted(),
   });
 
-  socket.on("disconnect", () => {
-    logger.screenInfo(`Disconnected socket: ${socket.id}`);
+  endpoint.emit("screen-settings-update", {
+    hideQueue: getQueueVisibility(),
+    smallPlayer: getSmallPlayer(),
   });
 
   socket.emit("player-update", {
@@ -39,12 +41,23 @@ endpoint.on("connection", (socket) => {
     volume: playbackManager.getVolume(),
     radio: playbackManager.getLastStation(),
   });
+
+  socket.on("disconnect", () => {
+    logger.screenInfo(`Disconnected socket: ${socket.id}`);
+  });
 });
 
 eventBus.on("queue-update", () => {
   endpoint.emit("queue-update", {
     queue: queueManager.getQueue(),
     duration: queueManager.getTotalDurationFormatted(),
+  });
+});
+
+eventBus.on("screen-settings-update", () => {
+  endpoint.emit("screen-settings-update", {
+    hideQueue: getQueueVisibility(),
+    smallPlayer: getSmallPlayer(),
   });
 });
 

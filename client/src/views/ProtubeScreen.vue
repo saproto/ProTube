@@ -10,7 +10,19 @@
     </div>
 
     <div v-show="isPlayingVideo">
-      <div :id="playerID" class="min-h-screen w-full" />
+      <div
+        id="player-wrapper"
+        class="overflow-hidden"
+        :class="{
+          'small-player': screenSettings.smallPlayer,
+          'hide-queue': screenSettings.hideQueue,
+        }">
+        <div
+          v-if="screenSettings.smallPlayer"
+          :style="`width:${queueProgress}%;`"
+          class="bg-proto_blue absolute bottom-0 z-[1] h-2 w-0 rounded-sm opacity-60"></div>
+        <div :id="playerID"></div>
+      </div>
     </div>
 
     <div
@@ -30,7 +42,9 @@
             Queue: {{ totalDuration }}
           </div>
         </div>
-        <div class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
+        <div
+          v-if="!screenSettings.hideQueue"
+          class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
           <VideoCard
             v-for="(video, index) in queueWithCurrent.slice(0, 5)"
             :key="video.id"
@@ -49,7 +63,9 @@
       </div>
     </div>
 
-    <div v-if="!isPlayingVideo" class="dark:text-white">
+    <div
+      v-if="!isPlayingVideo || screenSettings.smallPlayer"
+      class="dark:text-white">
       <div v-if="photo && !photo.error && photo.url !== ''">
         <div class="flex h-screen justify-center overflow-x-hidden p-5">
           <img
@@ -124,13 +140,18 @@ const playerState = ref({
   volume: 0,
 });
 
+const screenSettings = ref({
+  hideQueue: false,
+  smallPlayer: false,
+});
+
 const photo = ref({
   url: "",
   album_name: "",
   date_taken: 0,
 });
 
-const emit = defineEmits(["youtube-media-error"]);
+const emit = defineEmits(["youtube-media-error", "screen-settings-update"]);
 const props = defineProps({
   volume: {
     type: Number,
@@ -264,6 +285,10 @@ socket.on("new-video-timestamp", async (newStamp) => {
   }
 });
 
+socket.on("screen-settings-update", (newValue) => {
+  screenSettings.value = newValue;
+});
+
 socket.on("queue-update", (newQueue) => {
   queue.value = newQueue.queue;
 });
@@ -272,3 +297,30 @@ socket.on("photo-update", (newPhoto) => {
   photo.value = newPhoto;
 });
 </script>
+<style scoped>
+:global(.small-player) {
+  width: calc(20% - 0.8rem) !important;
+  position: absolute !important;
+  right: 1rem !important;
+  bottom: 8.5rem !important;
+  left: unset !important;
+  height: unset !important;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.5rem;
+  border-left: 4px solid rgb(0, 170, 192);
+}
+
+:global(.small-player.hide-queue) {
+  bottom: 0.5rem !important;
+}
+
+/* Target the iframe inside the dynamically created div */
+::v-deep(iframe) {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: unset;
+  left: unset;
+}
+</style>
