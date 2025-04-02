@@ -35,18 +35,21 @@
     </div>
 
     <div v-if="isPlayingVideo">
-      <div class="absolute bottom-0 mb-1 w-screen rounded-lg">
-        <div class="flex justify-between">
+      <div class="absolute bottom-0 z-[2] mb-1 w-screen rounded-lg">
+        <div class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
+          <div v-if="screenSettings.smallPlayer"></div>
           <div
-            class="border-proto_blue dark:bg-proto_secondary_gray-dark mb-1 ml-4 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+            class="border-proto_blue dark:bg-proto_secondary_gray-dark mr-4 w-fit rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
             Queue: {{ totalDuration }}
           </div>
         </div>
         <div
           v-if="!screenSettings.hideQueue"
           class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
+          <div v-if="screenSettings.smallPlayer"></div>
           <VideoCard
-            v-for="(video, index) in queueWithCurrent.slice(0, 5)"
+            v-for="(video, index) in queueWithCurrent"
+            :class="{ '': screenSettings.smallPlayer && index === 0 }"
             :key="video.id"
             :index="index"
             :title="video.title"
@@ -57,7 +60,9 @@
             :video-i-d="video.id"
             :text-scrolling="true"
             :rounded-corners="true"
-            :progress-bar="index === 0 ? queueProgress : 0"
+            :progress-bar="
+              !screenSettings.smallPlayer && index === 0 ? queueProgress : 0
+            "
             :opacity="0.9" />
         </div>
       </div>
@@ -174,7 +179,12 @@ const queueWithCurrent = computed(() => {
   let currentVideo = playerState.value.video;
   // if currentvideo = empty -> queue is empty
   if (Object.keys(currentVideo).length === 0) return [];
-  return [currentVideo].concat(queue.value);
+
+  const slicedQueue = queue.value.slice(0, 4);
+  if (!screenSettings.value.smallPlayer) {
+    return [currentVideo].concat(slicedQueue);
+  }
+  return slicedQueue;
 });
 
 const isPlayingVideo = computed(
@@ -301,13 +311,13 @@ socket.on("photo-update", (newPhoto) => {
 :global(.small-player) {
   width: calc(20% - 0.8rem) !important;
   position: absolute !important;
-  right: 1rem !important;
-  bottom: 8.5rem !important;
-  left: unset !important;
+  left: 1rem !important;
+  bottom: 0.5rem !important;
   height: unset !important;
   aspect-ratio: 16 / 9;
   border-radius: 0.5rem;
   border-left: 4px solid rgb(0, 170, 192);
+  z-index: 3;
 }
 
 :global(.small-player.hide-queue) {
