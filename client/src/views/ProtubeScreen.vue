@@ -35,22 +35,21 @@
     </div>
 
     <div v-if="isPlayingVideo">
-      <div class="absolute bottom-0 mb-1 w-screen rounded-lg z-[2]">
+      <div class="absolute bottom-0 z-[2] mb-1 w-screen rounded-lg">
         <div class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
           <div v-if="screenSettings.smallPlayer"></div>
           <div
-            class="border-proto_blue w-fit dark:bg-proto_secondary_gray-dark mr-4 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+            class="border-proto_blue dark:bg-proto_secondary_gray-dark mr-4 w-fit rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
             Queue: {{ totalDuration }}
           </div>
         </div>
         <div
           v-if="!screenSettings.hideQueue"
           class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
-          <div
-          v-if="screenSettings.smallPlayer"></div>
+          <div v-if="screenSettings.smallPlayer"></div>
           <VideoCard
             v-for="(video, index) in queueWithCurrent"
-            :class="{'': screenSettings.smallPlayer && index === 0}"
+            :class="{ '': screenSettings.smallPlayer && index === 0 }"
             :key="video.id"
             :index="index"
             :title="video.title"
@@ -61,7 +60,9 @@
             :video-i-d="video.id"
             :text-scrolling="true"
             :rounded-corners="true"
-            :progress-bar="!screenSettings.smallPlayer && index === 0 ? queueProgress : 0"
+            :progress-bar="
+              !screenSettings.smallPlayer && index === 0 ? queueProgress : 0
+            "
             :opacity="0.9" />
         </div>
       </div>
@@ -180,10 +181,10 @@ const queueWithCurrent = computed(() => {
   if (Object.keys(currentVideo).length === 0) return [];
 
   const slicedQueue = queue.value.slice(0, 4);
-  if(!screenSettings.value.smallPlayer){
+  if (!screenSettings.value.smallPlayer) {
     return [currentVideo].concat(slicedQueue);
   }
-  return slicedQueue
+  return slicedQueue;
 });
 
 const isPlayingVideo = computed(
