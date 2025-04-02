@@ -39,7 +39,7 @@
         <div class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
           <div v-if="screenSettings.smallPlayer"></div>
           <div
-            class="border-proto_blue w-fit dark:bg-proto_secondary_gray-dark mb-1 mr-4 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+            class="border-proto_blue w-fit dark:bg-proto_secondary_gray-dark mr-4 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
             Queue: {{ totalDuration }}
           </div>
         </div>
