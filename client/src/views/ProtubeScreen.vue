@@ -1,12 +1,10 @@
 <template>
   <div class="dark:bg-proto_background_gray-dark">
     <!-- empty filler block for the grid -->
-    <div class="absolute top-0 mt-2 w-full">
-      <div
-        v-show="screenCode !== -1"
-        class="dark:bg-proto_secondary_gray-dark mx-auto max-w-min rounded-lg bg-white px-4 py-2 text-3xl font-medium text-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
-        {{ screenCode }}
-      </div>
+    <div
+      v-show="screenCode !== -1"
+      class="dark:bg-proto_secondary_gray-dark absolute left-1/2 top-0 z-10 mt-2 -translate-x-1/2 rounded-lg bg-white px-4 py-2 text-3xl font-medium text-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+      {{ screenCode }}
     </div>
 
     <div v-show="isPlayingVideo">
