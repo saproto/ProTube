@@ -1,49 +1,43 @@
-import { Client, SearchResult, type PlaylistCompact, type VideoCompact, PlaylistVideos } from 'youtubei';
+import { Client, SearchResult, type PlaylistCompact, VideoCompact, PlaylistVideos } from 'youtubei';
 import moment from 'moment';
 import c from '#Config.js';
+import type SearchVideosSchema from '#App/Schemas/SearchVideos/SearchVideosSchema.js';
+import type SearchPlaylistsSchema from '#App/Schemas/SearchVideos/SearchPlaylistsSchema.js';
 
 const youtube = new Client();
 
-export interface SearchedVideo {
-    video_id: string
-    title: string
-    duration_s: number
-    duration_formatted: string
-    thumbnail: string
-    uploadDate: string
-    views: number
-    views_formatted: string
-};
-interface SearchedPlayList {
-    playlist_id: string
-    title: string
-    thumbnail: string
-}
-
-interface SearchResults {
-    videos: {
-        results: SearchedVideo[]
-        continuationToken: string | null
-    }
-    playlists: {
-        results: SearchedPlayList[]
-        continuationToken: string | null
-    }
-}
+type SearchedVideos = Zod.infer<typeof SearchVideosSchema>;
+type SearchedPlaylists = Zod.infer<typeof SearchPlaylistsSchema>;
 
 /**
  * Search the YouTube api for videos!
  *
  * @param query The search query where to search for
- * @param durationLimitS The limit of a video (in seconds), set to -1 for admins to disable this. By default this is set to the max_video_duration in the config
+ * @param isAdmin Whether we're searching for an admin or not (a duration limit basically)
  * @returns The found playlists + videos
  */
-export async function search (query: string, durationLimitS: number = c.general.max_video_duration): Promise<SearchResults> {
-    return {
-        videos: await searchVideos(query, durationLimitS),
-        playlists: await searchPlaylists(query)
-    };
+export async function searchYtVideos (query: string, isAdmin: boolean = false): Promise<SearchedVideos> {
+    const durationLimitS: number = isAdmin ? -1 : c.general.max_video_duration;
+
+    return await searchVideos(query, durationLimitS);
 }
+
+// export async function searchYtPlaylists (query: string, isAdmin: boolean = false): Promise<SearchedVideos> {
+//     const durationLimitS: number = isAdmin ? -1 : c.general.max_video_duration;
+
+//     return await searchPlaylists(query, durationLimitS);
+// }
+
+export async function searchVideoById (videoId: string, isAdmin: boolean = false): Promise<SearchedVideos['results']> {
+    const durationLimitS: number = isAdmin ? -1 : c.general.max_video_duration;
+
+    const video = await youtube.findOne(videoId);
+
+    // if (video === undefined) return [];
+    if (!(video instanceof VideoCompact)) return [];
+
+    return formatSearchVideos([video], durationLimitS).results;
+};
 
 /**
  * Do an initial search for videos on youtube for a given string
@@ -52,7 +46,7 @@ export async function search (query: string, durationLimitS: number = c.general.
  * @param durationLimitS The limit of a video (in seconds), set to -1 for admins to disable this. By default this is set to the max_video_duration in the config
  * @returns Formatted videos that were found for the query
  */
-async function searchVideos (query: string, durationLimitS: number): Promise<SearchResults['videos']> {
+async function searchVideos (query: string, durationLimitS: number): Promise<SearchedVideos> {
     const videos = await youtube.search(query, {
         type: 'video'
     });
@@ -66,7 +60,7 @@ async function searchVideos (query: string, durationLimitS: number): Promise<Sea
  * @param query The search query
  * @returns Formatted playlists that were found for the query
  */
-async function searchPlaylists (query: string): Promise<SearchResults['playlists']> {
+async function searchPlaylists (query: string): Promise<SearchedPlaylists> {
     const playlists = await youtube.search(query, {
         type: 'playlist'
     });
@@ -74,20 +68,20 @@ async function searchPlaylists (query: string): Promise<SearchResults['playlists
     return formatSearchPlaylists(playlists.items, playlists.continuation);
 }
 
-/**
- * Search the next page of a previous result based on a continuationtoken
- *
- * @param playListContinuationToken The continuationtoken for a playlist search
- * @param videoContinuationToken The continuationtoken for a video search
- * @param durationLimitS The limit of a video (in seconds), set to -1 for admins to disable this. By default this is set to the max_video_duration in the config
- * @returns
- */
-export async function searchNextPage (playListContinuationToken: string | null, videoContinuationToken: string | null, durationLimitS: number = c.general.max_video_duration): Promise<SearchResults> {
-    return {
-        videos: await searchNextPageVideos(playListContinuationToken, durationLimitS),
-        playlists: await searchNextPagePlayLists(videoContinuationToken)
-    };
-}
+// /**
+//  * Search the next page of a previous result based on a continuationtoken
+//  *
+//  * @param playListContinuationToken The continuationtoken for a playlist search
+//  * @param videoContinuationToken The continuationtoken for a video search
+//  * @param durationLimitS The limit of a video (in seconds), set to -1 for admins to disable this. By default this is set to the max_video_duration in the config
+//  * @returns
+//  */
+// export async function searchNextPage (playListContinuationToken: string | null, videoContinuationToken: string | null, durationLimitS: number = c.general.max_video_duration): Promise<SearchResults> {
+//     return {
+//         videos: await searchNextPageVideos(playListContinuationToken, durationLimitS),
+//         playlists: await searchNextPagePlayLists(videoContinuationToken)
+//     };
+// }
 
 /**
  * Search the next page of a previous result based on a continuationtoken
@@ -96,7 +90,7 @@ export async function searchNextPage (playListContinuationToken: string | null, 
  * @param durationLimitS The limit of a video (in seconds), set to -1 for admins to disable this. By default this is set to the max_video_duration in the config
  * @returns Formatted videos that were found for the query
  */
-async function searchNextPageVideos (continuationToken: string | null = null, durationLimitS: number = c.general.max_video_duration): Promise<SearchResults['videos']> {
+export async function searchNextPageVideos (continuationToken: string | null = null, durationLimitS: number = c.general.max_video_duration): Promise<SearchedVideos> {
     const videos = new SearchResult<'video'>({ client: youtube });
     videos.continuation = continuationToken;
     await videos.next();
@@ -110,7 +104,7 @@ async function searchNextPageVideos (continuationToken: string | null = null, du
  * @param continuationToken The continuationtoken for a playlist search
  * @returns Formatted playlists that were found for the query
  */
-async function searchNextPagePlayLists (continuationToken: string | null = null): Promise<SearchResults['playlists']> {
+export async function searchNextPagePlayLists (continuationToken: string | null = null): Promise<SearchedPlaylists> {
     const playlists = new SearchResult<'playlist'>({ client: youtube });
     playlists.continuation = continuationToken;
     await playlists.next();
@@ -126,18 +120,18 @@ async function searchNextPagePlayLists (continuationToken: string | null = null)
  * @param continuationToken The continuationtoken for the search
  * @returns Formatted videos that were found for the query
  */
-function formatSearchVideos (videos: VideoCompact[], durationLimitS: number, continuationToken: string | null = null): SearchResults['videos'] {
+function formatSearchVideos (videos: VideoCompact[], durationLimitS: number, continuationToken: string | null = null): SearchedVideos {
     // Filter out videos that are too long (-1 for admins to disable this)
     if (durationLimitS > 0) {
-        videos = videos.filter(video => (video.duration ?? -1) < durationLimitS);
+        videos = videos.filter(video => (video.duration ?? 43200) < durationLimitS);
     }
 
     const formattedVideos = videos.map(video => {
-        const duration = video.duration ?? -1;
+        const duration = video.duration ?? 43200; // live videos don't have a duration
         const durationFormatted = moment.utc(
             moment.duration(duration, 'seconds')
                 .as('milliseconds')
-        ).format('hh:mm:ss');
+        ).format('HH:mm:ss');
 
         const views = video.viewCount ?? -1;
         const formattedViews = formatViews(views);
@@ -150,7 +144,8 @@ function formatSearchVideos (videos: VideoCompact[], durationLimitS: number, con
             thumbnail: video.thumbnails[video.thumbnails.length - 1].url,
             uploadDate: video.uploadDate ?? '',
             views,
-            views_formatted: formattedViews
+            views_formatted: formattedViews,
+            live: video.isLive
         };
     });
 
@@ -167,7 +162,7 @@ function formatSearchVideos (videos: VideoCompact[], durationLimitS: number, con
  * @param continuationToken The continuationtoken for the search
  * @returns Formatted playlists that were found for the query
  */
-function formatSearchPlaylists (playlists: PlaylistCompact[], continuationToken: string | null = null): SearchResults['playlists'] {
+function formatSearchPlaylists (playlists: PlaylistCompact[], continuationToken: string | null = null): SearchedPlaylists {
     const formattedPlaylists = playlists.map(playlist => {
         return {
             playlist_id: playlist.id,
@@ -186,10 +181,10 @@ function formatSearchPlaylists (playlists: PlaylistCompact[], continuationToken:
  * Get all the videos that are in the playlist
  *
  * @param playlistId The playlist id to search for
- * @param durationLimitS The limit of a video (in seconds), set to -1 for admins to disable this. By default this is set to the max_video_duration in the config
+ * @param isAdmin Whether we're searching for an admin or not (a duration limit basically)
  * @returns An array of videos
  */
-export async function getVideosInPlaylist (playlistId: string, durationLimitS: number = c.general.max_video_duration): Promise<SearchedVideo[]> {
+export async function getVideosInPlaylist (playlistId: string, isAdmin: boolean = false): Promise<SearchedVideos['results']> {
     const playlist = await youtube.getPlaylist(playlistId);
 
     if (playlist === undefined || playlist.videoCount === 0) return [];
@@ -202,6 +197,8 @@ export async function getVideosInPlaylist (playlistId: string, durationLimitS: n
     } else {
         videos = playlist.videos;
     }
+
+    const durationLimitS: number = isAdmin ? -1 : c.general.max_video_duration;
 
     return formatSearchVideos(videos, durationLimitS).results;
 };

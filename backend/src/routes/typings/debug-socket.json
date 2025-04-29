@@ -1,0 +1,82 @@
+[
+    {
+        "name": "devsocket",
+        "allAbsoluteUrls": [
+            {
+                "url": "/dev-socket",
+                "fullName": "socket.devsocket.testRoute"
+            },
+            {
+                "url": "/dev-socket",
+                "fullName": "socket.devsocket.testSock"
+            },
+            {
+                "url": "/dev-socket",
+                "fullName": "socket.devsocket.queueUpdate"
+            }
+        ],
+        "formattedSocketRoutes": {
+            "namespace": "socket.devsocket",
+            "routes": [
+                {
+                    "name": "testRoute",
+                    "fullName": "socket.devsocket.testRoute",
+                    "requestTypescript": "",
+                    "callbackTypescript": "type callback = {\n    name: string;\n};",
+                    "eventSource": "client",
+                    "url": "/dev-socket"
+                },
+                {
+                    "name": "testSock",
+                    "fullName": "socket.devsocket.testSock",
+                    "requestTypescript": "",
+                    "callbackTypescript": "",
+                    "eventSource": "client",
+                    "url": "/dev-socket"
+                },
+                {
+                    "name": "queueUpdate",
+                    "fullName": "socket.devsocket.queueUpdate",
+                    "requestTypescript": "type queueUpdate = {\n    /** The id of the video */\n    video_id: string;\n    /** The title of the video */\n    title: string;\n    /** The duration of the video in seconds */\n    duration_s: number;\n    /** The duration of the video formatted in hh:mm:ss */\n    duration_formatted: string;\n    /** The thumbnail of the video */\n    thumbnail: string;\n    /** The upload date of the video formatted in YYYY-MM-DD */\n    uploadDate: string;\n    /** The amount of views the video has */\n    views: number;\n    /** The amount of views the video has formatted (e.g. 1.2M) */\n    views_formatted: string;\n    /** Whether the video is live or not */\n    live?: boolean;\n    /** The username of the person that added the video */\n    username: string;\n    /** The user id of the person that added this video to the queue */\n    user_id: number;\n    /** The queue of the video */\n    queue: string;\n}[];",
+                    "callbackTypescript": "",
+                    "eventSource": "server",
+                    "url": "/dev-socket"
+                }
+            ]
+        }
+    },
+    {
+        "name": "nsp1",
+        "allAbsoluteUrls": [
+            {
+                "url": "/socket2",
+                "fullName": "socket.nsp1.testRoute2"
+            },
+            {
+                "url": "/socket2",
+                "fullName": "socket.nsp1.soemEmit"
+            }
+        ],
+        "formattedSocketRoutes": {
+            "namespace": "socket.nsp1",
+            "routes": [
+                {
+                    "name": "testRoute2",
+                    "fullName": "socket.nsp1.testRoute2",
+                    "requestTypescript": "type testRoute2 = {\n    name: string;\n};",
+                    "callbackTypescript": "type callback = boolean;",
+                    "eventSource": "client",
+                    "url": "/socket2"
+                },
+                {
+                    "name": "soemEmit",
+                    "fullName": "socket.nsp1.soemEmit",
+                    "requestTypescript": "type soemEmit = never;",
+                    "callbackTypescript": "",
+                    "eventSource": "server",
+                    "url": "/socket2"
+                }
+            ]
+        }
+    }
+]

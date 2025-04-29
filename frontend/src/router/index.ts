@@ -44,6 +44,4 @@ const router = createRouter({
     routes,
 });
 
-// router.beforeEach(guard);
-
 export default router;

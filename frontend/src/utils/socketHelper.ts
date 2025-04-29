@@ -21,7 +21,12 @@ export function emit<K extends keyof clientEmits>(
         ? []
         : [res: CallbackFunction<TypeForKey<clientEmits, K, 'res'>>]
 ): void {
-    socket.emit(namespacePathMappings[key], req, ...args);
+    // console.log('emitting', namespacePathMappings[key], req, ...args);
+    if (req === undefined) {
+        socket.emit(namespacePathMappings[key], ...args);
+    } else {
+        socket.emit(namespacePathMappings[key], req, ...args);
+    }
 }
 
 /**
@@ -35,13 +40,14 @@ export function emit<K extends keyof clientEmits>(
 export function onEvent<K extends keyof serverEmits>(
     socket: Socket,
     key: K,
-    req: TypeForKey<serverEmits, K, 'req'>,
-    ...args: TypeForKey<serverEmits, K, 'res'> extends null | never | undefined
-        ? []
-        : [res: CallbackFunction<TypeForKey<serverEmits, K, 'res'>>]
+    res: CallbackFunction<TypeForKey<serverEmits, K, 'res'>>
+    // req: TypeForKey<serverEmits, K, 'req'>,
+    // ...args: TypeForKey<serverEmits, K, 'res'> extends null | never | undefined
+    //     ? []
+    //     : [res: CallbackFunction<TypeForKey<serverEmits, K, 'res'>>]
 ): void {
     // @ts-expect-error idk why it throws an error
-    socket.on(namespacePathMappings[key], req, ...args);
+    socket.on(namespacePathMappings[key], res);
 }
 
 /**

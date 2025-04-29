@@ -156,12 +156,19 @@ export default class SocketRouteRegistrar {
             }
 
             for (const _socketRoute of route.routes) {
-                const [eventName, eventHandler] = _socketRoute;
+                const [eventType, eventName, eventHandler] = _socketRoute;
+
+                if (eventType === 'emit event') continue;
 
                 console.log(`[SOCKET] ${route.namespace} ${eventName}`);
                 socket.on(eventName, async (...args) => {
-                    // @ts-expect-error The no. arguments is unknown here, pass them to the handler
-                    await eventHandler.handler(socket, ...args);
+                    console.log(`[SOCKET] ${route.namespace} ${eventName} called`);
+                    try {
+                        // @ts-expect-error The no. arguments is unknown here, pass them to the handler
+                        await eventHandler.handler(socket, ...args);
+                    } catch (e) {
+                        console.error(e);
+                    }
                 });
             };
         });

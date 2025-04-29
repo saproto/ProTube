@@ -9,6 +9,11 @@ userStore.userIsAuthenticated.then(() => {
     router.push({ name: 'Remote' });
     return;
 });
+
+userStore.userIsAuthenticated.catch(() => {
+    userStore.slowLogin();
+    return;
+});
 </script>
 
 <template>

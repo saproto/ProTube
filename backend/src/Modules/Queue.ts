@@ -1,15 +1,14 @@
 import { TypedEventEmitter } from '#Kernel/Services/EventEmitter.js';
 import moment from 'moment';
-import { type SearchedVideo } from '#Services/YouTubeSearchService.js';
 import c from '#Config.js';
+import type VideoSchema from '#App/Schemas/SearchVideos/VideoSchema.js';
+import type QueuedVideo from '#App/Schemas/QueuedVideo.js';
 
-export interface Video extends SearchedVideo {
-    user_id: number
-    queue: string
-};
+type SearchedVideo = Zod.infer<typeof VideoSchema>;
+type QueuedVid = Zod.infer<typeof QueuedVideo>;
 
 interface QueueEvents {
-    'queue-updated': [Video[]]
+    'queue-updated': QueuedVid[]
 }
 
 // ToDo: Add Redis to this queue
@@ -17,13 +16,13 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
     /**
      * The actual queue
      */
-    private queue: Video[] = [];
+    private queue: QueuedVid[] = [];
 
     /**
      * The video that was removed from the queue by playNext()
      * (so is currently playing) like the queue[-1], used for sorting the queue
      */
-    private recentlyPlayed: Video | null = null;
+    private recentlyPlayed: QueuedVid | null = null;
 
     constructor (
         public readonly name: string
@@ -38,9 +37,9 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
      * @param userId For which user we want to add it
      * @param isAdmin Is this user an admin? (for the duration limit)
      */
-    public add (searchedVideo: SearchedVideo, userId: number, isAdmin = false): void {
+    public add (searchedVideo: SearchedVideo, userId: number, username: string, isAdmin = false): void {
         // Inject userId
-        const video = this.injectQueueNameAndUserId(searchedVideo, userId);
+        const video = this.injectQueueNameAndUser(searchedVideo, userId, username);
 
         if (this.findDoppelganger(video)) throw new Error('Video already in queue!');
         if (this.videoIsTooLong(video, isAdmin)) throw new Error('Video too long!');
@@ -56,12 +55,12 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
      * @param userId For which user we want to add it
      * @param isAdmin Is this user an admin? (for the duration limit)
      */
-    public addMany (searchedVideos: SearchedVideo[], userId: number, isAdmin = false): void {
+    public addMany (searchedVideos: SearchedVideo[], userId: number, username: string, isAdmin = false): void {
         let partiallyAdded = false;
 
         for (const searchedVideo of searchedVideos) {
             // Inject userId
-            const video = this.injectQueueNameAndUserId(searchedVideo, userId);
+            const video = this.injectQueueNameAndUser(searchedVideo, userId, username);
 
             // Don't allow duplicate videos or videos that are too long
             if (this.findDoppelganger(video) || this.videoIsTooLong(video, isAdmin)) {
@@ -83,14 +82,14 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
      * @param searchedVideo The video to add to the queue
      * @param userId For which user we want to add it
      */
-    public addToTop (inputVideo: SearchedVideo | Video, userId: number): void {
-        let video: Video;
+    public addToTop (inputVideo: SearchedVideo | QueuedVid, userId: number, username: string): void {
+        let video: QueuedVid;
 
         if ('user_id' in inputVideo) {
             video = inputVideo;
         } else {
             // Inject the user_id
-            video = this.injectQueueNameAndUserId(inputVideo, userId);
+            video = this.injectQueueNameAndUser(inputVideo, userId, username);
         }
 
         this.queue.unshift(video);
@@ -112,7 +111,7 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
      *
      * @returns The current queue
      */
-    public getQueue (): Video[] {
+    public getQueue (): QueuedVid[] {
         return this.queue;
     }
 
@@ -121,7 +120,7 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
      *
      * @returns The video that is next in line to be played
      */
-    public playNext (): Video | null {
+    public playNext (): QueuedVid | null {
         const video = this.queue.shift() ?? null;
         if (video !== null) {
             this.queueUpdated();
@@ -137,7 +136,7 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
      *
      * @returns The video that is next in line to be played
      */
-    public getNext (): Video | null {
+    public getNext (): QueuedVid | null {
         return this.queue[0] ?? null;
     }
 
@@ -232,7 +231,7 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
 
         // get all ids in the queue on which to order
         const allIds = new Set(oldQueue.map((video) => video.user_id));
-        let videosPerUser: Video[][] = [];
+        let videosPerUser: QueuedVid[][] = [];
         // create a 2d array for all videos per user [[videos of user a], [videos of user b]]
         allIds.forEach((userId) => {
             videosPerUser.push(
@@ -242,7 +241,7 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
             );
         });
 
-        const newQueue: Video[] = [];
+        const newQueue: QueuedVid[] = [];
         const maxVideos = videosPerUser.slice().sort((a, b) => {
             return b.length - a.length;
         })[0].length;
@@ -287,7 +286,7 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
      * @param video The video to check
      * @returns Whether the video is already in the queue
      */
-    private findDoppelganger (video: Video): boolean {
+    private findDoppelganger (video: QueuedVid): boolean {
         return this.queue.some(queueVideo => queueVideo.video_id === video.video_id);
     }
 
@@ -298,14 +297,14 @@ export class Queue extends TypedEventEmitter<QueueEvents> {
      * @param isAdmin Whether the user is an admin (duration is ignored)
      * @returns Whether the video is too long
      */
-    private videoIsTooLong (video: Video, isAdmin = false): boolean {
+    private videoIsTooLong (video: QueuedVid, isAdmin = false): boolean {
         if (video.duration_s > c.general.max_video_duration && !isAdmin) {
             return true;
         }
         return false;
     }
 
-    private injectQueueNameAndUserId (video: SearchedVideo, userId: number): Video {
-        return { ...video, user_id: userId, queue: this.name };
+    private injectQueueNameAndUser (video: SearchedVideo, userId: number, username: string): QueuedVid {
+        return { ...video, user_id: userId, queue: this.name, username };
     }
 }

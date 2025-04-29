@@ -34,7 +34,7 @@ type availableLogLabels = keyof typeof prefixes;
 
 let color = winston.format.uncolorize();
 let timestampFormat = 'YYYY-MM-DD HH:mm:ss';
-let logLevel = logLevels.INFO;
+let logLevel = logLevels.DEBUG;
 
 // Dev mode: log with colors into console except for logging to files + different timestamp format
 if (c.env.development) {
@@ -90,7 +90,7 @@ function formatLog (prefix: availableLogLabels, message: string): string {
 }
 
 const log = {
-    debug: (prefix: availableLogLabels, message: string, meta?: any[]) => logLevel === logLevels.DEBUG ? logger.debug(formatLog(prefix, message), meta) : null,
+    debug: (prefix: availableLogLabels, message: string, meta?: any[]) => logLevel === logLevels.DEBUG ? logger.debug(formatLog(prefix, message), 'jfge') : null,
     info: (prefix: availableLogLabels, message: string, meta?: any[]) => logLevel <= logLevels.INFO ? logger.info(formatLog(prefix, message), meta) : null,
     error: (prefix: availableLogLabels, message: string, meta?: any[]) => logLevel <= logLevels.ERROR ? logger.error(formatLog(prefix, message), meta) : null
 };

@@ -2,6 +2,7 @@
 import * as UserController from '#Controllers/UserController.js';
 import UserPlugin from '#Middlewares/User.js';
 import AdminPlugin from '#Middlewares/Admin.js';
+import * as VideoController from '#Controllers/VideoController.js';
 import { type WebRoute } from '#Kernel/Routes/Web/Registrar.js';
 
 const web: WebRoute = {
@@ -9,6 +10,8 @@ const web: WebRoute = {
     middlewares: [UserPlugin],
     name: 'http',
     routes: [
+        ['GET', 'searchYoutube', '/search', VideoController.searchYouTubeVideos],
+        ['POST', 'addVideoToQueue', '/queue', VideoController.addVideoToQueue],
         ['GET', 'user', '/user', UserController.userInfo],
         {
             prefix: '',

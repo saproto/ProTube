@@ -1,0 +1,116 @@
+[
+    {
+        "name": "http",
+        "allAbsoluteUrls": [
+            {
+                "url": "/api/search",
+                "fullName": "http.searchYoutube"
+            },
+            {
+                "url": "/api/queue",
+                "fullName": "http.addVideoToQueue"
+            },
+            {
+                "url": "/api/user",
+                "fullName": "http.user"
+            },
+            {
+                "url": "/api/admin",
+                "fullName": "http.admin.admin"
+            },
+            {
+                "url": "/api/test/admin2",
+                "fullName": "http.admin.prefix.admin"
+            }
+        ],
+        "formattedWebRoutes": {
+            "namespace": "http",
+            "routes": [
+                {
+                    "name": "searchYoutube",
+                    "fullName": "http.searchYoutube",
+                    "responseTypescript": "type searchYoutube = {\n    /** The videos found for a given query */\n    results: {\n        /** The id of the video */\n        video_id: string;\n        /** The title of the video */\n        title: string;\n        /** The duration of the video in seconds */\n        duration_s: number;\n        /** The duration of the video formatted in hh:mm:ss */\n        duration_formatted: string;\n        /** The thumbnail of the video */\n        thumbnail: string;\n        /** The upload date of the video formatted in YYYY-MM-DD */\n        uploadDate: string;\n        /** The amount of views the video has */\n        views: number;\n        /** The amount of views the video has formatted (e.g. 1.2M) */\n        views_formatted: string;\n        /** Whether the video is live or not */\n        live?: boolean;\n    }[];\n    /** The continuation token to resume previous searches */\n    continuationToken: string | null;\n};",
+                    "requestTypescript": "type request = {\n    /** The title of the video */\n    search: string;\n    videoContinuationToken?: string | undefined;\n};",
+                    "url": "/api/search",
+                    "params": []
+                },
+                {
+                    "name": "addVideoToQueue",
+                    "fullName": "http.addVideoToQueue",
+                    "responseTypescript": "type addVideoToQueue = (void | undefined) | string;",
+                    "requestTypescript": "type request = {\n    /** The id of the video */\n    videoId: string;\n};",
+                    "url": "/api/queue",
+                    "params": []
+                },
+                {
+                    "name": "user",
+                    "fullName": "http.user",
+                    "responseTypescript": "type user = {\n    /** The id of the user */\n    id: number;\n    /** The name of the user */\n    name: string;\n    /** Whether the user is an admin or not */\n    admin: boolean;\n};",
+                    "requestTypescript": "",
+                    "url": "/api/user",
+                    "params": []
+                },
+                {
+                    "namespace": "admin",
+                    "routes": [
+                        {
+                            "name": "admin",
+                            "fullName": "http.admin.admin",
+                            "responseTypescript": "type admin = {\n    incr: number;\n};",
+                            "requestTypescript": "",
+                            "url": "/api/admin",
+                            "params": []
+                        },
+                        {
+                            "namespace": "prefix",
+                            "routes": [
+                                {
+                                    "name": "admin",
+                                    "fullName": "http.admin.prefix.admin",
+                                    "responseTypescript": "type admin = {\n    incr: number;\n};",
+                                    "requestTypescript": "",
+                                    "url": "/api/test/admin2",
+                                    "params": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "name": "guest",
+        "allAbsoluteUrls": [
+            {
+                "url": "/auth/login/callback",
+                "fullName": "guest.logincallback"
+            },
+            {
+                "url": "/auth/user",
+                "fullName": "guest.user"
+            }
+        ],
+        "formattedWebRoutes": {
+            "namespace": "guest",
+            "routes": [
+                {
+                    "name": "logincallback",
+                    "fullName": "guest.logincallback",
+                    "responseTypescript": "type logincallback = null;",
+                    "requestTypescript": "",
+                    "url": "/auth/login/callback",
+                    "params": []
+                },
+                {
+                    "name": "user",
+                    "fullName": "guest.user",
+                    "responseTypescript": "type user = {\n    /** The id of the user */\n    id: number;\n    /** The name of the user */\n    name: string;\n    /** Whether the user is an admin or not */\n    admin: boolean;\n};",
+                    "requestTypescript": "",
+                    "url": "/auth/user",
+                    "params": []
+                }
+            ]
+        }
+    }
+]

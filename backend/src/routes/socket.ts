@@ -23,8 +23,11 @@ const socket: SocketRoute[] = [{
         };
     }, sessionRefreshMiddleware],
     routes: [
-        ['listen for', 'testRoute', dashboardSocket.testRoute]
-    ]
+        ['listen for', 'testRoute', dashboardSocket.testRoute],
+        ['listen for', 'testSock', dashboardSocket.testSock],
+        ['emit event', 'queueUpdate', dashboardSocket.queueUpdate]
+    ],
+    booted: dashboardSocket.booted
 }, {
     name: 'nsp1',
     namespace: '/socket2',
