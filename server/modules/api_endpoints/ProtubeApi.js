@@ -53,6 +53,10 @@ this.protubeApi.post("/updateadmin", async function (req, res) {
   }
 
   for (const sock of screenSockets) {
+    // Screen sockets dont always have a user; e.g. whitelisted via IP
+    if (sock.request.user === undefined) {
+      continue;
+    }
     await sock.request.user.reload();
     if (sock.request.user.id === userID) {
       logger.apiInfo(`Disconnected admin screen socket`);
