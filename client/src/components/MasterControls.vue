@@ -103,8 +103,6 @@ const screenSettings = ref({
   smallPlayer: false,
 });
 
-console.log(screenSettings);
-
 const router = useRouter();
 
 const inProduction = process.env.NODE_ENV === "production";

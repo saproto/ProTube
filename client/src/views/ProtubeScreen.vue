@@ -302,7 +302,7 @@ socket.on("queue-update", (newQueue) => {
 });
 
 socket.on("photo-update", (newPhoto) => {
-  photo.value = newPhoto;
+  photo.value = newPhoto.photo;
 });
 </script>
 <style scoped>
