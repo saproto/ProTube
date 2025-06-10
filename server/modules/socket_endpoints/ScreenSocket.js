@@ -35,7 +35,6 @@ endpoint.on("connection", (socket) => {
     },
   });
 
-
   socket.emit("queue-update", {
     queue: queueManager.getQueue(),
     duration: queueManager.getTotalDurationFormatted(),
@@ -112,28 +111,28 @@ function emitNewPhoto() {
   }
   if (album.photos.length === 0) {
     fetch(`${process.env.LARAVEL_ENDPOINT}/api/photos/random_album`)
-        .then((res) => res.json())
-        .then((newAlbum) => {
-          album = newAlbum.photos;
-          old_album = newAlbum.old_photos;
-        })
-        .catch((e) => {
-          endpoint.emit("photo-update", {
+      .then((res) => res.json())
+      .then((newAlbum) => {
+        album = newAlbum.photos;
+        old_album = newAlbum.old_photos;
+      })
+      .catch((e) => {
+        endpoint.emit("photo-update", {
+          photo: {
+            url: "",
+            album_name: "",
+            date_taken: 0,
+            error: e,
+          },
+          old_photo: {
             photo: {
               url: "",
               album_name: "",
               date_taken: 0,
               error: e,
             },
-            old_photo: {
-              photo: {
-                url: "",
-                album_name: "",
-                date_taken: 0,
-                error: e,
-              }
-            }
-          });
+          },
         });
+      });
   }
 }

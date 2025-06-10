@@ -44,13 +44,13 @@ const routes = [
     path: "/photos",
     name: "Photo Screen",
     component: PhotoScreen,
-    props: () => ({ objectKey: 'photo' }),
+    props: () => ({ objectKey: "photo" }),
   },
   {
     path: "/old_photos",
     name: "Old Photo Screen",
     component: PhotoScreen,
-    props: () => ({ objectKey: 'old_photo' }),
+    props: () => ({ objectKey: "old_photo" }),
   },
   {
     path: "/error",
