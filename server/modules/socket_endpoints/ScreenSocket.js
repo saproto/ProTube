@@ -11,16 +11,30 @@ let album = {
   photos: [],
 };
 
+let old_photo = null;
+let old_album = {
+  album_name: "",
+  date_taken: "",
+  photos: [],
+};
 endpoint.on("connection", (socket) => {
   logger.screenInfo(
     `Screen connected from ${socket.handshake.address} with socket id ${socket.id}`
   );
 
   endpoint.emit("photo-update", {
-    url: photo,
-    album_name: album.album_name,
-    date_taken: album.date_taken,
+    photo: {
+      url: photo,
+      album_name: album.album_name,
+      date_taken: album.date_taken,
+    },
+    old_photo: {
+      url: old_photo,
+      album_name: old_album.album_name,
+      date_taken: old_album.date_taken,
+    },
   });
+
 
   socket.emit("queue-update", {
     queue: queueManager.getQueue(),
@@ -79,29 +93,47 @@ eventBus.on("player-update", () => {
 eventBus.on("new-video-timestamp", (timestamp) => {
   endpoint.emit("new-video-timestamp", timestamp);
 });
-
 function emitNewPhoto() {
   if (album.photos.length > 0) {
     photo = album.photos.shift();
+    old_photo = old_album.photos.shift();
     endpoint.emit("photo-update", {
-      url: photo,
-      album_name: album.album_name,
-      date_taken: album.date_taken,
+      photo: {
+        url: photo,
+        album_name: album.album_name,
+        date_taken: album.date_taken,
+      },
+      old_photo: {
+        url: old_photo,
+        album_name: old_album.album_name,
+        date_taken: old_album.date_taken,
+      },
     });
   }
   if (album.photos.length === 0) {
     fetch(`${process.env.LARAVEL_ENDPOINT}/api/photos/random_album`)
-      .then((res) => res.json())
-      .then((newAlbum) => {
-        album = newAlbum;
-      })
-      .catch((e) => {
-        endpoint.emit("photo-update", {
-          url: "",
-          album_name: "",
-          date_taken: 0,
-          error: e,
+        .then((res) => res.json())
+        .then((newAlbum) => {
+          album = newAlbum.photos;
+          old_album = newAlbum.old_photos;
+        })
+        .catch((e) => {
+          endpoint.emit("photo-update", {
+            photo: {
+              url: "",
+              album_name: "",
+              date_taken: 0,
+              error: e,
+            },
+            old_photo: {
+              photo: {
+                url: "",
+                album_name: "",
+                date_taken: 0,
+                error: e,
+              }
+            }
+          });
         });
-      });
   }
 }

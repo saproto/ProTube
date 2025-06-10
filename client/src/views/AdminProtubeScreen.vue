@@ -49,6 +49,5 @@ socket.on("new-screen-code", (newCode) => {
 
 const updateScreenSettings = (newValue) => {
   screenSettings.value = newValue;
-  console.log(screenSettings.value);
 };
 </script>

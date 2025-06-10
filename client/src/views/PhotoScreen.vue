@@ -38,6 +38,13 @@ socket.on("new-screen-code", (newCode) => {
   screenCode.value = newCode;
 });
 
+const props = defineProps({
+  objectKey: {
+    type: String,
+    required: true,
+  },
+});
+
 onBeforeMount(() => {
   connectSocket();
 });
@@ -53,6 +60,6 @@ const photo = ref({
 });
 
 socket.on("photo-update", (newPhoto) => {
-  photo.value = newPhoto;
+  photo.value = newPhoto[props.objectKey];
 });
 </script>
