@@ -84,7 +84,7 @@ exports.getPlaylistInfo = async (playlistId) => {
     id: playlist.id,
     title: playlist.title,
     channel: playlist.channel?.name,
-    thumbnail: playlist.thumbnails[playlist.thumbnails.length - 1],
+    thumbnail: playlist.thumbnails ? playlist.thumbnails[playlist.thumbnails.length - 1]:'',
     videoCount: playlist.videoCount,
   };
 };

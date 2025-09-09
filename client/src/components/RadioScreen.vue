@@ -15,7 +15,7 @@
     <audio
       id="radio"
       autoplay
-      :src="radio.m"
+      :src="radio.jp"
       frameborder="0"
       width="400"
       height="200"></audio>
