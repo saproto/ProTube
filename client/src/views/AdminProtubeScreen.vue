@@ -1,5 +1,8 @@
 <template>
-  <ProtubeScreen :volume="volume" :screen-code="screenCode" />
+  <ProtubeScreen
+    @screen-settings-update="updateScreenSettings"
+    :volume="volume"
+    :screen-code="screenCode" />
   <ReconnectionHandler :socket="socket" />
 </template>
 
@@ -13,6 +16,11 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const screenCode = ref("0000");
 const volume = ref(50);
+
+const screenSettings = ref({
+  hideQueue: false,
+  smallPlayer: false,
+});
 
 onBeforeMount(async () => {
   const response = await fetch("/api/user");
@@ -38,4 +46,8 @@ socket.on("get-volume-code", (newData) => {
 socket.on("new-screen-code", (newCode) => {
   screenCode.value = newCode;
 });
+
+const updateScreenSettings = (newValue) => {
+  screenSettings.value = newValue;
+};
 </script>

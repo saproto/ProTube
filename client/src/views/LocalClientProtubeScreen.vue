@@ -12,7 +12,7 @@ import ReconnectionHandler from "@/components/ReconnectionHandler";
 import socket, { connectSocket } from "@/js/AdminScreenSocket";
 import { onBeforeUnmount, onBeforeMount, ref } from "vue";
 
-const screenCode = ref("0000");
+const screenCode = ref(0o000);
 const volume = ref(50);
 
 onBeforeMount(() => {

@@ -1,16 +1,26 @@
 <template>
   <div class="dark:bg-proto_background_gray-dark">
     <!-- empty filler block for the grid -->
-    <div class="absolute top-0 mt-2 w-full">
-      <div
-        v-show="screenCode !== -1"
-        class="dark:bg-proto_secondary_gray-dark mx-auto max-w-min rounded-lg bg-white px-4 py-2 text-3xl font-medium text-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
-        {{ screenCode }}
-      </div>
+    <div
+      v-show="screenCode !== -1"
+      class="dark:bg-proto_secondary_gray-dark absolute left-1/2 top-0 z-10 mt-2 -translate-x-1/2 rounded-lg bg-white px-4 py-2 text-3xl font-medium text-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+      {{ screenCode }}
     </div>
 
     <div v-show="isPlayingVideo">
-      <div :id="playerID" class="min-h-screen w-full" />
+      <div
+        id="player-wrapper"
+        class="overflow-hidden"
+        :class="{
+          'small-player': screenSettings.smallPlayer,
+          'hide-queue': screenSettings.hideQueue,
+        }">
+        <div
+          v-if="screenSettings.smallPlayer"
+          :style="`width:${queueProgress}%;`"
+          class="bg-proto_blue absolute bottom-0 z-[1] h-2 w-0 rounded-sm opacity-60"></div>
+        <div :id="playerID"></div>
+      </div>
     </div>
 
     <div
@@ -23,16 +33,21 @@
     </div>
 
     <div v-if="isPlayingVideo">
-      <div class="absolute bottom-0 mb-1 w-screen rounded-lg">
-        <div class="flex justify-between">
+      <div class="absolute bottom-0 z-[2] mb-1 w-screen rounded-lg">
+        <div class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
+          <div v-if="screenSettings.smallPlayer"></div>
           <div
-            class="border-proto_blue dark:bg-proto_secondary_gray-dark mb-1 ml-4 rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
+            class="border-proto_blue dark:bg-proto_secondary_gray-dark mr-4 w-fit rounded-lg border-l-4 bg-white p-1 px-4 py-2 font-medium text-gray-900 opacity-80 shadow-lg ring-1 ring-black ring-opacity-5 dark:text-gray-50">
             Queue: {{ totalDuration }}
           </div>
         </div>
-        <div class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
+        <div
+          v-if="!screenSettings.hideQueue"
+          class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
+          <div v-if="screenSettings.smallPlayer"></div>
           <VideoCard
-            v-for="(video, index) in queueWithCurrent.slice(0, 5)"
+            v-for="(video, index) in queueWithCurrent"
+            :class="{ '': screenSettings.smallPlayer && index === 0 }"
             :key="video.id"
             :index="index"
             :title="video.title"
@@ -43,18 +58,22 @@
             :video-i-d="video.id"
             :text-scrolling="true"
             :rounded-corners="true"
-            :progress-bar="index === 0 ? queueProgress : 0"
+            :progress-bar="
+              !screenSettings.smallPlayer && index === 0 ? queueProgress : 0
+            "
             :opacity="0.9" />
         </div>
       </div>
     </div>
 
-    <div v-if="!isPlayingVideo" class="dark:text-white">
+    <div
+      v-if="!isPlayingVideo || screenSettings.smallPlayer"
+      class="dark:text-white">
       <div v-if="photo && !photo.error && photo.url !== ''">
         <div class="flex h-screen justify-center overflow-x-hidden p-5">
           <img
             :src="photo.url"
-            class="dark:bg-proto_secondary_gray-dark -z-10 h-full max-w-none rounded-lg bg-white"
+            class="dark:bg-proto_secondary_gray-dark h-full max-w-none rounded-lg bg-white"
             alt="Loading..." />
         </div>
         <div class="absolute left-0 top-0 ml-4 mt-2 rounded-lg text-lg">
@@ -124,13 +143,18 @@ const playerState = ref({
   volume: 0,
 });
 
+const screenSettings = ref({
+  hideQueue: false,
+  smallPlayer: false,
+});
+
 const photo = ref({
   url: "",
   album_name: "",
   date_taken: 0,
 });
 
-const emit = defineEmits(["youtube-media-error"]);
+const emit = defineEmits(["youtube-media-error", "screen-settings-update"]);
 const props = defineProps({
   volume: {
     type: Number,
@@ -153,7 +177,12 @@ const queueWithCurrent = computed(() => {
   let currentVideo = playerState.value.video;
   // if currentvideo = empty -> queue is empty
   if (Object.keys(currentVideo).length === 0) return [];
-  return [currentVideo].concat(queue.value);
+
+  const slicedQueue = queue.value.slice(0, 4);
+  if (!screenSettings.value.smallPlayer) {
+    return [currentVideo].concat(slicedQueue);
+  }
+  return slicedQueue;
 });
 
 const isPlayingVideo = computed(
@@ -264,11 +293,42 @@ socket.on("new-video-timestamp", async (newStamp) => {
   }
 });
 
+socket.on("screen-settings-update", (newValue) => {
+  screenSettings.value = newValue;
+});
+
 socket.on("queue-update", (newQueue) => {
   queue.value = newQueue.queue;
 });
 
 socket.on("photo-update", (newPhoto) => {
-  photo.value = newPhoto;
+  photo.value = newPhoto.photo;
 });
 </script>
+<style scoped>
+:global(.small-player) {
+  width: calc(20% - 0.8rem) !important;
+  position: absolute !important;
+  left: 1rem !important;
+  bottom: 0.5rem !important;
+  height: unset !important;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.5rem;
+  border-left: 4px solid rgb(0, 170, 192);
+  z-index: 3;
+}
+
+:global(.small-player.hide-queue) {
+  bottom: 0.5rem !important;
+}
+
+/* Target the iframe inside the dynamically created div */
+::v-deep(iframe) {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: unset;
+  left: unset;
+}
+</style>

@@ -84,7 +84,9 @@ exports.getPlaylistInfo = async (playlistId) => {
     id: playlist.id,
     title: playlist.title,
     channel: playlist.channel?.name,
-    thumbnail: playlist.thumbnails[playlist.thumbnails.length - 1],
+    thumbnail: playlist.thumbnails
+      ? playlist.thumbnails[playlist.thumbnails.length - 1]
+      : "",
     videoCount: playlist.videoCount,
   };
 };
@@ -101,7 +103,9 @@ exports.getVideosInPlaylist = async (playlistId, isAdmin = false) => {
   if (!playlist) throw new softError("Could not find that playlist");
   if (!videos) throw new softError("Could not find any videos");
 
-  videos.map((video) => sanitizeVideo(video));
+  videos = videos.filter((video) => video.channel !== undefined);
+  videos = videos.map((video) => sanitizeVideo(video));
+
   if (isAdmin) return videos;
 
   return videos.filter(

@@ -9,14 +9,18 @@ let playerType = enums.TYPES.VIDEO;
 
 let selectedRadioStation = {};
 let playbackInterval;
-let volume = 75;
+let volume = 25;
 let timestamp = 0;
+let hideQueue = false;
+let smallPlayer = false;
 
 exports.getCurrentVideoTimestamp = () => timestamp;
 exports.getPlayerType = () => playerType;
 exports.getPlayerMode = () => playerMode;
 exports.getLastStation = () => selectedRadioStation;
 exports.getVolume = () => volume;
+exports.getSmallPlayer = () => smallPlayer;
+exports.getQueueVisibility = () => hideQueue;
 
 exports.setVolume = (newVolume) => {
   if (newVolume > 100 || newVolume < 0) throw new hardError("Invalid volume!");
@@ -39,19 +43,6 @@ exports.playVideo = (video) => {
         ),
       });
     } else {
-      // video ended, add video to played videos
-      fetch(
-        `${process.env.LARAVEL_ENDPOINT}/api/protube/played?` +
-          new URLSearchParams({
-            secret: process.env.LARAVEL_API_KEY,
-            user_id: video.user.id,
-            video_id: video.id,
-            video_title: video.title,
-          })
-      ).catch(function () {
-        // non-asynchronous because we don't need to wait for this to be done to play the next video (it can do it in the background)
-        logger.serverError("Failed to send video data to ProTube site");
-      });
       try {
         this.playNextVideo();
       } catch (e) {
@@ -74,6 +65,24 @@ exports.playNextVideo = () => {
     throw new softError("Radio is currently playing!");
 
   const previouslyPlaying = queueManager.getCurrentVideo();
+  if (!isEmpty(previouslyPlaying) && timestamp > 5) {
+    // video was skipped or ended, add video to played videos
+    fetch(
+      `${process.env.LARAVEL_ENDPOINT}/api/protube/played?` +
+        new URLSearchParams({
+          secret: process.env.LARAVEL_API_KEY,
+          user_id: previouslyPlaying.user.id,
+          video_id: previouslyPlaying.id,
+          video_title: previouslyPlaying.title,
+          duration: previouslyPlaying.duration,
+          duration_played: timestamp,
+        })
+    ).catch(function () {
+      // non-syncronous because we don't need to wait for this to be done to play the next video (it can do it in the background)
+      logger.serverError("Failed to send video data to ProTube site");
+    });
+  }
+
   this.stopVideo();
 
   try {
@@ -112,6 +121,17 @@ exports.playPause = () => {
     return this.playVideo(queueManager.getCurrentVideo());
   if (playerMode === enums.MODES.PLAYING) return this.pauseVideo();
   throw new hardError("Can't resume ProTube!");
+};
+
+exports.toggleSmallPlayer = () => {
+  smallPlayer = !smallPlayer;
+  eventBus.emit("screen-settings-update");
+  return enums.SUCCESS;
+};
+exports.toggleQueueVisibility = () => {
+  hideQueue = !hideQueue;
+  eventBus.emit("screen-settings-update");
+  return enums.SUCCESS;
 };
 
 exports.toggleType = () => {
