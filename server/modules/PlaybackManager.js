@@ -43,20 +43,6 @@ exports.playVideo = (video) => {
         ),
       });
     } else {
-      // video ended, add video to played videos
-      fetch(
-        `${process.env.LARAVEL_ENDPOINT}/api/protube/played?` +
-          new URLSearchParams({
-            secret: process.env.LARAVEL_API_KEY,
-            user_id: video.user.id,
-            video_id: video.id,
-            video_title: video.title,
-            duration_played: video.duration,
-          })
-      ).catch(function () {
-        // non-asynchronous because we don't need to wait for this to be done to play the next video (it can do it in the background)
-        logger.serverError("Failed to send video data to ProTube site");
-      });
       try {
         this.playNextVideo();
       } catch (e) {
@@ -79,6 +65,24 @@ exports.playNextVideo = () => {
     throw new softError("Radio is currently playing!");
 
   const previouslyPlaying = queueManager.getCurrentVideo();
+  if (!isEmpty(previouslyPlaying) && timestamp > 5){
+    // video was skipped or ended, add video to played videos
+    fetch(
+        `${process.env.LARAVEL_ENDPOINT}/api/protube/played?` +
+        new URLSearchParams({
+          secret: process.env.LARAVEL_API_KEY,
+          user_id: previouslyPlaying.user.id,
+          video_id: previouslyPlaying.id,
+          video_title: previouslyPlaying.title,
+          duration: previouslyPlaying.duration,
+          duration_played: timestamp,
+        })
+    ).catch(function () {
+      // non-syncronous because we don't need to wait for this to be done to play the next video (it can do it in the background)
+      logger.serverError("Failed to send video data to ProTube site");
+    });
+  }
+
   this.stopVideo();
 
   try {
