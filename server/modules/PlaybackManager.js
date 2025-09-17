@@ -65,10 +65,10 @@ exports.playNextVideo = () => {
     throw new softError("Radio is currently playing!");
 
   const previouslyPlaying = queueManager.getCurrentVideo();
-  if (!isEmpty(previouslyPlaying) && timestamp > 5){
+  if (!isEmpty(previouslyPlaying) && timestamp > 5) {
     // video was skipped or ended, add video to played videos
     fetch(
-        `${process.env.LARAVEL_ENDPOINT}/api/protube/played?` +
+      `${process.env.LARAVEL_ENDPOINT}/api/protube/played?` +
         new URLSearchParams({
           secret: process.env.LARAVEL_API_KEY,
           user_id: previouslyPlaying.user.id,
