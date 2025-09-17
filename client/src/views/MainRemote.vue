@@ -94,9 +94,12 @@ onBeforeMount(async () => {
   if (user.value.hasValidRemote) connectSocket();
 });
 
-onMounted(() => {});
+onMounted(() => {
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+});
 
 onBeforeUnmount(() => {
+  document.removeEventListener("visibilitychange", handleVisibilityChange);
   socket.disconnect();
 });
 
@@ -113,6 +116,12 @@ socket.on("disconnect", () => {
 
 function displayToast(toast) {
   latestToast.value = toast;
+}
+
+function handleVisibilityChange() {
+  if (document.visibilityState === "visible") {
+    if (user.value.hasValidRemote) connectSocket();
+  }
 }
 
 async function fetchThenAddVideo(videoId) {
