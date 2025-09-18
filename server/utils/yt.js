@@ -60,7 +60,7 @@ exports.getVideo = async (videoId, isAdmin = false) => {
     // throws error if unknown video
     video = await youtube.getVideo(videoId);
   } catch (e) {
-    throw new softError("Could not find this video");
+    throw new softError(`Could not find video with id: ${videoId}`);
   }
 
   video = sanitizeVideo(video);
