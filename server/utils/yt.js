@@ -4,6 +4,9 @@ const { format_mm_ss, format_hh_mm_ss } = require("./time-formatter");
 const { Client, SearchResult } = require("youtubei");
 const youtube = new Client();
 
+let cachedVideos= new Map();
+let cachedVideosLifeTime= new Map();
+
 //search for a YouTube video
 exports.search = async (
   query,
@@ -40,6 +43,8 @@ exports.search = async (
     }
   });
 
+  cacheVideos(videos);
+
   return {
     videos: isAdmin
       ? videos
@@ -51,6 +56,21 @@ exports.search = async (
     continuationToken: newContinuation,
   };
 };
+function cacheVideos(videos){
+  videos.forEach((video) => {
+    cachedVideos.set(video.id, video);
+    cachedVideosLifeTime.set(video.id, Date.now() + process.env.VIDEO_CACHE_LIFETIME * 1000);
+  })
+  cleanVideoCache()
+}
+function cleanVideoCache(){
+  cachedVideos.forEach((video, videoId) => {
+    if(cachedVideosLifeTime.has(videoId) && cachedVideosLifeTime.get(videoId) < Date.now()){
+      cachedVideosLifeTime.delete(videoId);
+      cachedVideos.delete(videoId);
+    }
+  })
+}
 
 //get metadata for a single YouTube video
 exports.getVideo = async (videoId, isAdmin = false) => {
@@ -58,12 +78,18 @@ exports.getVideo = async (videoId, isAdmin = false) => {
   let video;
   try {
     // throws error if unknown video
-    video = await youtube.getVideo(videoId);
+    if(cachedVideos.has(videoId)) {
+      video = cachedVideos.get(videoId);
+    }else {
+      video = await youtube.getVideo(videoId);
+      video = sanitizeVideo(video);
+    }
   } catch (e) {
     throw new softError(`Could not find video with id: ${videoId}`);
   }
 
-  video = sanitizeVideo(video);
+  cleanVideoCache()
+
   if (
     !isAdmin &&
     video.duration > (parseInt(process.env.YOUTUBE_MAX_DURATION) || 600)
@@ -105,6 +131,8 @@ exports.getVideosInPlaylist = async (playlistId, isAdmin = false) => {
 
   videos = videos.filter((video) => video.channel !== undefined);
   videos = videos.map((video) => sanitizeVideo(video));
+
+  cacheVideos(videos);
 
   if (isAdmin) return videos;
 
