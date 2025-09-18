@@ -4,8 +4,8 @@ const { format_mm_ss, format_hh_mm_ss } = require("./time-formatter");
 const { Client, SearchResult } = require("youtubei");
 const youtube = new Client();
 
-let cachedVideos= new Map();
-let cachedVideosLifeTime= new Map();
+let cachedVideos = new Map();
+let cachedVideosLifeTime = new Map();
 
 //search for a YouTube video
 exports.search = async (
@@ -56,20 +56,26 @@ exports.search = async (
     continuationToken: newContinuation,
   };
 };
-function cacheVideos(videos){
+function cacheVideos(videos) {
   videos.forEach((video) => {
     cachedVideos.set(video.id, video);
-    cachedVideosLifeTime.set(video.id, Date.now() + process.env.VIDEO_CACHE_LIFETIME * 1000);
-  })
-  cleanVideoCache()
+    cachedVideosLifeTime.set(
+      video.id,
+      Date.now() + process.env.VIDEO_CACHE_LIFETIME * 1000
+    );
+  });
+  cleanVideoCache();
 }
-function cleanVideoCache(){
+function cleanVideoCache() {
   cachedVideos.forEach((video, videoId) => {
-    if(cachedVideosLifeTime.has(videoId) && cachedVideosLifeTime.get(videoId) < Date.now()){
+    if (
+      cachedVideosLifeTime.has(videoId) &&
+      cachedVideosLifeTime.get(videoId) < Date.now()
+    ) {
       cachedVideosLifeTime.delete(videoId);
       cachedVideos.delete(videoId);
     }
-  })
+  });
 }
 
 //get metadata for a single YouTube video
@@ -78,9 +84,9 @@ exports.getVideo = async (videoId, isAdmin = false) => {
   let video;
   try {
     // throws error if unknown video
-    if(cachedVideos.has(videoId)) {
+    if (cachedVideos.has(videoId)) {
       video = cachedVideos.get(videoId);
-    }else {
+    } else {
       video = await youtube.getVideo(videoId);
       video = sanitizeVideo(video);
     }
@@ -88,7 +94,7 @@ exports.getVideo = async (videoId, isAdmin = false) => {
     throw new softError(`Could not find video with id: ${videoId}`);
   }
 
-  cleanVideoCache()
+  cleanVideoCache();
 
   if (
     !isAdmin &&
