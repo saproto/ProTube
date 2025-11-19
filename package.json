@@ -16,18 +16,12 @@
     "format:write": "prettier --write ."
   },
   "devDependencies": {
-    "concurrently": "^7.6.0",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.6.0",
-    "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-vue": "^9.28.0"
-  },
-  "dependencies": {
-    "prettier": "^2.8.8",
-    "prettier-plugin-tailwindcss": "^0.2.0",
-    "vite-plugin-eslint": "^1.8.1"
+    "@nabla/vite-plugin-eslint": "^2.0.6",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-vue": "^10.5.1",
+    "globals": "^16.5.0",
+    "typescript-eslint": "^8.47.0"
   }
 }

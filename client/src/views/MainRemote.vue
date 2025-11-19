@@ -177,7 +177,7 @@ async function fetchVideos(query) {
   loadModalMessage.value = query
     ? `Searching for ${query}...`
     : "Getting results from next page...";
-  let result = await new Promise((resolve) => {
+  const result = await new Promise((resolve) => {
     socket.emit(
       "fetch-videos",
       {

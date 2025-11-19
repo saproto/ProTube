@@ -1,18 +1,21 @@
-import { defineConfig } from "vite";
+import {defineConfig, loadEnv} from "vite";
 import vue from "@vitejs/plugin-vue";
-import eslint from "vite-plugin-eslint";
+import eslintPlugin from "@nabla/vite-plugin-eslint";
+
 
 const path = require("path");
 const fs = require("fs");
 
 // https://vitejs.dev/config/
-export default defineConfig(() => {
+export default defineConfig(({mode}) => {
   require("dotenv").config({ path: `../server/.env` });
-  let serverPort = process.env.PORT;
-  let serverHTTPS = process.env.HTTPS === "true" ? "https" : "http";
+    const env = loadEnv(mode, process.cwd(), '')
+
+    let serverPort = env.PORT;
+  let serverHTTPS = env.HTTPS === "true" ? "https" : "http";
 
   return {
-    plugins: [vue(), eslint()],
+    plugins: [vue(), eslintPlugin()],
     resolve: {
       extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".vue"],
       alias: {
@@ -24,8 +27,8 @@ export default defineConfig(() => {
       https:
         process.env.HTTPS === "true"
           ? {
-              key: fs.readFileSync(`../server/${process.env.SSL_KEY_FILE}`),
-              cert: fs.readFileSync(`../server/${process.env.SSL_CERT_FILE}`),
+              key: fs.readFileSync(`../server/${env.SSL_KEY_FILE}`),
+              cert: fs.readFileSync(`../server/${env.SSL_CERT_FILE}`),
             }
           : false,
       proxy: {

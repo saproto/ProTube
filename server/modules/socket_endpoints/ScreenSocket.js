@@ -93,7 +93,7 @@ eventBus.on("new-video-timestamp", (timestamp) => {
   endpoint.emit("new-video-timestamp", timestamp);
 });
 function emitNewPhoto() {
-  if (album.photos.length > 0) {
+  if (album?.photos.length > 0) {
     photo = album.photos.shift();
     old_photo = old_album.photos.shift();
     endpoint.emit("photo-update", {
@@ -109,7 +109,7 @@ function emitNewPhoto() {
       },
     });
   }
-  if (album.photos.length === 0) {
+  if (album?.photos.length === 0) {
     fetch(`${process.env.LARAVEL_ENDPOINT}/api/photos/random_album`)
       .then((res) => res.json())
       .then((newAlbum) => {
