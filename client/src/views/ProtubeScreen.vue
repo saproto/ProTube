@@ -18,7 +18,7 @@
         <div
           v-if="screenSettings.smallPlayer"
           :style="`width:${queueProgress}%;`"
-          class="bg-proto_blue absolute bottom-0 z-[1] h-2 w-0 rounded-sm opacity-60"></div>
+          class="bg-proto_blue absolute bottom-0 z-1 h-2 w-0 rounded-xs opacity-60"></div>
         <div :id="playerID"></div>
       </div>
     </div>
@@ -33,7 +33,7 @@
     </div>
 
     <div v-if="isPlayingVideo">
-      <div class="absolute bottom-0 z-[2] mb-1 w-screen rounded-lg">
+      <div class="absolute bottom-0 z-2 mb-1 w-screen rounded-lg">
         <div class="mx-4 mb-1 grid grid-cols-5 gap-2 overflow-hidden">
           <div v-if="screenSettings.smallPlayer"></div>
           <div

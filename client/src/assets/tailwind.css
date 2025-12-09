@@ -1,5 +1,44 @@
-@tailwind base;
+@import 'tailwindcss';
 
-@tailwind components;
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/aspect-ratio';
+@plugin 'tailwind-scrollbar' {
+  nocompatible: true;
+}
 
-@tailwind utilities;
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-proto_green: #83b716;
+  --color-proto_blue: #00aac0;
+
+  --color-proto_background_gray: #f1f1f1;
+  --color-proto_background_gray-dark: #424242;
+
+  --color-proto_secondary_gray: #fff;
+  --color-proto_secondary_gray-dark: #303030;
+
+  --color-search_button_border: #007d8d;
+
+  --color-search_button_background-light: #e9ecef;
+  --color-search_button_background: #00889a;
+  --color-search_button_background-dark: #424242;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}

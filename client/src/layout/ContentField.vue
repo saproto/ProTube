@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-proto_secondary_gray dark:bg-proto_secondary_gray-dark mt-4 overflow-hidden shadow md:rounded-sm">
+    class="bg-proto_secondary_gray dark:bg-proto_secondary_gray-dark mt-4 overflow-hidden shadow-sm md:rounded-xs">
     <div class="m-8">
       <slot />
     </div>

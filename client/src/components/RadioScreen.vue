@@ -9,7 +9,7 @@
         style="width: 150px"
         :src="`https://www.nederland.fm/i/l/${radio.z}.gif`" />
       <div
-        class="from-proto_blue absolute -left-1/4 -top-1/2 h-52 w-52 animate-[spin_3s_linear_infinite] bg-gradient-to-r via-white to-white"></div>
+        class="from-proto_blue absolute -left-1/4 -top-1/2 h-52 w-52 animate-[spin_3s_linear_infinite] bg-linear-to-r via-white to-white"></div>
     </div>
     <br />
     <audio

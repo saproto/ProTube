@@ -20,7 +20,7 @@
           <input
             v-model="searchString"
             minlength="1"
-            class="w-full min-w-min rounded-l-md border border-gray-400 bg-white pl-2 text-gray-700 placeholder-gray-500 outline-none focus:placeholder-gray-600"
+            class="w-full min-w-min rounded-l-md border border-gray-400 bg-white pl-2 text-gray-700 placeholder-gray-500 outline-hidden focus:placeholder-gray-600"
             placeholder="Search" />
           <button
             :disabled="!searchString"
@@ -29,7 +29,7 @@
                 ? 'hover:border-search_button_border hover:bg-search_button_background hover:text-white'
                 : 'cursor-default opacity-80'
             "
-            class="bg-search_button_background-light focus:border-search_button_border focus:bg-search_button_background dark:border-search_button_background-dark dark:bg-search_button_background-dark mx-auto inline-flex items-center justify-center rounded-r-md border p-2 font-medium shadow-sm duration-200 focus:text-white focus:outline-none dark:text-white">
+            class="bg-search_button_background-light focus:border-search_button_border focus:bg-search_button_background dark:border-search_button_background-dark dark:bg-search_button_background-dark mx-auto inline-flex items-center justify-center rounded-r-md border p-2 font-medium shadow-xs duration-200 focus:text-white focus:outline-hidden dark:text-white">
             <font-awesome-icon icon="fa-solid fa-search" class="mx-1">
             </font-awesome-icon>
           </button>

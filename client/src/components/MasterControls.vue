@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col justify-between md:flex-row">
-    <ContentField class="flex-grow md:w-2/3">
+    <ContentField class="grow md:w-2/3">
       <div class="mb-1 flex">
         <h3 class="h-full text-2xl text-gray-600 dark:text-white">
           Master controls
@@ -19,7 +19,7 @@
             Volume - {{ playerSettings.volume }}
           </span>
           <input
-            class="bg-proto_blue hover:bg-proto_blue/80 h-2 w-full appearance-none rounded-xl border border-gray-500 outline-none"
+            class="bg-proto_blue hover:bg-proto_blue/80 h-2 w-full appearance-none rounded-xl border border-gray-500 outline-hidden"
             type="range"
             min="0"
             max="100"
@@ -74,7 +74,7 @@
       </div>
     </ContentField>
     <ScreenControls
-      class="flex-grow md:ml-3"
+      class="grow md:ml-3"
       :screen-settings="screenSettings"
       @toggle-queue-visibility="toggleHiddenQueue"
       @toggle-small-player="toggleSmallPlayer" />
