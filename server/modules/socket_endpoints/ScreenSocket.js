@@ -113,10 +113,10 @@ function emitNewPhoto() {
     fetch(`${process.env.LARAVEL_ENDPOINT}/api/photos/random_album`)
       .then((res) => res.json())
       .then((newAlbum) => {
-          if(newAlbum.photos?.length > 0) {
-              album = newAlbum.photos;
-              old_album = newAlbum.old_photos;
-          }
+        if (newAlbum.photos?.length > 0) {
+          album = newAlbum.photos;
+          old_album = newAlbum.old_photos;
+        }
       })
       .catch((e) => {
         endpoint.emit("photo-update", {
