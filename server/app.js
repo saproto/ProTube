@@ -1,7 +1,7 @@
 // ffs kut versie errors
-if (process.version.match(/^v(\d+\.\d+)/)[1].split(".")[0] !== "16") {
+if (process.version.match(/^v(\d+\.\d+)/)[1].split(".")[0] !== "24") {
   console.log(
-    `You are running node ${process.version} but this app is designed in v16, please run 'nvm use'`
+    `You are running node ${process.version} but this app is designed in v24, please run 'nvm use'`
   );
   process.exit(1);
 }
