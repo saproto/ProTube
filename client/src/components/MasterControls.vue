@@ -19,7 +19,7 @@
             Volume - {{ playerSettings.volume }}
           </span>
           <input
-            class="bg-proto_blue hover:bg-proto_blue/80 h-2 w-full appearance-none rounded-xl border border-gray-500 outline-hidden"
+            class="bg-proto_blue hover:bg-proto_blue/80 outline-hidden h-2 w-full appearance-none rounded-xl border border-gray-500"
             type="range"
             min="0"
             max="100"

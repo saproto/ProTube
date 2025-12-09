@@ -25,7 +25,7 @@
       </transition>
     </router-view>
   </div>
-  <div v-else class="mx-auto sm:pt-0 md:p-4 xl:max-w-(--breakpoint-2xl)">
+  <div v-else class="xl:max-w-(--breakpoint-2xl) mx-auto sm:pt-0 md:p-4">
     <router-view v-slot="{ Component }">
       <component :is="Component" />
     </router-view>

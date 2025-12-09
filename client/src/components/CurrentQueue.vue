@@ -32,7 +32,7 @@
               Remove user
             </div>
             <ul
-              class="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark dark:bg-proto_background_gray-dark max-h-60 w-full divide-y divide-stone-300 overflow-auto rounded-b-md border border-stone-300 bg-white py-1 focus:outline-hidden">
+              class="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark dark:bg-proto_background_gray-dark focus:outline-hidden max-h-60 w-full divide-y divide-stone-300 overflow-auto rounded-b-md border border-stone-300 bg-white py-1">
               <li
                 v-for="video in usersInQueue"
                 :key="video.user.id"

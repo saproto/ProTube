@@ -11,7 +11,7 @@
       `">
       <div
         :style="`width:${progressBar}%;`"
-        class="bg-proto_blue absolute bottom-0 h-2 w-0 rounded-xs opacity-60"></div>
+        class="bg-proto_blue rounded-xs absolute bottom-0 h-2 w-0 opacity-60"></div>
       <button
         :disabled="!clickable"
         :class="[
