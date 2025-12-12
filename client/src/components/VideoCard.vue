@@ -1,8 +1,8 @@
 <template>
   <transition appear @before-enter="beforeEnter" @enter="enter">
     <li
-      class="col-span-1 flex w-full flex-col overflow-hidden text-center shadow duration-200"
-      :class="roundedCorners ? 'rounded-lg' : 'rounded-sm'"
+      class="col-span-1 flex w-full flex-col overflow-hidden text-center shadow-sm duration-200"
+      :class="roundedCorners ? 'rounded-lg' : 'rounded-xs'"
       :style="`
         background-repeat: no-repeat;
         background-position: center center;
@@ -11,7 +11,7 @@
       `">
       <div
         :style="`width:${progressBar}%;`"
-        class="bg-proto_blue absolute bottom-0 h-2 w-0 rounded-sm opacity-60"></div>
+        class="bg-proto_blue rounded-xs absolute bottom-0 h-2 w-0 opacity-60"></div>
       <button
         :disabled="!clickable"
         :class="[
@@ -82,24 +82,24 @@
             v-show="statusIcon === enums.STATUS.SUCCESS"
             icon="fa-solid fa-check-circle"
             size="lg"
-            class="absolute -bottom-0 -right-0 ml-auto mr-2 text-green-500">
+            class="absolute bottom-0 right-0 ml-auto mr-2 text-green-500">
           </font-awesome-icon>
 
           <font-awesome-icon
             v-show="statusIcon === enums.STATUS.WARNING"
             icon="fa-solid fa-warning"
             size="lg"
-            class="absolute -bottom-0 -right-0 ml-auto mr-2 text-yellow-400">
+            class="absolute bottom-0 right-0 ml-auto mr-2 text-yellow-400">
           </font-awesome-icon>
 
           <font-awesome-icon
             v-show="statusIcon === enums.STATUS.ERROR"
             icon="fa-solid fa-xmark-circle"
             size="lg"
-            class="absolute -bottom-0 -right-0 ml-auto mr-2 text-red-500">
+            class="absolute bottom-0 right-0 ml-auto mr-2 text-red-500">
           </font-awesome-icon>
 
-          <div class="absolute -bottom-0 -right-0 flex gap-1">
+          <div class="absolute bottom-0 right-0 flex gap-1">
             <button
               v-if="canMoveUp"
               class="bg-proto_green rounded-lg px-3 py-2 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"

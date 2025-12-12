@@ -26,7 +26,7 @@
         </template>
         <div
           v-show="passkeyAccepted || loading || passkeyAccepted == false"
-          class="flex h-16 w-16 items-center justify-center rounded-md opacity-75 outline-none"
+          class="outline-hidden flex h-16 w-16 items-center justify-center rounded-md opacity-75"
           :class="codeStatusIndicatorStyle">
           <font-awesome-icon
             v-show="passkeyAccepted && !loading"
