@@ -4,6 +4,7 @@
   "description": "ProTube is an application used by Study Association Proto to play videos and music from YouTube.",
   "scripts": {
     "postinstall": "concurrently \"npm:install-*\"",
+    "update-all": "concurrently 'npm update' 'cd server && npm update' 'cd client && npm update'",
     "install-client": "cd client && npm install",
     "install-server": "cd server && npm install",
     "dev": "concurrently \"npm:dev-*\"",

@@ -39,7 +39,7 @@
   </div>
   <div class="my-auto mr-6 hidden shrink-0 lg:block">
     <img
-      class="w-30 mx-auto h-0 shrink-0 object-cover md:h-32"
+      class="w-30 mx-auto h-0 shrink-0 object-contain md:h-32"
       :src="classicLogo" />
   </div>
 </template>

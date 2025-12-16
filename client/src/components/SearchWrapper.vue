@@ -6,7 +6,7 @@
         <span class="w-full"> ProTube playlist panel</span>
         <font-awesome-icon
           :class="openMenu ? 'fa-rotate-90' : 'fa-rotate-0'"
-          class="block cursor-pointer duration-500 md:hidden"
+          class="cursor-pointer duration-500 sm:block md:invisible"
           icon="bars"
           @click="openMenu = !openMenu" />
       </h3>

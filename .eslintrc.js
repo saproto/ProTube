@@ -7,6 +7,7 @@ module.exports = {
   },
   extends: ["eslint:recommended", "plugin:vue/vue3-recommended", "prettier"],
   overrides: [],
+  ignorePatterns: ["**/assets/*.js"],
   parserOptions: {
     ecmaVersion: "latest",
   },
