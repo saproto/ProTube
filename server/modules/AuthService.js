@@ -25,7 +25,19 @@ passport.use(
           },
         }
       );
+
+      if (!response.ok) {
+        logger.serverError(`User fetch failed:  ${response.status}, ${response.statusText}`);
+        return done(null, false);
+      }
+
       const userData = await response.json();
+
+      if (!userData.authenticated) {
+        logger.serverError(`User not authenticated by Laravel: ${userData}`);
+        return done(null, false);
+      }
+
       if (userData.authenticated) {
         await User.upsert({
           id: userData.id,
