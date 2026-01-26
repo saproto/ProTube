@@ -5,8 +5,8 @@ if (process.version.match(/^v(\d+\.\d+)/)[1].split(".")[0] !== "24") {
   );
   process.exit(1);
 }
-
 require("dotenv").config();
+require("./instrument");
 global.logger = require("./utils/logger");
 global.enums = require("./utils/Enums").enums;
 const { EventEmitter } = require("events");

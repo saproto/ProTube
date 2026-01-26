@@ -1,5 +1,4 @@
 const passport = require("passport");
-const fetch = require("node-fetch");
 const OAuth2Strategy = require("passport-oauth2").Strategy;
 const { User } = require("./DataBase");
 

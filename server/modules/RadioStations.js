@@ -1,5 +1,3 @@
-const fetch = require("node-fetch");
-
 let allRadioStations = [];
 
 exports.getAllRadioStations = () => allRadioStations;

@@ -6,6 +6,7 @@
     "watch": "nodemon app"
   },
   "dependencies": {
+    "@sentry/node": "^10.36.0",
     "colors": "^1.4.0",
     "connect-history-api-fallback": "^2.0.0",
     "connect-session-sequelize": "^8.0.4",
@@ -20,7 +21,6 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mysql2": "^3.14.1",
-    "node-fetch": "^2.7.0",
     "passport": "^0.7.0",
     "passport-oauth2": "^1.6.1",
     "sequelize": "^6.25.3",
