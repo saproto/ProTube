@@ -60,9 +60,17 @@ import "./assets/tailwind.css";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 import router from "./router/index.js";
-
+import * as Sentry from "@sentry/vue";
 const app = createApp(App);
-// app.config.globalProperties.eventBus = eventBus;
+
+Sentry.init({
+  app,
+  dsn: import.meta.env.VITE_SENTRY_DSN,
+  // Adds request headers and IP for users, for more info visit:
+  // https://docs.sentry.io/platforms/javascript/guides/vue/configuration/options/#sendDefaultPii
+  sendDefaultPii: false,
+});
+
 app.component("FontAwesomeIcon", FontAwesomeIcon);
 app.use(router);
 app.mount("#app");
