@@ -26,7 +26,9 @@ passport.use(
       );
 
       if (!response.ok) {
-        logger.serverError(`User fetch failed:  ${response.status}, ${response.statusText}`);
+        logger.serverError(
+          `User fetch failed:  ${response.status}, ${response.statusText}`
+        );
         return done(null, false);
       }
 
