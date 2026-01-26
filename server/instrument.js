@@ -3,4 +3,5 @@ const Sentry = require("@sentry/node");
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
   sendDefaultPii: false,
+  tracesSampleRate: process.env.SENTRY_TRACES_SAMPLE_RATE,
 });

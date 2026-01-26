@@ -6,6 +6,10 @@ RUN apk add nano
 RUN mkdir /protube
 COPY . /protube
 
+# Bake the sentry DSN into the frontend build
+ARG VITE_SENTRY_DSN
+ENV VITE_SENTRY_DSN=$VITE_SENTRY_DSN
+
 # Installing and building
 WORKDIR /protube
 RUN npm install

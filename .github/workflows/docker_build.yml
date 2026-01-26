@@ -30,6 +30,8 @@ jobs:
           context: .
           file: ./docker/Dockerfile
           push: true
+          build-args: |
+            VITE_SENTRY_DSN=${{ secrets.VITE_SENTRY_DSN }}
           tags: |
             hyttioaoac/protube:latest
             hyttioaoac/protube:${{ github.sha }}
