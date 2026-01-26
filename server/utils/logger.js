@@ -152,6 +152,7 @@ process.on("exit", (code) => {
 // Add signal listeners
 ["SIGINT", "SIGTERM", "SIGQUIT"].forEach((signal) => {
   process.on(signal, (code) => {
-    process.exit(code);
+    log(`Received ${code}. Shutting down...`);
+    process.exit(0);
   });
 });
