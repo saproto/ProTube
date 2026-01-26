@@ -1,5 +1,4 @@
 const passport = require("passport");
-const fetch = require("node-fetch");
 const OAuth2Strategy = require("passport-oauth2").Strategy;
 const { User } = require("./DataBase");
 
@@ -27,7 +26,9 @@ passport.use(
       );
 
       if (!response.ok) {
-        logger.serverError(`User fetch failed:  ${response.status}, ${response.statusText}`);
+        logger.serverError(
+          `User fetch failed:  ${response.status}, ${response.statusText}`
+        );
         return done(null, false);
       }
 

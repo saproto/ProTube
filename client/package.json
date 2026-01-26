@@ -14,7 +14,7 @@
     "@vitejs/plugin-vue": "^6.0.2",
     "core-js": "^3.21.1",
     "gsap": "^3.9.1",
-    "jquery": "^3.6.0",
+    "jquery": "^4.0.0",
     "mitt": "^3.0.0",
     "roboto-fontface": "*",
     "sass": "^1.95.0",
