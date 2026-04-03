@@ -1,7 +1,6 @@
 {
   "name": "protube",
   "version": "1.0.0",
-  "type": "module",
   "description": "ProTube is an application used by Study Association Proto to play videos and music from YouTube.",
   "scripts": {
     "postinstall": "concurrently \"npm:install-*\"",
