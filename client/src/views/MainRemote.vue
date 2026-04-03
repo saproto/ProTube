@@ -186,7 +186,7 @@ async function fetchVideos(query) {
       },
       (result) => {
         resolve(result);
-      }
+      },
     );
   });
   foundVideos.value = result.videos;

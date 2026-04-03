@@ -14,7 +14,7 @@ this.authApi.get(
   passport.authenticate("oauth2", { failureRedirect: "/fail" }),
   (req, res) => {
     res.status(200).redirect("/remote");
-  }
+  },
 );
 
 // Only accessible for logged in users

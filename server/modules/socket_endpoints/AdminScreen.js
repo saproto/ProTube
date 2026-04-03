@@ -7,7 +7,7 @@ endpoint.use(socketCheckAdminAuthenticated);
 
 endpoint.on("connection", (socket) => {
   logger.screenInfo(
-    `Admin Screen connected from ${socket.handshake.address} with socket id ${socket.id}`
+    `Admin Screen connected from ${socket.handshake.address} with socket id ${socket.id}`,
   );
 
   socket.on("disconnect", () => {
@@ -27,7 +27,7 @@ endpoint.on("connection", (socket) => {
   // the ProTube app player (local) noticed the video was unplayable, skipping
   socket.on("player-error-skip", (errorCode) => {
     logger.adminInfo(
-      `Current video generated error ${errorCode}, skipping to next video`
+      `Current video generated error ${errorCode}, skipping to next video`,
     );
     try {
       playNextVideo();

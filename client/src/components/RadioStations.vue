@@ -66,7 +66,7 @@ socket.on("connect", async () => {
 
 const filteredRadioStations = computed(() => {
   return radioStations.value.filter((station) =>
-    station.o.toLowerCase().includes(radiofilter.value.toLowerCase())
+    station.o.toLowerCase().includes(radiofilter.value.toLowerCase()),
   );
 });
 

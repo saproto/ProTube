@@ -52,7 +52,7 @@ library.add(
   faCaretDown,
   faArrowDown,
   faArrowUp,
-  faQuestionCircle
+  faQuestionCircle,
 );
 
 import "./assets/tailwind.css";

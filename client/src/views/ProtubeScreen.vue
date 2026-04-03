@@ -188,13 +188,13 @@ const queueWithCurrent = computed(() => {
 const isPlayingVideo = computed(
   () =>
     playerState.value.playerType === enums.TYPES.VIDEO &&
-    playerState.value.playerMode !== enums.MODES.IDLE
+    playerState.value.playerMode !== enums.MODES.IDLE,
 );
 
 const isPlayingRadio = computed(
   () =>
     playerState.value.playerType === enums.TYPES.RADIO &&
-    playerState.value.playerMode === enums.MODES.IDLE
+    playerState.value.playerMode === enums.MODES.IDLE,
 );
 
 onBeforeMount(() => {
@@ -239,7 +239,7 @@ watch(
   () => {
     if (props.volume < 0) return;
     player.setVolume(props.volume);
-  }
+  },
 );
 
 onBeforeUnmount(() => {

@@ -18,7 +18,7 @@ let old_album = {
 };
 endpoint.on("connection", (socket) => {
   logger.screenInfo(
-    `Screen connected from ${socket.handshake.address} with socket id ${socket.id}`
+    `Screen connected from ${socket.handshake.address} with socket id ${socket.id}`,
   );
 
   endpoint.emit("photo-update", {

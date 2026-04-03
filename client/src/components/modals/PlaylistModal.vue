@@ -13,7 +13,7 @@ const showModal = (playList) => {
 };
 
 const maxVideos = parseInt(
-  import.meta.env.VITE_USER_MAX_VIDEOS_IN_QUEUE ?? "20"
+  import.meta.env.VITE_USER_MAX_VIDEOS_IN_QUEUE ?? "20",
 );
 const closeModal = () => {
   dialog.value?.close();

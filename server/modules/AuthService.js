@@ -22,12 +22,12 @@ passport.use(
           headers: {
             Authorization: "Bearer " + accessToken,
           },
-        }
+        },
       );
 
       if (!response.ok) {
         logger.serverError(
-          `User fetch failed:  ${response.status}, ${response.statusText}`
+          `User fetch failed:  ${response.status}, ${response.statusText}`,
         );
         return done(null, false);
       }
@@ -54,8 +54,8 @@ passport.use(
         });
       }
       return done(null, false);
-    }
-  )
+    },
+  ),
 );
 
 passport.serializeUser(function (user, done) {

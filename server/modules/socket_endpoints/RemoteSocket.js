@@ -20,7 +20,7 @@ endpoint.on("connection", (socket) => {
         request.query,
         request.continuationToken,
         socket.request.user.admin,
-        queueManager.getQueue()
+        queueManager.getQueue(),
       );
       callback(result);
       logger.youtubeInfo("Returned list of music to client (remote)");
@@ -34,7 +34,7 @@ endpoint.on("connection", (socket) => {
       const playlist = await youtube.getPlaylistInfo(playlistId);
       callback(playlist);
       logger.youtubeInfo(
-        "Returned playlist information to the client (remote)"
+        "Returned playlist information to the client (remote)",
       );
     } catch (e) {
       callback(e.getInfo());
@@ -45,7 +45,7 @@ endpoint.on("connection", (socket) => {
     try {
       let videos = await youtube.getVideosInPlaylist(
         playlistId,
-        socket.request.user.admin
+        socket.request.user.admin,
       );
 
       videos.forEach((video) => (video.user = formatUser(socket)));
@@ -77,14 +77,14 @@ endpoint.on("connection", (socket) => {
 
   socket.on("remove-videos", (videoIDs, callback) => {
     logger.clientInfo(
-      `${socket.id} Requested video removal of ${videoIDs.length}`
+      `${socket.id} Requested video removal of ${videoIDs.length}`,
     );
     try {
       callback({
         success: queueManager.removeVideos(
           videoIDs,
           socket.request.session.passport.user.id,
-          socket.request.user.admin
+          socket.request.user.admin,
         ),
       });
     } catch (e) {
@@ -96,7 +96,7 @@ endpoint.on("connection", (socket) => {
     logger.clientInfo(
       `${socket.id} Requested change in order ${
         up ? "up" : "down"
-      } of ${videoID}`
+      } of ${videoID}`,
     );
     try {
       callback({
@@ -104,7 +104,7 @@ endpoint.on("connection", (socket) => {
           videoID,
           up,
           socket.request.session.passport.user.id,
-          socket.request.user.admin
+          socket.request.user.admin,
         ),
       });
     } catch (e) {

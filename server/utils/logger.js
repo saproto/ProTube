@@ -48,7 +48,7 @@ const logFormat = winston.format.combine(
   winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
   winston.format.printf((info) => {
     return `${info.timestamp} - ${info.message}`;
-  })
+  }),
 );
 
 const logger = winston.createLogger({
@@ -123,7 +123,7 @@ function log(message, error = false) {
 }
 
 this.serverInfo(
-  `----------------------- Starting ProTube server -----------------------`
+  `----------------------- Starting ProTube server -----------------------`,
 );
 
 // Catch all and log system crashes
@@ -134,7 +134,7 @@ process.on("uncaughtException", (err) => {
   // wait for logger flush
   setTimeout(() => {
     console.log(
-      `Program crashed of uncaught exception, see the logs at ${new Date().toLocaleString()}!`
+      `Program crashed of uncaught exception, see the logs at ${new Date().toLocaleString()}!`,
     );
     process.exit(1);
   }, 500);
@@ -143,7 +143,7 @@ process.on("uncaughtException", (err) => {
 // Log all exits of the program
 process.on("exit", (code) => {
   this.serverInfo(
-    `----------------------- ProTube server exited with exit code ${code} -----------------------`
+    `----------------------- ProTube server exited with exit code ${code} -----------------------`,
   );
   dbLogger.end();
   logger.end();

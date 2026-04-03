@@ -68,8 +68,8 @@ exports.screenCodeCheck = async (socket, next) => {
       new Error(
         `Your ban is lifted ${moment
           .duration(user.banned_until - getCurrentUnix(), "seconds")
-          .humanize(true)}`
-      )
+          .humanize(true)}`,
+      ),
     );
   }
 
@@ -90,14 +90,14 @@ exports.screenCodeCheck = async (socket, next) => {
     logger.clientInfo(
       `Banned user: ${user.id} until ${
         getCurrentUnix() + parseInt(process.env.FAIL_2_BAN_DURATION)
-      }`
+      }`,
     );
     return next(
       new Error(
         `Your ban is lifted ${moment
           .duration(parseInt(process.env.FAIL_2_BAN_DURATION), "seconds")
-          .humanize(true)}`
-      )
+          .humanize(true)}`,
+      ),
     );
   }
 

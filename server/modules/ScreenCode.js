@@ -4,13 +4,13 @@ const { Op } = require("sequelize");
 
 let recreateScreencodeInterval = setInterval(
   regenerateAuthToken,
-  parseInt(process.env.CODE_REFRESH_INTERVAL) * 1000
+  parseInt(process.env.CODE_REFRESH_INTERVAL) * 1000,
 );
 let screenCode;
 regenerateAuthToken();
 setInterval(
   revokeExpiredRemotes,
-  parseInt(process.env.CODE_VALID_FLUSHING_INTERVAL) * 1000
+  parseInt(process.env.CODE_VALID_FLUSHING_INTERVAL) * 1000,
 );
 
 function regenerateAuthToken() {
@@ -30,7 +30,7 @@ exports.adminResetScreenCode = async () => {
   clearInterval(recreateScreencodeInterval);
   recreateScreencodeInterval = setInterval(
     regenerateAuthToken,
-    parseInt(process.env.CODE_REFRESH_INTERVAL) * 1000
+    parseInt(process.env.CODE_REFRESH_INTERVAL) * 1000,
   );
   regenerateAuthToken();
 
@@ -39,7 +39,7 @@ exports.adminResetScreenCode = async () => {
     { valid_remote_until: 0 },
     {
       where: { valid_remote_until: { [Op.not]: 0 } },
-    }
+    },
   );
   await revokeExpiredRemotes();
 

@@ -13,7 +13,7 @@ this.protubeApi.use(checkBearerToken);
 // Endpoint to update the admin status of a user id
 this.protubeApi.post("/updateadmin", async function (req, res) {
   logger.apiInfo(
-    `Attempt from ${req.hostname} to update the admin status of a user`
+    `Attempt from ${req.hostname} to update the admin status of a user`,
   );
 
   // Check if the required data is present and parse it

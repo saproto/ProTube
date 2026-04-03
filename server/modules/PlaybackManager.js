@@ -38,7 +38,7 @@ exports.playVideo = (video) => {
       eventBus.emit("new-video-timestamp", {
         timestamp: timestamp,
         totalDuration: format_hh_mm_ss(
-          queueManager.getTotalDuration() + (video.duration - timestamp)
+          queueManager.getTotalDuration() + (video.duration - timestamp),
         ),
       });
     } else {
@@ -75,7 +75,7 @@ exports.playNextVideo = () => {
           video_title: previouslyPlaying.title,
           duration: previouslyPlaying.duration,
           duration_played: timestamp,
-        })
+        }),
     ).catch(function () {
       // non-syncronous because we don't need to wait for this to be done to play the next video (it can do it in the background)
       logger.serverError("Failed to send video data to ProTube site");

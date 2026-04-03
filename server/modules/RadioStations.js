@@ -10,7 +10,7 @@ setInterval(async () => {
 async function updateRadioStations() {
   try {
     const response = await fetch(
-      "https://www.nederland.fm/common/radio/zenders/nederland.js"
+      "https://www.nederland.fm/common/radio/zenders/nederland.js",
     );
     const data = await response.text();
     allRadioStations = JSON.parse(data.split(" = ")[1]).items;

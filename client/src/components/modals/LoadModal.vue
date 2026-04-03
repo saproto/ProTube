@@ -94,11 +94,13 @@ defineProps({
     transform: rotate(-180deg);
   }
   /*//50% { transform: rotate(-1800deg);}*/
-    100% { transform: rotate(360deg);}
+  100% {
+    transform: rotate(360deg);
   }
-  
-  @keyframes loader {
-    /*0% { transform: rotate(0deg);}
+}
+
+@keyframes loader {
+  /*0% { transform: rotate(0deg);}
     //50% { transform: rotate(-180deg);}*/
   100% {
     transform: rotate(360deg);
