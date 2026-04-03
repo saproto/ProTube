@@ -18,7 +18,7 @@ updates:
       interval: "weekly"
     ignore:
       - dependency-name: "*"
-        update-types: [ "version-update:semver-major" ]
+        update-types: ["version-update:semver-major"]
     groups:
       npm-server:
         patterns:
@@ -30,7 +30,7 @@ updates:
       interval: "weekly"
     ignore:
       - dependency-name: "*"
-        update-types: [ "version-update:semver-major" ]
+        update-types: ["version-update:semver-major"]
     groups:
       npm-client:
         patterns:
