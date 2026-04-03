@@ -47,8 +47,8 @@
           <div v-if="screenSettings.smallPlayer"></div>
           <VideoCard
             v-for="(video, index) in queueWithCurrent"
-            :class="{ '': screenSettings.smallPlayer && index === 0 }"
             :key="video.id"
+            :class="{ '': screenSettings.smallPlayer && index === 0 }"
             :index="index"
             :title="video.title"
             :name="video.user.name"

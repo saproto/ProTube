@@ -1,8 +1,8 @@
 <template>
   <ProtubeScreen
-    @screen-settings-update="updateScreenSettings"
     :volume="volume"
-    :screen-code="screenCode" />
+    :screen-code="screenCode"
+    @screen-settings-update="updateScreenSettings" />
   <ReconnectionHandler :socket="socket" />
 </template>
 
