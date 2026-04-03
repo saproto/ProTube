@@ -35,7 +35,7 @@ watch(
       let index = toasts.value.indexOf(newValue);
       if (index !== -1) toasts.value.splice(index, 1);
     }, newValue.duration ?? 2500);
-  }
+  },
 );
 </script>
 

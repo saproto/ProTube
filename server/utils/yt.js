@@ -12,7 +12,7 @@ exports.search = async (
   query,
   continuationToken,
   isAdmin = false,
-  queue = []
+  queue = [],
 ) => {
   let result;
   let videos;
@@ -51,7 +51,7 @@ exports.search = async (
       : videos.filter(
           (video) =>
             video.duration <=
-            (parseInt(process.env.YOUTUBE_MAX_DURATION) || 600)
+            (parseInt(process.env.YOUTUBE_MAX_DURATION) || 600),
         ),
     continuationToken: newContinuation,
   };
@@ -61,7 +61,7 @@ function cacheVideos(videos) {
     cachedVideos.set(video.id, video);
     cachedVideosLifeTime.set(
       video.id,
-      Date.now() + process.env.VIDEO_CACHE_LIFETIME * 1000
+      Date.now() + process.env.VIDEO_CACHE_LIFETIME * 1000,
     );
   });
   cleanVideoCache();
@@ -144,7 +144,7 @@ exports.getVideosInPlaylist = async (playlistId, isAdmin = false) => {
 
   return videos.filter(
     (video) =>
-      video.duration <= (parseInt(process.env.YOUTUBE_MAX_DURATION) || 600)
+      video.duration <= (parseInt(process.env.YOUTUBE_MAX_DURATION) || 600),
   );
 };
 

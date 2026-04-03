@@ -14,7 +14,7 @@ exports.sequelize = new Sequelize(
       process.env.DATABASE_QUERY_LOGGING === "true"
         ? (msg) => logger.dbLog(msg)
         : false,
-  }
+  },
 );
 
 //checking the database connection
@@ -22,16 +22,16 @@ this.sequelize
   .authenticate()
   .then(() => {
     logger.dbLog(
-      "Connection has been established successfully to the database"
+      "Connection has been established successfully to the database",
     );
     logger.serverInfo(
-      "Connection has been established successfully to the database"
+      "Connection has been established successfully to the database",
     );
   })
   .catch((error) => {
     logger.dbLog(`Unable to connect to the database: ${error.toString()}`);
     logger.serverError(
-      `Unable to connect to the database: ${error.toString()}`
+      `Unable to connect to the database: ${error.toString()}`,
     );
     process.exit(10);
   });
@@ -92,7 +92,7 @@ User.init(
   {
     sequelize: this.sequelize,
     modelName: "user",
-  }
+  },
 );
 
 exports.User = this.sequelize.models["user"];

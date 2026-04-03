@@ -30,7 +30,7 @@ app.use(
         },
       },
     ],
-  })
+  }),
 );
 app.use("/", express.static(path.join(__dirname, "../public")));
 app.use(express.json());
@@ -49,7 +49,7 @@ if (process.env.HTTPS === "true") {
 }
 server.listen(PORT); //server.listen instead of app.listen to accommedate for https and socket.io
 server.on("error", (err) =>
-  logger.serverError(`Failed to start server: ${err}`)
+  logger.serverError(`Failed to start server: ${err}`),
 );
 server.on("listening", () => logger.serverInfo(`Listening on port ${PORT}`));
 

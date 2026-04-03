@@ -54,7 +54,7 @@ watch(
   (to) => {
     if (props.volume < 0) return;
     document.getElementById("radio").volume = to / 100;
-  }
+  },
 );
 
 function playClick() {

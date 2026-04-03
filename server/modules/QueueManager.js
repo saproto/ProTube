@@ -173,7 +173,7 @@ function organizeQueue() {
     videosPerUser.push(
       oldQueue.filter((element) => {
         return element.user.id === userId;
-      })
+      }),
     );
   });
 

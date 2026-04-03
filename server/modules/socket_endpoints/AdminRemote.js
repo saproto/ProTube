@@ -127,7 +127,7 @@ endpoint.on("connection", (socket) => {
   // change the screen's volume
   socket.on("set-new-volume", (volume, callback) => {
     logger.adminInfo(
-      `${socket.id} Requested to change the volume to: ${volume}`
+      `${socket.id} Requested to change the volume to: ${volume}`,
     );
     try {
       callback({ success: setVolume(volume) });
