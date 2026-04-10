@@ -20,7 +20,7 @@
     "express-session": "^1.17.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "mysql2": "^3.14.1",
+    "mysql2": "^3.22.0",
     "passport": "^0.7.0",
     "passport-oauth2": "^1.6.1",
     "sequelize": "^6.25.3",
