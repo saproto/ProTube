@@ -30,7 +30,6 @@
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@tailwindcss/typography": "^0.5.8",
-    "@vue/devtools": "^8.0.5",
     "autoprefixer": "^10.4.13",
     "dotenv": "^17.2.3",
     "postcss": "^8.4.19",
