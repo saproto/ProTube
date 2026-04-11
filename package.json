@@ -5,6 +5,7 @@
   "scripts": {
     "postinstall": "concurrently \"npm:install-*\"",
     "update-all": "concurrently 'npm update' 'cd server && npm update' 'cd client && npm update'",
+    "outdated": "concurrently 'npm outdated' 'cd server && npm outdated' 'cd client && npm outdated'",
     "install-client": "cd client && npm install",
     "install-server": "cd server && npm install",
     "dev": "concurrently \"npm:dev-*\"",
