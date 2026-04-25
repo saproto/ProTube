@@ -6,7 +6,7 @@
     "watch": "nodemon app"
   },
   "dependencies": {
-    "@sentry/node": "^10.36.0",
+    "@sentry/node": "^10.50.0",
     "colors": "^1.4.0",
     "connect-history-api-fallback": "^2.0.0",
     "connect-session-sequelize": "^8.0.4",
@@ -20,14 +20,14 @@
     "express-session": "^1.17.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "mysql2": "^3.22.0",
+    "mysql2": "^3.22.2",
     "passport": "^0.7.0",
     "passport-oauth2": "^1.6.1",
     "sequelize": "^6.25.3",
     "socket.io": "^4.5.4",
     "winston": "^3.7.2",
     "winston-daily-rotate-file": "^5.0.0",
-    "youtubei": "^1.7.0"
+    "youtubei": "^1.8.9"
   },
   "devDependencies": {
     "autoprefixer": "^10.3.1",
