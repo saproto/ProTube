@@ -10,7 +10,7 @@
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
     "@fortawesome/vue-fontawesome": "^3.0.0-5",
     "@mdi/font": "7.4.47",
-    "@sentry/vue": "^10.50.0",
+    "@sentry/vue": "^10.51.0",
     "@tailwindcss/postcss": "^4.2.4",
     "@vitejs/plugin-vue": "^6.0.2",
     "core-js": "^3.21.1",
@@ -32,7 +32,7 @@
     "@tailwindcss/typography": "^0.5.8",
     "autoprefixer": "^10.4.13",
     "dotenv": "^17.2.3",
-    "postcss": "^8.4.19",
+    "postcss": "^8.5.13",
     "tailwind-scrollbar": "^4.0.2",
     "tailwindcss": "^4.1.17"
   }
