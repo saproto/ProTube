@@ -99,7 +99,7 @@
             class="absolute bottom-0 right-0 ml-auto mr-2 text-red-500">
           </font-awesome-icon>
 
-          <div class="absolute bottom-0 right-0 flex gap-1">
+          <div class="absolute bottom-0 right-0 flex gap-1 pr-8">
             <button
               v-if="canMoveUp"
               class="bg-proto_green rounded-lg px-3 py-2 text-xs font-medium text-white shadow-lg duration-200 hover:-translate-x-1 hover:-translate-y-0.5 hover:opacity-80 hover:shadow-lg"

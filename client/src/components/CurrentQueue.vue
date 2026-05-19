@@ -53,13 +53,13 @@
       </div>
     </div>
     <div
-      class="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark flex max-h-[84vh] justify-center overscroll-auto px-0">
+      class="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-proto_background_gray dark:scrollbar-thumb-neutral-800 dark:scrollbar-track-proto_background_gray-dark flex max-h-[84vh] justify-center overscroll-auto px-0">
       <div v-if="skeletonLoading" class="w-full">
         <ul class="grid gap-2">
           <SkeletonResult v-for="index in 10" :key="index" />
         </ul>
       </div>
-      <div v-if="!skeletonLoading" class="w-full">
+      <div v-if="!skeletonLoading">
         <TransitionGroup name="list" tag="ul" class="grid gap-2 pr-4">
           <VideoCard
             v-for="(video, index) in queue"
