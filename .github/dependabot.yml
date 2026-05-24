@@ -11,6 +11,8 @@ updates:
       npm:
         patterns:
           - "*"
+    cooldown:
+      default-days: 7
 
   - package-ecosystem: "npm"
     directory: "/server"
@@ -23,6 +25,8 @@ updates:
       npm-server:
         patterns:
           - "*"
+    cooldown:
+      default-days: 7
 
   - package-ecosystem: "npm"
     directory: "/client"
@@ -35,6 +39,8 @@ updates:
       npm-client:
         patterns:
           - "*"
+    cooldown:
+      default-days: 7
 
   - package-ecosystem: "github-actions"
     directory: ".github/workflows"
@@ -44,3 +50,5 @@ updates:
       actions:
         patterns:
           - "*"
+    cooldown:
+      default-days: 7
