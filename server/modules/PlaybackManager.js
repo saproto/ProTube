@@ -22,165 +22,167 @@ exports.getSmallPlayer = () => smallPlayer;
 exports.getQueueVisibility = () => hideQueue;
 
 exports.setVolume = (newVolume) => {
-  if (newVolume > 100 || newVolume < 0) throw new hardError("Invalid volume!");
-  volume = parseInt(newVolume);
-  return enums.SUCCESS;
+    if (newVolume > 100 || newVolume < 0)
+        throw new hardError("Invalid volume!");
+    volume = parseInt(newVolume);
+    return enums.SUCCESS;
 };
 
 exports.playVideo = (video) => {
-  playerType = enums.TYPES.VIDEO;
-  playerMode = enums.MODES.PLAYING;
-  queueManager.setCurrentVideo(video);
+    playerType = enums.TYPES.VIDEO;
+    playerMode = enums.MODES.PLAYING;
+    queueManager.setCurrentVideo(video);
 
-  playbackInterval = setInterval(() => {
-    if (timestamp < video.duration) {
-      timestamp++;
-      eventBus.emit("new-video-timestamp", {
-        timestamp: timestamp,
-        totalDuration: format_hh_mm_ss(
-          queueManager.getTotalDuration() + (video.duration - timestamp),
-        ),
-      });
-    } else {
-      try {
-        this.playNextVideo();
-      } catch (e) {
-        logger.serverError(e);
-      }
-      eventBus.emit("player-update");
-    }
-  }, 1000);
-  eventBus.emit("player-update");
+    playbackInterval = setInterval(() => {
+        if (timestamp < video.duration) {
+            timestamp++;
+            eventBus.emit("new-video-timestamp", {
+                timestamp: timestamp,
+                totalDuration: format_hh_mm_ss(
+                    queueManager.getTotalDuration() +
+                        (video.duration - timestamp),
+                ),
+            });
+        } else {
+            try {
+                this.playNextVideo();
+            } catch (e) {
+                logger.serverError(e);
+            }
+            eventBus.emit("player-update");
+        }
+    }, 1000);
+    eventBus.emit("player-update");
 };
 
 exports.pauseVideo = () => {
-  clearInterval(playbackInterval);
-  playerMode = enums.MODES.PAUSED;
-  eventBus.emit("player-update");
+    clearInterval(playbackInterval);
+    playerMode = enums.MODES.PAUSED;
+    eventBus.emit("player-update");
 };
 
 exports.playNextVideo = () => {
-  if (playerType === enums.TYPES.RADIO)
-    throw new softError("Radio is currently playing!");
+    if (playerType === enums.TYPES.RADIO)
+        throw new softError("Radio is currently playing!");
 
-  const previouslyPlaying = queueManager.getCurrentVideo();
-  if (!isEmpty(previouslyPlaying) && timestamp > 5) {
-    // video was skipped or ended, add video to played videos
-    fetch(
-      `${process.env.LARAVEL_ENDPOINT}/api/protube/played?` +
-        new URLSearchParams({
-          secret: process.env.LARAVEL_API_KEY,
-          user_id: previouslyPlaying.user.id,
-          video_id: previouslyPlaying.id,
-          video_title: previouslyPlaying.title,
-          duration: previouslyPlaying.duration,
-          duration_played: timestamp,
-        }),
-    ).catch(function () {
-      // non-syncronous because we don't need to wait for this to be done to play the next video (it can do it in the background)
-      logger.serverError("Failed to send video data to ProTube site");
-    });
-  }
+    const previouslyPlaying = queueManager.getCurrentVideo();
+    if (!isEmpty(previouslyPlaying) && timestamp > 5) {
+        // video was skipped or ended, add video to played videos
+        fetch(
+            `${process.env.LARAVEL_ENDPOINT}/api/protube/played?` +
+                new URLSearchParams({
+                    secret: process.env.LARAVEL_API_KEY,
+                    user_id: previouslyPlaying.user.id,
+                    video_id: previouslyPlaying.id,
+                    video_title: previouslyPlaying.title,
+                    duration: previouslyPlaying.duration,
+                    duration_played: timestamp,
+                }),
+        ).catch(function () {
+            // non-syncronous because we don't need to wait for this to be done to play the next video (it can do it in the background)
+            logger.serverError("Failed to send video data to ProTube site");
+        });
+    }
 
-  this.stopVideo();
+    this.stopVideo();
 
-  try {
-    queueManager.moveToNext();
-    this.playVideo(queueManager.getCurrentVideo());
-  } catch (e) {
-    // skip was pressed on an empty queue so we can't move and need to update the players
-    if (!isEmpty(previouslyPlaying)) eventBus.emit("player-update");
-    throw e;
-  }
-  return enums.SUCCESS;
+    try {
+        queueManager.moveToNext();
+        this.playVideo(queueManager.getCurrentVideo());
+    } catch (e) {
+        // skip was pressed on an empty queue so we can't move and need to update the players
+        if (!isEmpty(previouslyPlaying)) eventBus.emit("player-update");
+        throw e;
+    }
+    return enums.SUCCESS;
 };
 
 exports.stopVideo = () => {
-  clearInterval(playbackInterval);
-  playerMode = enums.MODES.IDLE;
-  timestamp = 0;
-  queueManager.setCurrentVideo({});
+    clearInterval(playbackInterval);
+    playerMode = enums.MODES.IDLE;
+    timestamp = 0;
+    queueManager.setCurrentVideo({});
 };
 
 exports.playRadio = (newStationId) => {
-  const newRadio = radio.validateRadioStation(newStationId);
+    const newRadio = radio.validateRadioStation(newStationId);
 
-  if (!newRadio) throw new hardError("Radio station not found!");
+    if (!newRadio) throw new hardError("Radio station not found!");
 
-  selectedRadioStation = newRadio;
-  if (playerType === enums.TYPES.VIDEO) this.toggleType();
-  else eventBus.emit("player-update");
-  return enums.SUCCESS;
+    selectedRadioStation = newRadio;
+    if (playerType === enums.TYPES.VIDEO) this.toggleType();
+    else eventBus.emit("player-update");
+    return enums.SUCCESS;
 };
 
 exports.playPause = () => {
-  if (playerMode === enums.MODES.IDLE && playerType === enums.TYPES.RADIO)
-    return this.toggleType();
-  if (playerMode === enums.MODES.PAUSED)
-    return this.playVideo(queueManager.getCurrentVideo());
-  if (playerMode === enums.MODES.PLAYING) return this.pauseVideo();
-  throw new hardError("Can't resume ProTube!");
+    if (playerMode === enums.MODES.IDLE && playerType === enums.TYPES.RADIO)
+        return this.toggleType();
+    if (playerMode === enums.MODES.PAUSED)
+        return this.playVideo(queueManager.getCurrentVideo());
+    if (playerMode === enums.MODES.PLAYING) return this.pauseVideo();
+    throw new hardError("Can't resume ProTube!");
 };
 
 exports.toggleSmallPlayer = () => {
-  smallPlayer = !smallPlayer;
-  eventBus.emit("screen-settings-update");
-  return enums.SUCCESS;
+    smallPlayer = !smallPlayer;
+    eventBus.emit("screen-settings-update");
+    return enums.SUCCESS;
 };
 exports.toggleQueueVisibility = () => {
-  hideQueue = !hideQueue;
-  eventBus.emit("screen-settings-update");
-  return enums.SUCCESS;
+    hideQueue = !hideQueue;
+    eventBus.emit("screen-settings-update");
+    return enums.SUCCESS;
 };
 
 exports.toggleType = () => {
-  if (playerType === enums.TYPES.RADIO) {
-    playerType = enums.TYPES.VIDEO;
-    try {
-      this.playNextVideo();
-      // eslint-disable-next-line
-    } catch {}
-    eventBus.emit("player-update");
-    return enums.SUCCESS;
-  }
-
-  //check if there is a radio set, if not, try to
-  if (isEmpty(selectedRadioStation)) {
-    try {
-      selectedRadioStation = radio.getAllRadioStations()[0];
-    } catch (e) {
-      throw new hardError("Can't find a radiostation!");
+    if (playerType === enums.TYPES.RADIO) {
+        playerType = enums.TYPES.VIDEO;
+        try {
+            this.playNextVideo();
+            // eslint-disable-next-line
+        } catch {}
+        eventBus.emit("player-update");
+        return enums.SUCCESS;
     }
-  }
 
-  //add the current playing video back into the queue
-  if (playerMode !== enums.MODES.IDLE) {
-    queueManager.addToTop(queueManager.getCurrentVideo());
-    eventBus.emit("queue-update");
-  }
-  this.stopVideo();
-  playerType = enums.TYPES.RADIO;
+    //check if there is a radio set, if not, try to
+    if (isEmpty(selectedRadioStation)) {
+        try {
+            selectedRadioStation = radio.getAllRadioStations()[0];
+        } catch (e) {
+            throw new hardError("Can't find a radiostation!");
+        }
+    }
 
-  try {
-    this.playRadio(selectedRadioStation.z);
-  } catch (e) {
-    // if we cant play the radio, revert back to protube
-    this.toggleType();
-    throw e;
-  }
+    //add the current playing video back into the queue
+    if (playerMode !== enums.MODES.IDLE) {
+        queueManager.addToTop(queueManager.getCurrentVideo());
+        eventBus.emit("queue-update");
+    }
+    this.stopVideo();
+    playerType = enums.TYPES.RADIO;
 
-  // eventBus.emit('player-update');
-  return enums.SUCCESS;
+    try {
+        this.playRadio(selectedRadioStation.z);
+    } catch (e) {
+        // if we cant play the radio, revert back to protube
+        this.toggleType();
+        throw e;
+    }
+
+    // eventBus.emit('player-update');
+    return enums.SUCCESS;
 };
 
 // on queue update, if empty start playing
 eventBus.on("queue-update", () => {
-  if (
-    playerMode === enums.MODES.IDLE &&
-    playerType === enums.TYPES.VIDEO &&
-    !queueManager.isQueueEmpty() &&
-    isEmpty(queueManager.getCurrentVideo())
-  ) {
-    this.playNextVideo();
-  }
+    if (
+        playerMode === enums.MODES.IDLE &&
+        playerType === enums.TYPES.VIDEO &&
+        !queueManager.isQueueEmpty() &&
+        isEmpty(queueManager.getCurrentVideo())
+    ) {
+        this.playNextVideo();
+    }
 });

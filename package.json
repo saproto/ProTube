@@ -1,33 +1,33 @@
 {
-  "name": "protube",
-  "version": "1.0.0",
-  "description": "ProTube is an application used by Study Association Proto to play videos and music from YouTube.",
-  "scripts": {
-    "postinstall": "concurrently \"npm:install-*\"",
-    "update-all": "concurrently 'npm update' 'cd server && npm update' 'cd client && npm update'",
-    "outdated": "concurrently 'npm outdated' 'cd server && npm outdated' 'cd client && npm outdated'",
-    "install-client": "cd client && npm install",
-    "install-server": "cd server && npm install",
-    "dev": "concurrently \"npm:dev-*\"",
-    "dev-client": "cd client && npm run dev",
-    "dev-server": "cd server && npm run watch",
-    "build": "cd client && npm run build",
-    "lint:check": "eslint .",
-    "lint:write": "eslint . --fix",
-    "format:check": "prettier .",
-    "format:write": "prettier --write ."
-  },
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "concurrently": "^9.2.1",
-    "eslint": "^10.4.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-vue": "^10.9.1"
-  },
-  "dependencies": {
-    "globals": "^17.6.0",
-    "prettier": "^3.0.0",
-    "prettier-plugin-tailwindcss": "^0.8.0",
-    "vite-plugin-eslint": "^1.8.1"
-  }
+    "name": "protube",
+    "version": "1.0.0",
+    "description": "ProTube is an application used by Study Association Proto to play videos and music from YouTube.",
+    "scripts": {
+        "postinstall": "concurrently \"npm:install-*\"",
+        "update-all": "concurrently 'npm update' 'cd server && npm update' 'cd client && npm update'",
+        "outdated": "concurrently 'npm outdated' 'cd server && npm outdated' 'cd client && npm outdated'",
+        "install-client": "cd client && npm install",
+        "install-server": "cd server && npm install",
+        "dev": "concurrently \"npm:dev-*\"",
+        "dev-client": "cd client && npm run dev",
+        "dev-server": "cd server && npm run watch",
+        "build": "cd client && npm run build",
+        "lint:check": "eslint .",
+        "lint:write": "eslint . --fix",
+        "format:check": "prettier .",
+        "format:write": "prettier --write ."
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "concurrently": "^9.2.1",
+        "eslint": "^10.4.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-vue": "^10.9.1"
+    },
+    "dependencies": {
+        "globals": "^17.6.0",
+        "prettier": "^3.0.0",
+        "prettier-plugin-tailwindcss": "^0.8.0",
+        "vite-plugin-eslint": "^1.8.1"
+    }
 }

@@ -1,36 +1,36 @@
 @use "sass:math";
 // snowflake (after use delete file)
 .snowflake {
-  --size: 1vw;
-  width: var(--size);
-  height: var(--size);
-  background: white;
-  border-radius: 50%;
-  position: absolute;
-  top: -5vh;
+    --size: 1vw;
+    width: var(--size);
+    height: var(--size);
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: -5vh;
 }
 
 @keyframes snowfall {
-  0% {
-    transform: translate3d(var(--left-ini), 0, 0);
-  }
-  100% {
-    transform: translate3d(var(--left-end), 110vh, 0);
-  }
+    0% {
+        transform: translate3d(var(--left-ini), 0, 0);
+    }
+    100% {
+        transform: translate3d(var(--left-end), 110vh, 0);
+    }
 }
 
 @for $i from 1 through 144 {
-  .snowflake:nth-child(#{$i}) {
-    --size: #{math.random(5) * 0.4}vh;
-    --left-ini: #{math.random(20) - 10}vw;
-    --left-end: #{math.random(20) - 10}vw;
-    left: #{math.random(100)}vw;
-    animation: snowfall #{5 + math.random(10)}s linear infinite;
-    animation-delay: -#{math.random(10)}s;
-  }
+    .snowflake:nth-child(#{$i}) {
+        --size: #{math.random(5) * 0.4}vh;
+        --left-ini: #{math.random(20) - 10}vw;
+        --left-end: #{math.random(20) - 10}vw;
+        left: #{math.random(100)}vw;
+        animation: snowfall #{5 + math.random(10)}s linear infinite;
+        animation-delay: -#{math.random(10)}s;
+    }
 }
 
 /* added small blur every 6 snowflakes*/
 .snowflake:nth-child(6n) {
-  filter: blur(1px);
+    filter: blur(1px);
 }

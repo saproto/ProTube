@@ -10,19 +10,19 @@ this.authApi.get("/login", passport.authenticate("oauth2"));
 
 // Passport Oauth2 callback
 this.authApi.get(
-  "/login/callback",
-  passport.authenticate("oauth2", { failureRedirect: "/fail" }),
-  (req, res) => {
-    res.status(200).redirect("/remote");
-  },
+    "/login/callback",
+    passport.authenticate("oauth2", { failureRedirect: "/fail" }),
+    (req, res) => {
+        res.status(200).redirect("/remote");
+    },
 );
 
 // Only accessible for logged in users
 this.authApi.get("/user", checkAuthenticated, (req, res) => {
-  res.send({
-    name: req.user.name,
-    admin: req.user.isAdmin(),
-    hasValidRemote: req.user.hasValidRemote(),
-    id: req.user.id,
-  });
+    res.send({
+        name: req.user.name,
+        admin: req.user.isAdmin(),
+        hasValidRemote: req.user.hasValidRemote(),
+        id: req.user.id,
+    });
 });

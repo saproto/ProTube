@@ -8,69 +8,69 @@ import LoginPage from "@/views/LoginPage.vue";
 import LocalClientProtubeScreen from "@/views/LocalClientProtubeScreen.vue";
 
 const routes = [
-  {
-    path: "/",
-    redirect: "/remote",
-  },
-  {
-    path: "/login",
-    name: "Login",
-    component: LoginPage,
-    meta: {
-      transition: "fade",
+    {
+        path: "/",
+        redirect: "/remote",
     },
-  },
-  {
-    path: "/remote",
-    name: "Remote",
-    component: MainRemote,
-  },
-  {
-    path: "/screen",
-    name: "Screen",
-    component: ProtubeScreen,
-  },
-  {
-    path: "/screen/admin",
-    name: "Admin Screen",
-    component: AdminProtubeScreen,
-  },
-  {
-    path: "/screen/local",
-    name: "Local Admin Screen",
-    component: LocalClientProtubeScreen,
-  },
-  {
-    path: "/photos",
-    name: "Photo Screen",
-    component: PhotoScreen,
-    props: () => ({ objectKey: "photo" }),
-  },
-  {
-    path: "/old_photos",
-    name: "Old Photo Screen",
-    component: PhotoScreen,
-    props: () => ({ objectKey: "old_photo" }),
-  },
-  {
-    path: "/error",
-    name: "Error",
-    component: ErrorPage,
-    props: true,
-  },
-  {
-    path: "/:pathMatch(.*)*",
-    redirect: {
-      name: "Error",
-      params: {
-        errorcode: 404,
-      },
+    {
+        path: "/login",
+        name: "Login",
+        component: LoginPage,
+        meta: {
+            transition: "fade",
+        },
     },
-  },
+    {
+        path: "/remote",
+        name: "Remote",
+        component: MainRemote,
+    },
+    {
+        path: "/screen",
+        name: "Screen",
+        component: ProtubeScreen,
+    },
+    {
+        path: "/screen/admin",
+        name: "Admin Screen",
+        component: AdminProtubeScreen,
+    },
+    {
+        path: "/screen/local",
+        name: "Local Admin Screen",
+        component: LocalClientProtubeScreen,
+    },
+    {
+        path: "/photos",
+        name: "Photo Screen",
+        component: PhotoScreen,
+        props: () => ({ objectKey: "photo" }),
+    },
+    {
+        path: "/old_photos",
+        name: "Old Photo Screen",
+        component: PhotoScreen,
+        props: () => ({ objectKey: "old_photo" }),
+    },
+    {
+        path: "/error",
+        name: "Error",
+        component: ErrorPage,
+        props: true,
+    },
+    {
+        path: "/:pathMatch(.*)*",
+        redirect: {
+            name: "Error",
+            params: {
+                errorcode: 404,
+            },
+        },
+    },
 ];
 const router = createRouter({
-  history: createWebHistory(),
-  routes,
+    history: createWebHistory(),
+    routes,
 });
 
 export default router;
