@@ -20,17 +20,17 @@ app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(
-  history({
-    index: "/index.html",
-    rewrites: [
-      {
-        from: /^\/api\/.*$/,
-        to: function (context) {
-          return context.parsedUrl.path;
-        },
-      },
-    ],
-  }),
+    history({
+        index: "/index.html",
+        rewrites: [
+            {
+                from: /^\/api\/.*$/,
+                to: function (context) {
+                    return context.parsedUrl.path;
+                },
+            },
+        ],
+    }),
 );
 app.use("/", express.static(path.join(__dirname, "../public")));
 app.use(express.json());
@@ -40,35 +40,35 @@ app.use("/api/laravel/", protubeApi);
 
 let server;
 if (process.env.HTTPS === "true") {
-  const privateKey = fs.readFileSync(process.env.SSL_KEY_FILE, "utf8");
-  const certificate = fs.readFileSync(process.env.SSL_CERT_FILE, "utf8");
-  const ssl = { key: privateKey, cert: certificate };
-  server = https.createServer(ssl, app);
+    const privateKey = fs.readFileSync(process.env.SSL_KEY_FILE, "utf8");
+    const certificate = fs.readFileSync(process.env.SSL_CERT_FILE, "utf8");
+    const ssl = { key: privateKey, cert: certificate };
+    server = https.createServer(ssl, app);
 } else {
-  server = http.createServer(app);
+    server = http.createServer(app);
 }
 server.listen(PORT); //server.listen instead of app.listen to accommedate for https and socket.io
 server.on("error", (err) =>
-  logger.serverError(`Failed to start server: ${err}`),
+    logger.serverError(`Failed to start server: ${err}`),
 );
 server.on("listening", () => logger.serverInfo(`Listening on port ${PORT}`));
 
 //Create a global Socket.io instance for all modules to use
 global.io = new Server(server, {
-  pingTimeout: 10000,
-  cors: {
-    origin: process.env.CORS_ORIGIN,
-    credentials: true,
-  },
+    pingTimeout: 10000,
+    cors: {
+        origin: process.env.CORS_ORIGIN,
+        credentials: true,
+    },
 });
 
 const wrap = (middleware) => (socket, next) =>
-  middleware(socket.request, {}, next);
+    middleware(socket.request, {}, next);
 // registering this for all socketio namespaces
 io.on("new_namespace", (namespace) => {
-  namespace.use(wrap(sessionMiddleware));
-  namespace.use(wrap(passport.initialize()));
-  namespace.use(wrap(passport.session()));
+    namespace.use(wrap(sessionMiddleware));
+    namespace.use(wrap(passport.initialize()));
+    namespace.use(wrap(passport.session()));
 });
 
 require("./socket_endpoints/ScreenSocket");

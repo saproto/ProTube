@@ -1,5 +1,5 @@
 <template>
-  <LoadModal v-show="message" :message="message" />
+    <LoadModal v-show="message" :message="message" />
 </template>
 <script setup>
 import LoadModal from "@/components/modals/LoadModal";
@@ -13,53 +13,53 @@ let stopConnecting = false;
 const connectionDelayS = 5;
 
 const props = defineProps({
-  socket: { type: Object, default: null },
-  maxAttempts: {
-    type: Number,
-    default: -1,
-  },
+    socket: { type: Object, default: null },
+    maxAttempts: {
+        type: Number,
+        default: -1,
+    },
 });
 
 props.socket.on("connect", () => {
-  // Reload window on reconnection, occurs when the server goes down (for a new deployment e.g.)
-  if (connectionAttempts > 0) {
-    // Prevent reload looping
-    window.location.reload();
-  }
-  message.value = "";
-  connectionAttempts = 0;
+    // Reload window on reconnection, occurs when the server goes down (for a new deployment e.g.)
+    if (connectionAttempts > 0) {
+        // Prevent reload looping
+        window.location.reload();
+    }
+    message.value = "";
+    connectionAttempts = 0;
 });
 
 props.socket.on("connect_error", async (err) => {
-  if (stopConnecting) return;
-  if (err.message == "unauthorized")
-    return router.push({ name: "Error", params: { errorcode: 401 } });
+    if (stopConnecting) return;
+    if (err.message == "unauthorized")
+        return router.push({ name: "Error", params: { errorcode: 401 } });
 
-  connectionAttempts++;
-  message.value = `Connection attempt ${connectionAttempts} failed.`;
+    connectionAttempts++;
+    message.value = `Connection attempt ${connectionAttempts} failed.`;
 
-  if (props.maxAttempts < 0 || connectionAttempts < props.maxAttempts) {
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, connectionDelayS * 1000);
-    });
-    props.socket.connect();
-  } else {
-    message.value = "Attempted to reconnect but with no success...";
-    stopConnecting = true;
-    const currentPath = router.currentRoute.value.fullPath;
-    router.push({
-      name: "Error",
-      params: { errorcode: 408, routeback: currentPath },
-    });
-  }
+    if (props.maxAttempts < 0 || connectionAttempts < props.maxAttempts) {
+        await new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, connectionDelayS * 1000);
+        });
+        props.socket.connect();
+    } else {
+        message.value = "Attempted to reconnect but with no success...";
+        stopConnecting = true;
+        const currentPath = router.currentRoute.value.fullPath;
+        router.push({
+            name: "Error",
+            params: { errorcode: 408, routeback: currentPath },
+        });
+    }
 });
 
 props.socket.on("disconnect", (reason) => {
-  // Don't try to reconnect on manual disconnects (called on OnBeforeUnmounts)
-  if (reason === "io client disconnect") return;
-  message.value = "Lost connection, attempting to reconnect..";
-  props.socket.connect();
+    // Don't try to reconnect on manual disconnects (called on OnBeforeUnmounts)
+    if (reason === "io client disconnect") return;
+    message.value = "Lost connection, attempting to reconnect..";
+    props.socket.connect();
 });
 </script>

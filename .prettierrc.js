@@ -1,4 +1,4 @@
 module.exports = {
-  endOfLine: "auto",
-  bracketSameLine: true,
+    endOfLine: "auto",
+    bracketSameLine: true,
 };

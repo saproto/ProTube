@@ -1,9 +1,9 @@
 <template>
-  <ProtubeScreen
-    :volume="volume"
-    :screen-code="screenCode"
-    @screen-settings-update="updateScreenSettings" />
-  <ReconnectionHandler :socket="socket" />
+    <ProtubeScreen
+        :volume="volume"
+        :screen-code="screenCode"
+        @screen-settings-update="updateScreenSettings" />
+    <ReconnectionHandler :socket="socket" />
 </template>
 
 <script setup>
@@ -18,36 +18,36 @@ const screenCode = ref("0000");
 const volume = ref(50);
 
 const screenSettings = ref({
-  hideQueue: false,
-  smallPlayer: false,
+    hideQueue: false,
+    smallPlayer: false,
 });
 
 onBeforeMount(async () => {
-  const response = await fetch("/api/user");
-  if (response.redirected) return (window.location.href = response.url);
-  const data = await response.json();
-  if (data.admin) connectSocket();
-  else router.push({ name: "Error", params: { errorcode: 401 } });
+    const response = await fetch("/api/user");
+    if (response.redirected) return (window.location.href = response.url);
+    const data = await response.json();
+    if (data.admin) connectSocket();
+    else router.push({ name: "Error", params: { errorcode: 401 } });
 });
 
 onBeforeUnmount(() => {
-  socket.disconnect();
+    socket.disconnect();
 });
 
 socket.on("volume-update", (newVolume) => {
-  volume.value = newVolume;
+    volume.value = newVolume;
 });
 
 socket.on("get-volume-code", (newData) => {
-  screenCode.value = newData.screencode;
-  volume.value = newData.volume;
+    screenCode.value = newData.screencode;
+    volume.value = newData.volume;
 });
 
 socket.on("new-screen-code", (newCode) => {
-  screenCode.value = newCode;
+    screenCode.value = newCode;
 });
 
 const updateScreenSettings = (newValue) => {
-  screenSettings.value = newValue;
+    screenSettings.value = newValue;
 };
 </script>

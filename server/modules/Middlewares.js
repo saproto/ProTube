@@ -14,107 +14,110 @@ const sessionStore = new SequelizeStore({ db: sequelize, table: "sessions" });
 const allowLocalAdminConnections = process.env.LOCAL_CLIENT_IP_CHECK === "true";
 // Get the current gateway ip of the docker container,
 const gatewayIP = execSync("ip route | awk '/default/ {print $3}'", {
-  shell: true,
+    shell: true,
 })
-  .toString()
-  .trimEnd();
+    .toString()
+    .trimEnd();
 const allowedIP = `::ffff:${gatewayIP}`;
 
 exports.sessionMiddleware = session({
-  secret: process.env.SESSION_SECRET,
-  name: process.env.SESSION_NAME,
-  resave: false,
-  store: sessionStore,
-  saveUninitialized: false,
-  cookie: {
-    maxAge: parseInt(process.env.SESSION_DURATION) * 1000,
-  },
+    secret: process.env.SESSION_SECRET,
+    name: process.env.SESSION_NAME,
+    resave: false,
+    store: sessionStore,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: parseInt(process.env.SESSION_DURATION) * 1000,
+    },
 });
 
 exports.checkAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect("/login");
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect("/login");
 };
 
 exports.socketCheckAuthenticated = (socket, next) => {
-  if (socket.request.isAuthenticated()) return next();
-  next(new Error("unauthorized"));
+    if (socket.request.isAuthenticated()) return next();
+    next(new Error("unauthorized"));
 };
 
 exports.socketCheckAdminAuthenticated = (socket, next) => {
-  if (socket.request.isAuthenticated()) {
-    if (socket.request.user.admin) return next();
-    else return next(new Error("forbidden"));
-  }
-  // accept localhost connections also to be admin (local client)
-  else if (
-    allowLocalAdminConnections &&
-    (socket.handshake.address === allowedIP ||
-      socket.handshake.headers["x-real-ip"] === process.env.ROUTER_IP)
-  ) {
-    return next();
-  }
-  next(new Error("unauthorized"));
+    if (socket.request.isAuthenticated()) {
+        if (socket.request.user.admin) return next();
+        else return next(new Error("forbidden"));
+    }
+    // accept localhost connections also to be admin (local client)
+    else if (
+        allowLocalAdminConnections &&
+        (socket.handshake.address === allowedIP ||
+            socket.handshake.headers["x-real-ip"] === process.env.ROUTER_IP)
+    ) {
+        return next();
+    }
+    next(new Error("unauthorized"));
 };
 
 exports.screenCodeCheck = async (socket, next) => {
-  const user = socket.request.user;
+    const user = socket.request.user;
 
-  // if ban return immediately
-  if (user.isBanned()) {
-    return next(
-      new Error(
-        `Your ban is lifted ${moment
-          .duration(user.banned_until - getCurrentUnix(), "seconds")
-          .humanize(true)}`,
-      ),
-    );
-  }
+    // if ban return immediately
+    if (user.isBanned()) {
+        return next(
+            new Error(
+                `Your ban is lifted ${moment
+                    .duration(user.banned_until - getCurrentUnix(), "seconds")
+                    .humanize(true)}`,
+            ),
+        );
+    }
 
-  // Always accept admins and previously validated remotes
-  if (user.hasValidRemote()) return next();
+    // Always accept admins and previously validated remotes
+    if (user.hasValidRemote()) return next();
 
-  // Correct screencode, accept socket
-  if (checkScreenCode(socket.handshake.auth.token)) {
-    user.setValidRemote();
+    // Correct screencode, accept socket
+    if (checkScreenCode(socket.handshake.auth.token)) {
+        user.setValidRemote();
+        user.save();
+        return next();
+    }
+
+    // User reached connection attempt limit, ban him!
+    if (user.connection_attempts >= parseInt(process.env.FAIL_2_BAN_ATTEMPTS)) {
+        user.setBanned();
+        user.save();
+        logger.clientInfo(
+            `Banned user: ${user.id} until ${
+                getCurrentUnix() + parseInt(process.env.FAIL_2_BAN_DURATION)
+            }`,
+        );
+        return next(
+            new Error(
+                `Your ban is lifted ${moment
+                    .duration(
+                        parseInt(process.env.FAIL_2_BAN_DURATION),
+                        "seconds",
+                    )
+                    .humanize(true)}`,
+            ),
+        );
+    }
+
+    // User not bannable or valid = wrong entered screencode
+    user.connectionAttemptsPlusOne();
     user.save();
-    return next();
-  }
-
-  // User reached connection attempt limit, ban him!
-  if (user.connection_attempts >= parseInt(process.env.FAIL_2_BAN_ATTEMPTS)) {
-    user.setBanned();
-    user.save();
-    logger.clientInfo(
-      `Banned user: ${user.id} until ${
-        getCurrentUnix() + parseInt(process.env.FAIL_2_BAN_DURATION)
-      }`,
-    );
-    return next(
-      new Error(
-        `Your ban is lifted ${moment
-          .duration(parseInt(process.env.FAIL_2_BAN_DURATION), "seconds")
-          .humanize(true)}`,
-      ),
-    );
-  }
-
-  // User not bannable or valid = wrong entered screencode
-  user.connectionAttemptsPlusOne();
-  user.save();
-  return next(new Error("Invalid screencode"));
+    return next(new Error("Invalid screencode"));
 };
 
 exports.checkBearerToken = (req, res, next) => {
-  if (req.token === process.env.PROTUBE_API_SECRET) return next();
-  return res.status(401).json({
-    success: false,
-    message: "Not Authorized for this API",
-  });
+    if (req.token === process.env.PROTUBE_API_SECRET) return next();
+    return res.status(401).json({
+        success: false,
+        message: "Not Authorized for this API",
+    });
 };
 
 exports.checkLocalClientToken = (socket, next) => {
-  next(new Error("Invalid token!"));
+    next(new Error("Invalid token!"));
 };

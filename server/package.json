@@ -1,36 +1,36 @@
 {
-  "name": "protube",
-  "main": "app.js",
-  "scripts": {
-    "start": "node app",
-    "watch": "nodemon app"
-  },
-  "dependencies": {
-    "@sentry/node": "^10.52.0",
-    "colors": "^1.4.0",
-    "connect-history-api-fallback": "^2.0.0",
-    "connect-session-sequelize": "^8.0.4",
-    "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
-    "crypto": "^1.0.1",
-    "dotenv": "^17.2.3",
-    "express": "^5.2.1",
-    "express-bearer-token": "^3.0.0",
-    "express-mysql-session": "^3.0.3",
-    "express-session": "^1.17.2",
-    "lodash": "^4.17.21",
-    "moment": "^2.29.1",
-    "mysql2": "^3.22.3",
-    "passport": "^0.7.0",
-    "passport-oauth2": "^1.6.1",
-    "sequelize": "^6.25.3",
-    "socket.io": "^4.5.4",
-    "winston": "^3.7.2",
-    "winston-daily-rotate-file": "^5.0.0",
-    "youtubei": "^1.8.9"
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.3.1",
-    "nodemon": "^3.1.10"
-  }
+    "name": "protube",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app",
+        "watch": "nodemon app"
+    },
+    "dependencies": {
+        "@sentry/node": "^10.52.0",
+        "colors": "^1.4.0",
+        "connect-history-api-fallback": "^2.0.0",
+        "connect-session-sequelize": "^8.0.4",
+        "cookie-parser": "^1.4.6",
+        "cors": "^2.8.5",
+        "crypto": "^1.0.1",
+        "dotenv": "^17.2.3",
+        "express": "^5.2.1",
+        "express-bearer-token": "^3.0.0",
+        "express-mysql-session": "^3.0.3",
+        "express-session": "^1.17.2",
+        "lodash": "^4.17.21",
+        "moment": "^2.29.1",
+        "mysql2": "^3.22.3",
+        "passport": "^0.7.0",
+        "passport-oauth2": "^1.6.1",
+        "sequelize": "^6.25.3",
+        "socket.io": "^4.5.4",
+        "winston": "^3.7.2",
+        "winston-daily-rotate-file": "^5.0.0",
+        "youtubei": "^1.8.9"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.3.1",
+        "nodemon": "^3.1.10"
+    }
 }

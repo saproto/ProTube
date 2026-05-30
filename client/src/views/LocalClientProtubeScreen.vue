@@ -1,9 +1,9 @@
 <template>
-  <ProtubeScreen
-    :volume="volume"
-    :screen-code="screenCode"
-    @youtube-media-error="playerError" />
-  <ReconnectionHandler :socket="socket" />
+    <ProtubeScreen
+        :volume="volume"
+        :screen-code="screenCode"
+        @youtube-media-error="playerError" />
+    <ReconnectionHandler :socket="socket" />
 </template>
 
 <script setup>
@@ -16,29 +16,29 @@ const screenCode = ref(0o000);
 const volume = ref(50);
 
 onBeforeMount(() => {
-  connectSocket();
+    connectSocket();
 });
 
 onBeforeUnmount(() => {
-  socket.disconnect();
+    socket.disconnect();
 });
 
 socket.on("volume-update", (newVolume) => {
-  volume.value = newVolume;
+    volume.value = newVolume;
 });
 
 socket.on("get-volume-code", (newData) => {
-  screenCode.value = newData.screencode;
-  volume.value = newData.volume;
+    screenCode.value = newData.screencode;
+    volume.value = newData.volume;
 });
 
 socket.on("new-screen-code", (newCode) => {
-  screenCode.value = newCode;
+    screenCode.value = newCode;
 });
 
 // player generated an error on the media, request player to skip to next video
 function playerError(errorCode) {
-  socket.emit("player-error-skip", errorCode);
+    socket.emit("player-error-skip", errorCode);
 }
 
 // soundboardddd
