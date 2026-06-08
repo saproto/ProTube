@@ -27,7 +27,7 @@
         "socket.io": "^4.5.4",
         "winston": "^3.7.2",
         "winston-daily-rotate-file": "^5.0.0",
-        "youtubei": "^1.8.9"
+        "youtubei": "^1.8.10"
     },
     "devDependencies": {
         "autoprefixer": "^10.3.1",
