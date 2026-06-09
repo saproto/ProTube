@@ -17,4 +17,4 @@ RUN npm run build
 RUN rm -r ./client
 
 WORKDIR /protube/server
-ENTRYPOINT /usr/local/bin/node app
+CMD ["node", "app.js"]
