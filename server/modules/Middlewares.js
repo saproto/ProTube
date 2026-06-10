@@ -51,9 +51,10 @@ exports.socketCheckAdminAuthenticated = (socket, next) => {
     // accept localhost connections also to be admin (local client)
     else if (
         allowLocalAdminConnections &&
-        (socket.handshake.address === allowedIP
-        || socket.handshake.headers["x-real-ip"] === process.env.ROUTER_IP
-       || socket.handshake.headers["x-real-ip"] === process.env.DISPLAY_SERVER_IP)
+        (socket.handshake.address === allowedIP ||
+            socket.handshake.headers["x-real-ip"] === process.env.ROUTER_IP ||
+            socket.handshake.headers["x-real-ip"] ===
+                process.env.DISPLAY_SERVER_IP)
     ) {
         return next();
     }
