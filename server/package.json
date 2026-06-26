@@ -6,7 +6,7 @@
         "watch": "nodemon app"
     },
     "dependencies": {
-        "@sentry/node": "^10.55.0",
+        "@sentry/node": "^10.59.0",
         "colors": "^1.4.0",
         "connect-history-api-fallback": "^2.0.0",
         "connect-session-sequelize": "^8.0.4",
