@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v6.0.3
+        uses: actions/checkout@v7.0.0
 
       - name: Get Node version
         run: echo "NODE_VERSION=$(<.nvmrc)" >> $GITHUB_ENV
