@@ -6,7 +6,7 @@
         "watch": "nodemon app"
     },
     "dependencies": {
-        "@sentry/node": "^10.59.0",
+        "@sentry/node": "^10.62.0",
         "colors": "^1.4.0",
         "connect-history-api-fallback": "^2.0.0",
         "connect-session-sequelize": "^8.0.4",
@@ -30,7 +30,7 @@
         "youtubei": "^1.8.10"
     },
     "devDependencies": {
-        "autoprefixer": "^10.3.1",
+        "autoprefixer": "^10.5.2",
         "nodemon": "^3.1.10"
     }
 }
