@@ -14,13 +14,13 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v7.0.0
+        uses: actions/checkout@v7.0.1
 
       - name: Get Node version
         run: echo "NODE_VERSION=$(<.nvmrc)" >> $GITHUB_ENV
 
       - name: Set Node ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v6.4.0
+        uses: actions/setup-node@v7.0.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
@@ -29,7 +29,7 @@ jobs:
         run: npm install
 
       - name: Run linters
-        uses: wearerequired/lint-action@v2
+        uses: wearerequired/lint-action@v2.3.0
         with:
           eslint: true
           prettier: true
