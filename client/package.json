@@ -10,7 +10,7 @@
         "@fortawesome/free-solid-svg-icons": "^7.3.0",
         "@fortawesome/vue-fontawesome": "^3.3.3",
         "@mdi/font": "7.4.47",
-        "@sentry/vue": "^10.69.0",
+        "@sentry/vue": "^10.70.0",
         "@tailwindcss/postcss": "^4.3.2",
         "@vitejs/plugin-vue": "^6.0.7",
         "core-js": "^3.21.1",
