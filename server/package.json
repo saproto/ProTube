@@ -32,5 +32,8 @@
     "devDependencies": {
         "autoprefixer": "^10.6.1",
         "nodemon": "^3.1.10"
+    },
+    "allowScripts": {
+        "protobufjs@8.4.0": true
     }
 }
