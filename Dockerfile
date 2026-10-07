@@ -5,8 +5,8 @@ COPY package*.json ./
 COPY client/package*.json ./client/
 
 
-RUN npm install --ignore-scripts
-RUN cd client && npm install
+RUN npm ci --ignore-scripts
+RUN cd client && npm ci
 
 COPY client/ ./client
 
@@ -32,5 +32,7 @@ COPY server/ .
 COPY --from=builder /app/server/public ./public
 
 USER node
+
+EXPOSE 3000
 
 CMD ["node", "app.js"]
