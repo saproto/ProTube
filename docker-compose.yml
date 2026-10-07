@@ -17,8 +17,6 @@ services:
         depends_on:
             db:
                 condition: service_healthy
-        volumes:
-            - app_logs:/app/server/logs
         restart: unless-stopped
 
     db:
@@ -39,4 +37,3 @@ services:
 
 volumes:
     mysql_data:
-    app_logs:
