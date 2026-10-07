@@ -27,7 +27,7 @@ services:
             MYSQL_USER: ${DATABASE_USER}
             MYSQL_PASSWORD:  ${DATABASE_PASSWORD}
         volumes:
-            - mysql_data:/var/lib/mysql
+            - mysql:/var/lib/mysql
         healthcheck:
             test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
             interval: 10s
@@ -36,4 +36,4 @@ services:
         restart: unless-stopped
 
 volumes:
-    mysql_data:
+    mysql:
