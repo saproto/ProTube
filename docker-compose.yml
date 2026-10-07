@@ -25,7 +25,7 @@ services:
             MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
             MYSQL_DATABASE: ${DATABASE_DB}
             MYSQL_USER: ${DATABASE_USER}
-            MYSQL_PASSWORD:  ${DATABASE_PASSWORD}
+            MYSQL_PASSWORD: ${DATABASE_PASSWORD}
         volumes:
             - mysql:/var/lib/mysql
         healthcheck:
