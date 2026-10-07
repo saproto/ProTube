@@ -3,19 +3,23 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY client/package*.json ./client/
-COPY server/package*.json ./server/
 
-RUN npm install
+
+RUN npm install --ignore-scripts
 RUN cd client && npm install
 
-COPY . .
+COPY client/ ./client
+
+COPY enums.json .
+COPY eslint.config.mjs .
+
 RUN cd client && npm run build --if-present
 
 
 FROM node:24-alpine AS runner
 
 WORKDIR /app
-COPY enums.json ./enums.json
+COPY enums.json .
 
 WORKDIR /app/server
 
