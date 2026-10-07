@@ -1,20 +1,32 @@
-FROM node:24-alpine
+FROM node:24-alpine AS builder
 
-RUN apk update
-RUN apk add nano
+WORKDIR /protube
 
-RUN mkdir /protube
-COPY . /protube
+COPY package*.json ./
+COPY client/package*.json ./client/
+COPY server/package*.json ./server/
 
-# Bake the sentry DSN into the frontend build
+RUN npm install
+RUN cd client && npm install
+RUN cd server && npm install
+
+COPY . .
+
 ARG VITE_SENTRY_DSN
 ENV VITE_SENTRY_DSN=$VITE_SENTRY_DSN
 
-# Installing and building
-WORKDIR /protube
-RUN npm install
 RUN npm run build
-RUN rm -r ./client
+
+
+FROM node:24-alpine AS runner
 
 WORKDIR /protube/server
+
+COPY server/package*.json ./
+RUN npm ci --omit=dev
+
+COPY --from=builder /protube/server ./
+
+USER node
+
 CMD ["node", "app.js"]
