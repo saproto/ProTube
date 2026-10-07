@@ -4,14 +4,16 @@ WORKDIR /app
 COPY package*.json ./
 COPY client/package*.json ./client/
 
+COPY enums.json .
+COPY eslint.config.mjs .
 
 RUN npm ci --ignore-scripts
 RUN cd client && npm ci
 
 COPY client/ ./client
 
-COPY enums.json .
-COPY eslint.config.mjs .
+ARG VITE_SENTRY_DSN
+ENV VITE_SENTRY_DSN=$VITE_SENTRY_DSN
 
 RUN cd client && npm run build --if-present
 
