@@ -6,6 +6,8 @@ require("colors");
 require("winston-daily-rotate-file");
 const winston = require("winston");
 
+const transports = [new winston.transports.Console()];
+
 let fileRotationTransport = new winston.transports.DailyRotateFile({
     level: "info",
     filename: "%DATE%-protube.log",
@@ -26,6 +28,17 @@ let errorFileRotationTransport = new winston.transports.DailyRotateFile({
     maxFiles: process.env.LOG_RETENTION_DAYS + "d",
 });
 
+if (process.env.LOGDIR) {
+    transports.push(fileRotationTransport);
+    transports.push(errorFileRotationTransport);
+}
+
+let color = winston.format.uncolorize();
+// Dev mode: log with colors into console except for logging to files
+if (process.env.NODE_ENV !== "production") {
+    color = winston.format.colorize();
+}
+
 let dbFileRotationTransport = new winston.transports.DailyRotateFile({
     level: "info",
     filename: "%DATE%-protube-db.log",
@@ -36,13 +49,6 @@ let dbFileRotationTransport = new winston.transports.DailyRotateFile({
     maxFiles: process.env.LOG_RETENTION_DAYS + "d",
 });
 
-let color = winston.format.uncolorize();
-// Dev mode: log with colors into console except for logging to files
-if (process.env.NODE_ENV !== "production") {
-    fileRotationTransport = new winston.transports.Console();
-    color = winston.format.colorize();
-}
-
 const logFormat = winston.format.combine(
     color,
     winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
@@ -52,9 +58,10 @@ const logFormat = winston.format.combine(
 );
 
 const logger = winston.createLogger({
-    transports: [fileRotationTransport, errorFileRotationTransport],
+    transports: transports,
     format: logFormat,
 });
+
 const dbLogger = winston.createLogger({
     transports: [dbFileRotationTransport],
     format: logFormat,
