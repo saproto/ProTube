@@ -1,0 +1,42 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                VITE_SENTRY_DSN: ${VITE_SENTRY_DSN}
+        ports:
+            - "3000:3000"
+        environment:
+            NODE_ENV: production
+            DATABASE_HOST: db
+            DATABASE_USER: protube_user
+            DATABASE_PASSWORD: protube_password
+            DATABASE_DB: protube_db
+            DATABASE_PORT: 3306
+        depends_on:
+            db:
+                condition: service_healthy
+        volumes:
+            - ./server/logs:/app/server/logs
+        restart: unless-stopped
+    db:
+        image: mysql:8.0
+        environment:
+            MYSQL_ROOT_PASSWORD: root_password
+            MYSQL_DATABASE: protube_db
+            MYSQL_USER: protube_user
+            MYSQL_PASSWORD: protube_password
+        ports:
+            - "3306:3306"
+        volumes:
+            - mysql_data:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        restart: unless-stopped
+
+volumes:
+    mysql_data:
