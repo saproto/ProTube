@@ -170,7 +170,10 @@ const props = defineProps({
     },
 });
 
-const allowedDelta = props.screenCode === -1 ? 2 : 0.12;
+const allowedDelta =
+    props.screenCode === -1
+        ? 2
+        : parseFloat(process.env.VITE_ADMIN_SYNC_MAX_DELTA ?? "0.12");
 let YTPlayerState = -1;
 let bufferTime = -1;
 let firstTime = -1;
