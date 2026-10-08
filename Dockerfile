@@ -20,6 +20,8 @@ RUN cd client && npm run build --if-present
 
 FROM node:24-alpine AS runner
 
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
 WORKDIR /app
 COPY enums.json .
 
@@ -33,7 +35,7 @@ COPY server/ .
 
 COPY --from=builder /app/server/public ./public
 
-USER node
+USER appuser
 
 EXPOSE 3000
 
