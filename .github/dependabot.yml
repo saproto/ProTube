@@ -53,7 +53,7 @@ updates:
     cooldown:
       default-days: 7
 
-  - package-ecosystem: "docker"
+  - package-ecosystem: "docker-compose"
     directory: "/"
     schedule:
       interval: "daily"
@@ -62,5 +62,17 @@ updates:
         update-types: ["version-update:semver-major"]
     groups:
       docker:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      docker-compose:
         patterns:
           - "*"
