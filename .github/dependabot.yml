@@ -61,4 +61,3 @@ updates:
       docker:
         patterns:
           - "*"
-
