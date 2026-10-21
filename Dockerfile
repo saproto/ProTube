@@ -1,4 +1,4 @@
-FROM node:24.21.0-alpine3.24 AS builder
+FROM node:24.22.0-alpine3.24 AS builder
 WORKDIR /app
 
 COPY package*.json ./
@@ -18,7 +18,7 @@ ENV VITE_SENTRY_DSN=$VITE_SENTRY_DSN
 RUN cd client && npm run build --if-present
 
 
-FROM node:24.21.0-alpine3.24 AS runner
+FROM node:24.22.0-alpine3.24 AS runner
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
