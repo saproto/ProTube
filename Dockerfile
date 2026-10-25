@@ -1,11 +1,14 @@
 FROM node:26.12.1-alpine3.24 AS builder
 WORKDIR /app
 
+ENV NODE_ENV="development"
+
 COPY package*.json ./
 COPY client/package*.json ./client/
 
 COPY enums.json .
 COPY eslint.config.mjs .
+
 
 RUN npm ci --ignore-scripts
 RUN cd client && npm ci
