@@ -44,10 +44,6 @@ exports.socketCheckAuthenticated = (socket, next) => {
 };
 
 exports.socketCheckAdminAuthenticated = (socket, next) => {
-    logger.serverInfo("DEBUG IP/Headers:");
-    logger.serverInfo(socket.handshake.address);
-    logger.serverInfo(socket.handshake.headers["x-real-ip"]);
-    logger.serverInfo(socket.handshake.headers["x-forwarded-for"]);
     if (socket.request.isAuthenticated()) {
         if (socket.request.user.admin) return next();
         else return next(new Error("forbidden"));
