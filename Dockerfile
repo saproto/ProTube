@@ -1,8 +1,6 @@
 FROM node:26.12.1-alpine3.24 AS builder
 WORKDIR /app
 
-ENV NODE_ENV="development"
-
 COPY package*.json ./
 COPY client/package*.json ./client/
 
@@ -31,6 +29,8 @@ COPY enums.json .
 WORKDIR /app/server
 
 COPY server/package*.json ./
+
+ENV NODE_ENV="production"
 
 RUN npm ci --omit=dev
 

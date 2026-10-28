@@ -8,7 +8,6 @@ services:
         expose:
             - "3000"
         environment:
-            NODE_ENV: production
             DATABASE_HOST: ${DATABASE_HOST}
             DATABASE_USER: ${DATABASE_USER}
             DATABASE_PASSWORD: ${DATABASE_PASSWORD}
