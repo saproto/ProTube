@@ -26,3 +26,11 @@ this.authApi.get("/user", checkAuthenticated, (req, res) => {
         id: req.user.id,
     });
 });
+
+this.authApi.get("/health", (_req, res) => {
+    res.status(200).json({
+        status: "ok",
+        uptime: process.uptime(),
+        timestamp: Date.now(),
+    });
+});
